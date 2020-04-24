@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="initial structure of project">
+      <change beforePath="$PROJECT_DIR$/checker/AnDOChecker.py" beforeDir="false" afterPath="$PROJECT_DIR$/checker/AnDOChecker.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1aycNEKm5CZrX4Y4k9BpADKLsrK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="" />
+      <created>1587711231874</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587711231874</updated>
+    </task>
+    <task id="LOCAL-00001" summary="initial structure of project">
+      <created>1587711351591</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587711351591</updated>
+    </task>
+    <task id="LOCAL-00002" summary="initial structure of project">
+      <created>1587711536270</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1587711536270</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial structure of project" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial structure of project" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="676" y="392" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1587711268436">
+      <screen x="0" y="24" width="1680" height="1026" />
+    </state>
+    <state x="676" y="392" key="#com.intellij.fileTypes.FileTypeChooser/1680.150.1440.900/0.24.1680.1026@0.24.1680.1026" timestamp="1587711268436" />
+    <state x="534" y="323" key="Vcs.Push.Dialog.v2" timestamp="1587711539389">
+      <screen x="0" y="24" width="1680" height="1026" />
+    </state>
+    <state x="534" y="323" key="Vcs.Push.Dialog.v2/1680.150.1440.900/0.24.1680.1026@0.24.1680.1026" timestamp="1587711539389" />
+  </component>
+</project>
