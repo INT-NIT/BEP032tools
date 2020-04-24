@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import errno
 import json
-import sys
 import re
 from AnDO_Error import (
     SourceError,
@@ -42,7 +40,7 @@ def is_bids_verbose(names):
         try:
             raise DateError(names)
         except DateError as e:
-            print (e.strerror)
+            print(e.strerror)
             bool_error = 1
     if is_sub(names):
         bool_error = 0
@@ -50,7 +48,7 @@ def is_bids_verbose(names):
         try:
             raise SubError(names)
         except SubError as e:
-            print (e.strerror)
+            print(e.strerror)
             bool_error = 1
     if is_source(names):
         bool_error = 0
@@ -58,7 +56,7 @@ def is_bids_verbose(names):
         try:
             raise SourceError(names)
         except SourceError as e:
-            print (e.strerror)
+            print(e.strerror)
             bool_error = 1
 
     return bool_error
@@ -150,12 +148,12 @@ def get_regular_expressions(fileName):
 
 
 def flatten(seq):
-    l = []
+    list_flaten = []
     for elt in seq:
         t = type(elt)
         if t is tuple or t is list:
             for elt2 in flatten(elt):
-                l.append(elt2)
+                list_flaten.append(elt2)
         else:
-            l.append(elt)
-    return l
+            list_flaten.append(elt)
+    return list_flaten

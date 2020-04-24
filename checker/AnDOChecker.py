@@ -4,16 +4,10 @@
 import os
 import errno
 import json
-import sys
-import re
-import argparse
-from AnDO_Error import (
- 
-    SourceError, 
-    DateError, 
-    SubError)
 
-from AnDO_engine import *
+import argparse
+
+from AnDO_engine import is_bids, is_bids_verbose
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
@@ -83,12 +77,13 @@ if __name__ == '__main__':
         error = is_bids_verbose(names)
 
         if error == 1:
-            print ("\n" +
-                    directory
-                   +": Is Not validated by AnDOChecker")
+            print("\n" +
+                  directory +
+                  ": Is Not validated by AnDOChecker")
         else:
-            print ("\n" + directory 
-                  + ": Is validated by AnDOChecker")
+            print("\n" +
+                  directory +
+                  ": Is validated by AnDOChecker")
     else:
         try:
             directory = args.path
@@ -103,8 +98,10 @@ if __name__ == '__main__':
         names = get_name_in_dir([dic_data], names)
         error_not_found = is_bids(names)
         if not error_not_found:
-            print ("\n" + directory 
-                   +": Is Not validated by AnDOChecker")
+            print("\n" +
+                  directory +
+                  ": Is Not validated by AnDOChecker")
         else:
-            print ("\n" + directory 
-                   +": Is validated by AnDOChecker")
+            print("\n" +
+                  directory +
+                  ": Is validated by AnDOChecker")
