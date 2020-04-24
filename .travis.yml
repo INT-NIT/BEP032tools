@@ -35,7 +35,7 @@ script:
 notifications:
   email:
     recipients:
-      - jeremygarcia937@gmail.com # a ajouter davic et dipankar
+      - jeremygarcia937@gmail.com # a ajouter david et dipankar
     on_success: never # default: change
     on_failure: never # default: always
 
