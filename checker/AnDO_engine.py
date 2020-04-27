@@ -12,37 +12,40 @@ from AnDO_Error import (
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
 
-def is_bids(names):
-    """Checks if a file path appropriate for BIDS.
+def is_AnDO(names):
+    """
+    Check if file path adheres to BIDS.
+    Main method of the validator. uses other class methods for checking
+    different aspects of the directory path.
 
-        Main method of the validator. uses other class methods for checking
-        different aspects of the file path.
-
-        Parameters
-        ----------
-            path: string
-                A path of a file you want to check.
-        """
-
+    :param names: 
+    """
     validate = []
-    validate.append(is_date(names))
+    validate.append(is_session(names))
     validate.append(is_source(names))
-    validate.append(is_sub(names))
+    validate.append(is_subject(names))
 
     return all(validate)
 
 
-def is_bids_verbose(names):
+def is_AnDO_verbose(names):
+    """
+    Check if file path adheres to BIDS.
+    Main method of the validator. uses other class methods for checking
+    different aspects of the directory path.
+    
+    :param names: list of names founds in the path
+    """
     bool_error = 0
-    if is_date(names):
+    if is_session(names):
         bool_error = 0
     else:
         try:
-            raise DateError(names)
+            raise SessionError(names)
         except DateError as e:
             print(e.strerror)
             bool_error = 1
-    if is_sub(names):
+    if is_subject(names):
         bool_error = 0
     else:
         try:
@@ -62,10 +65,14 @@ def is_bids_verbose(names):
     return bool_error
 
 
-def is_date(names):
-    ''' Check if file is data. '''
+def is_session(names):
+    """
+    Check names follows session rules 
+    
+    :param names: list of names founds in the path
+    """
 
-    regexps = get_regular_expressions(dir_rules + 'date_rules.json')
+    regexps = get_regular_expressions(dir_rules + 'session_rules.json')
     conditions = []
     for word in names:
         conditions.append([re.compile(x).search(word) is not None
@@ -76,22 +83,13 @@ def is_date(names):
     return any(flatten(conditions))
 
 
-def is_data(names):
-    ''' Check if file is data. '''
 
-    regexps = get_regular_expressions(dir_rules + 'data_rules.json')
-    conditions = []
-    for word in names:
-        conditions.append([re.compile(x).match(word) is not None
-                          for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
-def is_sub(names):
-    ''' Check if file is data. '''
+def is_subject(names):
+    """
+    Check names follows subject rules
+    
+    :param names: list of names founds in the path
+    """
 
     regexps = get_regular_expressions(dir_rules + 'subject_rules.json')
     conditions = []
@@ -105,7 +103,11 @@ def is_sub(names):
 
 
 def is_source(names):
-    ''' Check if file is data. '''
+    """
+    Check names follows source rules
+    
+    :param names: list of names founds in the path
+    """
 
     regexps = get_regular_expressions(dir_rules + 'source_rules.json')
     conditions = []
@@ -148,6 +150,13 @@ def get_regular_expressions(fileName):
 
 
 def flatten(seq):
+    """
+    Format list the proper way
+    exemple:
+    [[x],[y],[z]]--->[x,y,z]
+    
+    :param seq: list to format
+    """
     list_flaten = []
     for elt in seq:
         t = type(elt)
