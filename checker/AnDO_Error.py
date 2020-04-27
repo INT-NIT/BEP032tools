@@ -9,7 +9,7 @@ class SubError(Exception):
                          "/naming issues")
 
 
-class DateError(Exception):
+class SessionError(Exception):
     def __init__(self, arg):
         names = arg
         self.strerror = ("\nError 3 type [Date folder error] at : " +
