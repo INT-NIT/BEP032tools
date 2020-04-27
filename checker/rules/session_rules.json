@@ -1,0 +1,5 @@
+{
+  "session_level": {
+    "regexp": "^\\d{6}_\\d{3}_([a-zA-Z]{1})_([a-zA-Z]*)_([a-zA-Z-_0-9]*)"
+  }
+} 
