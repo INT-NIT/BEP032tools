@@ -6,7 +6,7 @@ import json
 import re
 from AnDO_Error import (
     SourceError,
-    DateError,
+    SessionError,
     SubError)
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
@@ -42,7 +42,7 @@ def is_AnDO_verbose(names):
     else:
         try:
             raise SessionError(names)
-        except DateError as e:
+        except SessionError as e:
             print(e.strerror)
             bool_error = 1
     if is_subject(names):
