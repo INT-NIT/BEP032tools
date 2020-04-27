@@ -32,7 +32,7 @@ optional arguments:
 ```
 $Python3 checker/AnDOChecker.py tests/ds001/data/Enya
 ```
-<p align="center"><img src="Doc/vids/Exemple_no_verbose.gif" /></p>
+<p align="center"><img src="doc/vids/AnDO_no_verbose.gif" /></p>
 
 
 
@@ -44,7 +44,7 @@ $Python3 checker/AnDOChecker.py -v tests/ds001/data/Enya
 
 ```
 
-<p align="center"><img src="Doc/vids/Exemple_w_verbose.gif" /></p>
+<p align="center"><img src="doc/vids/AnDO_with_verbose.gif" /></p>
 
 
 # Development 
