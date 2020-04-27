@@ -1,7 +1,7 @@
 # AnDOChecker
 Checks the validity of a directory with respect to the ANimal Data Organization (AnDO) specifications 
 
-![version](https://img.shields.io/badge/version-2-informational)
+![version](https://img.shields.io/badge/version-1-informational)
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/Slowblitz/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
@@ -37,7 +37,7 @@ optional arguments:
 ```
 $Python3 checker/AnDOChecker.py tests/ds001/data/Enya
 ```
-<p align="center"><img src="Documents/vids/Exemple_no_verbose.gif" /></p>
+<p align="center"><img src="doc/vids/AnDO_no_verbose.gif" /></p>
 
 
 
@@ -49,7 +49,7 @@ $Python3 checker/AnDOChecker.py -v tests/ds001/data/Enya
 
 ```
 
-<p align="center"><img src="Documents/vids/Exemple_w_verbose.gif" /></p>
+<p align="center"><img src="doc/vids/AnDO_with_verbose.gif" /></p>
 
 
 # Development 
