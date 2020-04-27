@@ -7,17 +7,16 @@ import json
 
 import argparse
 
-from AnDO_engine import is_bids, is_bids_verbose
+from AnDO_engine import is_AnDO, is_AnDO_verbose
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
 
 def path_hierarchy(path):
-    """[make a json tree structure of the folder given in parameter]
-    Arguments:
-        path {[type]} -- [Path to the folder]
-    Returns:
-        [json] -- [Tree of the folder]
+    """
+    Make a json tree structure of the folder given in parameter]
+    
+    :param path: Path to the folder 
     """
 
     hierarchy = {'type': 'directory', 'name': os.path.basename(path),
@@ -36,12 +35,11 @@ def path_hierarchy(path):
 
 
 def get_name_in_dir(list_dict, names):
-    """[Get all the name of directories in the Dict recusively]
-    Arguments:
-        list_dict {[Dict]} -- [Json to dict ]
-        names {[list]} -- [Names of directories founds]
-    Returns:
-        [list] -- [Names of directories founds]
+    """
+    Get all the name of directories in the Dict recusively
+    
+    :param list_dict: Json to dict 
+    :param names: Names of directories founds
     """
 
     for my_dict in list_dict:
@@ -54,8 +52,21 @@ def get_name_in_dir(list_dict, names):
 
 
 if __name__ == '__main__':
+    """
+    Main function :
+    
+    usage: AnDOChecker.py [-h] [-v] pathToFolder
 
+        positional arguments:
+        path           Path to your folder
+
+        optional arguments:
+        -h, --help     show this help message and exit
+        -v, --verbose  increase output verbosity
+        
+    """
     # add argparse for verbose option
+    
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -74,7 +85,7 @@ if __name__ == '__main__':
                               indent=2, sort_keys=True))
         names = get_name_in_dir([dic_data], names)
 
-        error = is_bids_verbose(names)
+        error = is_AnDO_verbose(names)
 
         if error == 1:
             print("\n" +
@@ -96,7 +107,7 @@ if __name__ == '__main__':
 
         names = []
         names = get_name_in_dir([dic_data], names)
-        error_not_found = is_bids(names)
+        error_not_found = is_AnDO(names)
         if not error_not_found:
             print("\n" +
                   directory +
