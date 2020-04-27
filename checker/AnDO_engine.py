@@ -14,7 +14,7 @@ dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
 def is_AnDO(names):
     """
-    Check if file path adheres to BIDS.
+    Check if file path adheres to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
@@ -30,7 +30,7 @@ def is_AnDO(names):
 
 def is_AnDO_verbose(names):
     """
-    Check if file path adheres to BIDS.
+    Check if file path adheres to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
     
