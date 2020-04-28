@@ -19,13 +19,20 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="added dirs" />
+    <list default="true" id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="added dirs">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="prefix_additions" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1aycNEKm5CZrX4Y4k9BpADKLsrK" />
@@ -89,6 +96,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial structure of project" />
