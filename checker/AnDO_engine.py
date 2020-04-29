@@ -5,7 +5,6 @@ import os
 import json
 import re
 import pathlib
-from glob import glob
 from AnDO_Error import (
     SourceError,
     SessionError,
