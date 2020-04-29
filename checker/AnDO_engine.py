@@ -4,6 +4,8 @@
 import os
 import json
 import re
+import pathlib
+from glob import glob
 from AnDO_Error import (
     SourceError,
     SessionError,
@@ -11,8 +13,24 @@ from AnDO_Error import (
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
+def is_AnDO_R(subpath,level,validate):
+    #print(listOfNames)
+    if level < len(subpath):    
+        if  level == 0 :
+            validate.append(is_topLevel(subpath[level]))
+            is_AnDO_R(subpath,level+1,validate)
+        if  level == 1 :
+            validate.append(is_subject(subpath[level]))  
+            is_AnDO_R(subpath,level+1,validate)
+        if  level == 2 :
+            validate.append(is_session(subpath[level]))
+            is_AnDO_R(subpath,level+1,validate)
+        if  level == 3 :
+            validate.append(is_source(subpath[level]))    
 
-def is_AnDO(names):
+    return validate
+
+def is_AnDO(directory):
     """
     Check if file path adheres to AnDO.
     Main method of the validator. uses other class methods for checking
@@ -20,13 +38,37 @@ def is_AnDO(names):
 
     :param names: 
     """
-    validate = []
-    validate.append(is_session(names))
-    validate.append(is_source(names))
-    validate.append(is_subject(names))
+    validate=[]
+    list_of_dir=[]
+   
+    last = directory.split('/').pop()# take the last folder pass in arg so tests/ds007/data/Landing -> Landing
+    path = pathlib.PurePath(directory)
+    sub=directory.split(path.name)[0]# take evrything befor last tests/ds007/data/Landing -> tests/ds007/data 
+    
+    for root,dirs,_ in os.walk(directory):
+        for d in dirs:
+                list_of_dir.append((os.path.join(root,d).replace(sub,"")))
+                 # substract sub to all path : tests/ds007/data/Landing/sub-anye/180116_001_m_enya_land-001 -> Landing/sub-anye/180116_001_m_enya_land-001
+    nested_list_of_dir =[]  
+    
+    for each in list_of_dir:
+            nested_list_of_dir.append((each.split(os.sep)))
+            """
+            #[
+            #   ['Landing', 'sub-enya'],
+            #   ['Landing', 'sub-enya','180116_001_m_enya_land-001'], 
+            #   ['Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source']
+            # ]
+            """
+    for subpath in nested_list_of_dir:
+        is_AnDO_R(subpath,0,validate)   
+            
+    
+    return(all(validate))
+    
+    
 
-    return all(validate)
-
+        
 
 def is_AnDO_verbose(names):
     """
@@ -65,17 +107,20 @@ def is_AnDO_verbose(names):
     return bool_error
 
 
+def is_topLevel(names):
+    return True
+
 def is_session(names):
     """
     Check names follows session rules 
     
     :param names: list of names founds in the path
     """
-
+    
     regexps = get_regular_expressions(dir_rules + 'session_rules.json')
     conditions = []
-    for word in names:
-        conditions.append([re.compile(x).search(word) is not None
+    
+    conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
 
         # print(flatten(conditions))
@@ -93,11 +138,12 @@ def is_subject(names):
 
     regexps = get_regular_expressions(dir_rules + 'subject_rules.json')
     conditions = []
-    for word in names:
-        conditions.append([re.compile(x).search(word) is not None
+    
+    conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
 
-        #  print(flatten(conditions))
+
+    #print(flatten(conditions))
 
     return any(flatten(conditions))
 
@@ -111,8 +157,8 @@ def is_source(names):
 
     regexps = get_regular_expressions(dir_rules + 'source_rules.json')
     conditions = []
-    for word in names:
-        conditions.append([re.compile(x).search(word) is not None
+    
+    conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
 
         #  print(flatten(conditions))

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 import os
 import errno
 import json
@@ -50,6 +50,11 @@ def get_name_in_dir(list_dict, names):
 
     return names
 
+def fast_scandir(dirname):
+    subfolders= [f.path for f in os.scandir(dirname) if f.is_dir()]
+    for dirname in list(subfolders):
+        subfolders.extend(fast_scandir(dirname))
+    return subfolders
 
 if __name__ == '__main__':
     """
@@ -104,10 +109,15 @@ if __name__ == '__main__':
 
         dic_data = json.loads(json.dumps(path_hierarchy(directory),
                               indent=2, sort_keys=True))
-
+        
+          
+        #print([x[0] for x in os.walk(directory)])
+        
+        
         names = []
         names = get_name_in_dir([dic_data], names)
-        error_not_found = is_AnDO(names)
+        
+        error_not_found = is_AnDO(directory)
         if not error_not_found:
             print("\n" +
                   directory +
