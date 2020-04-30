@@ -35,7 +35,7 @@ def parse_all_path(nested_list_of_dir):
     
     main_list = sorted(nested_list_of_dir, key= lambda sublist: len(sublist))
 
-    # Méthode pour regrouper les sublist à utiliser sur la liste triée.
+    # TODO : optimize 
     i=0
     j=1
     while i < len(main_list) -1:
