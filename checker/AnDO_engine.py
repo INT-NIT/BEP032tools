@@ -33,8 +33,8 @@ def parse_all_path(nested_list_of_dir):
     Checking for the longest chain with the same sub chain
     """
     
-    main_list = sorted(nested_list_of_dir, key= lambda sublist: len(sublist))
-
+    main_list = sorted(nested_list_of_dir, key= lambda sublist: len(sublist)) 
+ 
     # TODO : optimize 
     i=0
     j=1

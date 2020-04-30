@@ -11,7 +11,7 @@ class ExperimentError(Exception):
             + '''
             
              ''' \
-            + '-Does not respect the naming convention for a subject directory,which is (exp-NAME) Check for structural/naming issues'
+            + '- Does not respect the naming convention for a subject directory, which is (exp-NAME) Check for structural/naming issues'
 
 
 class SubError(Exception):
@@ -23,7 +23,7 @@ class SubError(Exception):
             + '''
             
              ''' \
-            + '-Does not respect the naming convention for a subject directory, which is (sub-GUID) Check for structural/naming issues'
+            + '- Does not respect the naming convention for a subject directory, which is (sub-GUID) Check for structural/naming issues'
 
 
 class SessionError(Exception):
@@ -63,7 +63,7 @@ class SourceError(Exception):
             +'''
             
              ''' \
-            + '-Does not respect the naming convention for a subject directory,which is (source) Check for structural/naming issues'
+            + '- Does not respect the naming convention for a subject directory, which is (source) Check for structural/naming issues'
 
 
 class SourceNotFound(Exception):
