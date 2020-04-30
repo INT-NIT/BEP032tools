@@ -32,7 +32,7 @@ class SessionError(Exception):
         names = arg
         self.strerror = '\nError 3 type [Date folder error] at : ' \
             + names[2] + '\n' \
-            + '\nIt does not respect the naming convention for a session directory,which is (yymmdd_xxx_a_bbbb_cccc,) with : ' \
+            + '\nIt does not respect the naming convention for a session directory, which is (yymmdd_xxx_a_bbbb_cccc,) with : ' \
             + '\n' '''
             ''' \
             + '- yymmdd is the date in the format year, month, date (6 digits, for instance 200430 for April 30, 2020)' \
