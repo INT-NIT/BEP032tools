@@ -1,0 +1,5 @@
+{
+    "experiment_level": {
+        "regexp": "\\b(\\w*exp-\\w*)\\b"
+    }
+}  
