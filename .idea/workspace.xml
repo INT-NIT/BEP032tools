@@ -19,9 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="added dirs">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/checker/AnDO_Error.py" beforeDir="false" afterPath="$PROJECT_DIR$/checker/AnDO_Error.py" afterDir="false" />
+    <list default="true" id="59c1879f-7f27-461b-a92b-94e701d2cec4" name="Default Changelist" comment="Changed formatting and text of the errors">
+      <change beforePath="$PROJECT_DIR$/checker/rules/data_rules.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/checker/rules/date_rules.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +84,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587711781539</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Changed formatting and text of the errors">
+      <created>1588917069245</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1588917069246</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -102,16 +109,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial structure of project" />
     <MESSAGE value="added dirs" />
-    <option name="LAST_COMMIT_MESSAGE" value="added dirs" />
+    <MESSAGE value="Changed formatting and text of the errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed formatting and text of the errors" />
   </component>
   <component name="WindowStateProjectService">
     <state x="676" y="392" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1587711268436">
       <screen x="0" y="24" width="1680" height="1026" />
     </state>
     <state x="676" y="392" key="#com.intellij.fileTypes.FileTypeChooser/1680.150.1440.900/0.24.1680.1026@0.24.1680.1026" timestamp="1587711268436" />
-    <state x="534" y="323" key="Vcs.Push.Dialog.v2" timestamp="1587711783614">
-      <screen x="0" y="24" width="1680" height="1026" />
+    <state x="649" y="330" key="Vcs.Push.Dialog.v2" timestamp="1588917073559">
+      <screen x="57" y="21" width="1863" height="1059" />
     </state>
     <state x="534" y="323" key="Vcs.Push.Dialog.v2/1680.150.1440.900/0.24.1680.1026@0.24.1680.1026" timestamp="1587711783614" />
+    <state x="649" y="330" key="Vcs.Push.Dialog.v2/57.21.1863.1059@57.21.1863.1059" timestamp="1588917073559" />
   </component>
 </project>
