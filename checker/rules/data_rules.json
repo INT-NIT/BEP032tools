@@ -1,6 +1,0 @@
-{
-    "data_level": {
-      "regexp": "(?:^|\\W)data(?:$|\\W)"
-    }
-} 
-  
