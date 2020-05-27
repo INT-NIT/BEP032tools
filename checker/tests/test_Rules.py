@@ -7,7 +7,7 @@ class Test_Rules(unittest.TestCase):
 
     '''testing session rules'''
     def test_session_rules(self):
-        list=["180116_001_m_enya_land-001"]
+        list=["sess-180116_001_m_enya_land-001"]
         self.assertEqual(ando.is_session(list), True)
     def test_session_rules_1(self):
         list=["180116_m_enya_land-001"]

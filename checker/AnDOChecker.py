@@ -2,20 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import os
-import errno
-import json
 import argparse
 
 from AnDO_engine import is_AnDO, is_AnDO_verbose
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
-
-
 if __name__ == '__main__':
     """
     Main function :
-    
+
     usage: AnDOChecker.py [-h] [-v] pathToFolder
 
         positional arguments:
@@ -24,10 +20,9 @@ if __name__ == '__main__':
         optional arguments:
         -h, --help     show this help message and exit
         -v, --verbose  increase output verbosity
-        
+
     """
     # add argparse for verbose option
-    
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -41,7 +36,6 @@ if __name__ == '__main__':
         except IndexError:
 
             directory = '.'
-       
 
         error = is_AnDO_verbose(directory)
 
@@ -59,8 +53,7 @@ if __name__ == '__main__':
         except IndexError:
 
             directory = '.'
-    
-    
+
         error_not_found = is_AnDO(directory)
         if not error_not_found:
             print("\n" +

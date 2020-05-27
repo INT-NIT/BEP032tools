@@ -10,7 +10,7 @@ class ExperimentError(Exception):
             + '  It should follow the exp-NAME format, where:\n' \
             + '    - NAME is a string designating the name of your experiment\n'
 
-class SubError(Exception):
+class SubjectError(Exception):
 
     def __init__(self, arg):
         names = arg
@@ -46,6 +46,3 @@ class SourceNotFound(Exception):
         self.strerror = 'Level 4 error [source folder missing]\n' \
             + '  A folder called source should be present in the session folder ' + names[2] + '\n'
 
-
-
-			
