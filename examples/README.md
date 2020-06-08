@@ -26,7 +26,7 @@ number of subject |user time| system time |total
 500|0,46s| 0,02s  |0,488s|
 
 ## Benchmark plot
-![GitHub Logo](plot.png)
-Format: ![Alt Text](url)
+![](Plot.png)
+
 
 we can see that the script is running well in despite the number of subject that increase
