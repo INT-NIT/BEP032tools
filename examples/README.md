@@ -3,10 +3,44 @@
 
 ## Objectifs 
 The script "checker" should works on verry large dataset . I created a script that create a dataset with 500 subjects and 1 sessions in each subject and see how long it takes to run
-
 # Table of Contents
 0. [Objectifs](#Objectifs)
-1. [Time benchmark](#Time-benchmark)
+1. [Code](#code)
+2. [Time benchmark](#Time-benchmark)
+
+
+## Code 
+Code used  to generate 500 subject
+
+```python
+import os
+import random
+import string
+from random import randint
+# create random numbre of N digits
+def random_with_N_digits(n):
+	range_start =  10**(n-1)
+	range_end = (10**n)-1
+	return randint(range_start, range_end)
+
+try:
+	for i in  range(500):
+	# define the name of the directory to be created
+		rdmName=''.join([random.choice(string.ascii_letters)
+			  for n in  xrange(4)])
+		
+		rdmSpecies=random.choice(string.ascii_letters)
+		rdmDate=str(random_with_N_digits(6))
+		rdmNum=str(random_with_N_digits(3))
+
+		path=os.getcwd()+"/data/exp-test/sub-"+rdmName+"/"+"sess-"+rdmDate+"_"+rdmNum+"_"+rdmSpecies+"_"+rdmName+"_test-"+rdmNum
+		os.makedirs(path)
+
+except  OSError:
+	print ("Creation of the directory failed" )
+else:
+	print ("Successfully created the directory ")
+```
 
 
 ## Time benchmark
