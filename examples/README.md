@@ -16,7 +16,7 @@ The script "checker" should works on verry large dataset . I created a script th
 
 
 number of subject |user time| system time |total
-:---|:---|:---|:---|:---|
+:---|:---|:---|:---|
 1| 0,03s |0,00s  |0,020s|
 10| 0,04s| 0.00  | 0,037s|
 50| 0,050s |0,00s  |0,051s|
