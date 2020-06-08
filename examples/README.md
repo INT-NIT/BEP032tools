@@ -9,7 +9,7 @@ The script "checker" should works on verry large dataset . I created a script th
 1. [Time benchmark](#Time-benchmark)
 
 
-##Time benchmark
+## Time benchmark
 -   **real** - (wall clock time) is the time from start to finish of the call. It is the time from the moment you hit the `Enter` key until the moment the command is completed.
 -   **user** - amount of CPU time spent in user mode.
 -   **system** - amount of CPU time spent in kernel mode
@@ -24,7 +24,8 @@ number of subject |user time| system time |total
 150| 0,090s | 0,01s |0,099s|
 200| 0,10s | 0,02s  |0,130s|
 500|0,46s| 0,02s  |0,488s|
-##Benchmark plot
+
+## Benchmark plot
 ![GitHub Logo](plot.png)
 Format: ![Alt Text](url)
 
