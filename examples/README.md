@@ -17,13 +17,13 @@ The script "checker" should works on verry large dataset . I created a script th
 
 number of subject |user time| system time |total
 :---|:---|:---|:---|:---|
-1| 0,03s |0,00s  |0,020s
-10| 0,04s| 0.00  | 0,037s
-50| 0,050s |0,00s  |0,051s
-100|  0,070s |  0,00s  |  0,072s
-150| 0,090s | 0,01s |0,099s
-200| 0,10s | 0,02s  |0,130s
-500|0,46s| 0,02s  |0,488s
+1| 0,03s |0,00s  |0,020s|
+10| 0,04s| 0.00  | 0,037s|
+50| 0,050s |0,00s  |0,051s|
+100|  0,070s |  0,00s  |  0,072s|
+150| 0,090s | 0,01s |0,099s|
+200| 0,10s | 0,02s  |0,130s|
+500|0,46s| 0,02s  |0,488s|
 
-![Plot](https://ibb.co/7vgm7Zb)
+
 we can see that the script is running well in despite the number of subject that increase
