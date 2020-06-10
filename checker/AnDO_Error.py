@@ -46,6 +46,3 @@ class SourceNotFound(Exception):
         self.strerror = 'Level 4 error [source folder missing]\n' \
             + '  A folder called source should be present in the session folder ' + names[2] + '\n'
 
-
-
-			
