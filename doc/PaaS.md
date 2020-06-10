@@ -26,7 +26,7 @@ Ci-dessous les informations pertinentes relevé pour certain PAAS susceptibles d
 
 Nom|Remarque
 :---|:---|
-Heroku|Dans la grande majorité la communauté présente Heroku comme LA meilleur solution à court terme pour des petits projets, mais dès que le projet prend de l'ampleur et que les ressources deviennent insuffisantes les offre payante sont couteuse par rapport au service obtenue.
+Heroku|Dans la grande majorité la communauté présente Heroku comme LA meilleur solution à court terme pour des petits projets, mais dès que le projet prend de l'ampleur et que les ressources deviennent insuffisantes les offres payantes sont couteuses par rapport aux services obtenue.
 Openshift| Me semble pertinent malgré le manque de tutoriel et le fait de devoir tous les 60 jours se réinscrire et rebuild le projet.
 Google App Engine|Trop peu d'information disponible.
 Gigalixir|Pas créé spécifiquement pour des projets codé en python dans leur vidéo de présentation ils expliquent de Gigalixir peu prendre en charge pas mal de langage mais 0 information de trouvé sur leur site a ce sujet.
