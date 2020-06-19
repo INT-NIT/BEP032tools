@@ -4,7 +4,7 @@
 import os
 import argparse
 
-from AnDO_engine import is_AnDO, is_AnDO_verbose
+from engine import is_AnDO, is_AnDO_verbose
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
