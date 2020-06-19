@@ -6,7 +6,7 @@ import os
 import json
 import re
 import pathlib
-from AnDO_Error import ExperimentError, SourceError, SourceNotFound, \
+from error import ExperimentError, SourceError, SourceNotFound, \
     SessionError, SubjectError
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
