@@ -1,5 +1,7 @@
 import unittest
-import engine as andoE
+import ando.engine as andoE
+
+
 class Test_Rules(unittest.TestCase):
 
     def setUp(self):
@@ -15,7 +17,6 @@ class Test_Rules(unittest.TestCase):
     def test_session_rules_2(self):
         list=["180116_001_m_land-001"]
         self.assertEqual(andoE.is_session(list), False)
-
 
     '''testing source rules'''
     def test_source_rules(self):
