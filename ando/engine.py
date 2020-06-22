@@ -7,7 +7,7 @@ import json
 import re
 import pathlib
 from error import ExperimentError, SourceError, SourceNotFound, \
-    SessionError, SubjectError
+    SessionError, SubjectError,MetaDataError,DerivativeDataError,RawDataError
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
 
@@ -27,7 +27,7 @@ def parse_all_path(nested_list_of_dir):
     ]
     Checking for the longest chain with the same sub chain
     """
-
+    print(nested_list_of_dir)
     def _test_is_included(my_list_of_lists, list_elem):
         for my_list_elem in my_list_of_lists:
             if all([val[0] == val[1] for val in zip(my_list_elem,
@@ -103,6 +103,9 @@ def is_AnDO_R(subpath, level, validate):
         if level == 3:
 
             validate.append(is_source(subpath[level]))
+            validate.append(is_rawdata(subpath[level]))
+            validate.append(is_metadata(subpath[level]))
+            validate.append(is_derivatives(subpath[level]))
     return validate
 
 
@@ -133,6 +136,9 @@ def is_AnDO_verbose(directory):
 
     validate = []
     names = create_nested_list_of_path(directory)
+    for i in range(len(names)):
+        print(names[i])
+
     for item in names:
         validate.append(is_AnDO_verbose_Format(item))
 
@@ -149,7 +155,6 @@ def is_AnDO_verbose_Format(names):
     """
 
     bool_error = 0
-
     # only error that exit without checking other folder
 
     if is_experiment(names[0]):
@@ -177,18 +182,66 @@ def is_AnDO_verbose_Format(names):
         except SubjectError as e:
             print(e.strerror)
             bool_error = 1
-    if is_source(names):
-        bool_error = 0
-    else:
-        try:
-            if len(names) <= 3:
-                raise SourceNotFound(names)
-            else:
-                raise SourceError(names)
-        except (SourceError, SourceNotFound) as e:
-            print(e.strerror)
-            bool_error = 1
+    if len(names)==7 :
 
+        if is_source(names):
+            bool_error = 0
+        else:
+            try:
+                raise SourceError(names)
+            except SourceError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_rawdata(names):
+            bool_error = 0
+        else:
+            try:
+                raise RawDataError(names)
+            except RawDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_derivatives(names):
+            bool_error = 0
+        else:
+            try:
+                raise DerivativeDataError(names)
+            except DerivativeDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_metadata(names):
+            bool_error = 0
+        else:
+            try:
+                raise MetaDataError(names)
+            except MetaDataError as e:
+                print(e.strerror)
+                bool_error = 1
+
+    else:
+        if not is_metadata(names):
+            try:
+                raise MetaDataError(names)
+            except MetaDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_rawdata(names):
+            try:
+                raise RawDataError(names)
+            except MetaDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_derivatives(names):
+            try:
+                raise DerivativeDataError(names)
+            except DerivativeDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_source(names):
+            try:
+                raise SourceError(names)
+            except SourceError as e:
+                print(e.strerror)
+                bool_error = 1
     return bool_error
 
 
@@ -217,6 +270,82 @@ def is_experiment(names):
 
     return any(flatten(conditions))
 
+
+def is_rawdata(names):
+    """
+    Check names follows experiment rules
+
+    :param names: list of names founds in the path
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'rawdata_rules.json')
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+def is_metadata(names):
+    """
+    Check names follows experiment rules
+
+    :param names: list of names founds in the path
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'metadata_rules.json')
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+
+def is_derivatives(names):
+    """
+    Check names follows experiment rules
+
+    :param names: list of names founds in the path
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'derivatives_rules.json')
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
 
 def is_session(names):
     """
