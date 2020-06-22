@@ -36,16 +36,35 @@ def parse_all_path(nested_list_of_dir):
 
         return False
 
+    def _merge_duplicates(my_list_of_lists, max_length=3):
+
+        merged_list = []
+        for my_list_elem in my_list_of_lists:
+            simil_list = []
+            for my_list_elem2 in my_list_of_lists:
+                if all([val[0]==val[1] for i,val in enumerate(zip(my_list_elem, my_list_elem2)) if i < max_length]):
+
+                    simil_list.append(my_list_elem2)
+
+            if len(simil_list) > 1:
+                new_list = simil_list[0][:max_length]
+                for remain_list in simil_list:
+                    new_list.append(remain_list[max_length])
+                merged_list.append(new_list)
+
+            else:
+                merged_list.append(simil_list[0])
+
+        return merged_list
+
     new_list_of_lists = []
-
-    for list_elem in sorted(nested_list_of_dir, key=lambda sublist:
-                            len(sublist), reverse=True):
-
+    for list_elem in sorted(nested_list_of_dir, key= lambda sublist: len(sublist), reverse=True):
         if not _test_is_included(new_list_of_lists, list_elem):
             new_list_of_lists.append(list_elem)
 
-    return new_list_of_lists
+    new_list_of_lists = _merge_duplicates(new_list_of_lists)
 
+    return new_list_of_lists
 
 def create_nested_list_of_path(directory):
     """
