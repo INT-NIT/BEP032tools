@@ -1,5 +1,6 @@
 {
   "session_level": {
     "regexp": "^ses-\\d{8}_\\d{3}_([0-9a-zA-Z-]*\\Z)"
+
   }
 }

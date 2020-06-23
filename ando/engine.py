@@ -6,9 +6,9 @@ import os
 import json
 import re
 import pathlib
-
 from ando.error import ExperimentError, SourceError, SourceNotFound, \
     SessionError, SubjectError,MetaDataError,DerivativeDataError,RawDataError
+
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
@@ -58,6 +58,7 @@ def parse_all_path(nested_list_of_dir):
                 merged_list.append(simil_list[0])
 
         return merged_list
+
 
     new_list_of_lists = []
     for list_elem in sorted(nested_list_of_dir, key= lambda sublist: len(sublist), reverse=True):
@@ -242,6 +243,7 @@ def is_AnDO_verbose_Format(names):
                 bool_error = 1
 
     else:
+
 
         if not is_metadata(names):
             try:
