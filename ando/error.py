@@ -23,21 +23,40 @@ class SessionError(Exception):
     def __init__(self, arg):
         names = arg
         self.strerror = 'Level 3 error [session folder] at : ' + names[2] + '\n' \
-            + '  It should follow the YYMMDD_XXX_A_UFID_BBBB format, where:\n' \
-            + '    - YYMMDD is the date of the session (6 digits, for instance 200430 for April 30, 2020\n' \
+            + '  It should follow the ses-YYYYMMDD_XXX_BBBB format, where:\n' \
+            + '    - ‘ses-’ is an imposed prefix\n' \
+            + '    - ‘YYYYMMDD’ is the date of the session (6 digits, for instance 20180430 for April 30, 2018)\n' \
             + '    - XXX is the number of the session acquired on that date (3 digits, for instance 001 for the first session)\n' \
-            + '    - A is a single letter that designate the species of the animal (m for ???, o for ???, r for ???, s for ???)\n' \
-            + '    - UFID is a string containing the User Friendly IDentifier of the animal\n' \
             + '    - BBBB is a string freely usable by the research group / user\n' \
-            + '      (for instance to add extra info on the version of the experimental protocol, on the type of preparation etc.)\n'
+            + '      (is a string freely usable by the research group / user (for instance to add extra info on \n' \
+            + '      the version of the experimental protocol, on the type of preparation, on the user-friendly name of the animal etc.);\n' \
+            + '      this string cannot contain the underscore character.\n'
 
 
 class SourceError(Exception):
 
     def __init__(self, arg):
         names = arg
-        self.strerror = 'Level 4 error [source folder] at : ' + names[3] + '\n' \
+        self.strerror = 'Level 4 error [source folder] at : ' + names[2] + '\n' \
             + '  A single folder called source is authorized within a session folder\n'
+class RawDataError(Exception):
+
+    def __init__(self, arg):
+        names = arg
+        self.strerror = 'Level 4 error [rawdata folder missing]\n' \
+            + '  A folder called rawdata should be present in the session folder ' + names[2] + '\n'
+class MetaDataError(Exception):
+
+    def __init__(self, arg):
+        names = arg
+        self.strerror = 'Level 4 error [metadata folder missing]\n' \
+            + '  A folder called metadata should be present in the session folder ' + names[2] + '\n'
+class DerivativeDataError(Exception):
+
+    def __init__(self, arg):
+        names = arg
+        self.strerror ='Level 4 error [derivatives folder missing]\n' \
+            + '  A folder called derivatives should be present in the session folder ' + names[2] + '\n'
 
 class SourceNotFound(Exception):
 

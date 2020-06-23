@@ -27,7 +27,7 @@ def parse_all_path(nested_list_of_dir):
     ]
     Checking for the longest chain with the same sub chain
     """
-    print(nested_list_of_dir)
+
     def _test_is_included(my_list_of_lists, list_elem):
         for my_list_elem in my_list_of_lists:
             if all([val[0] == val[1] for val in zip(my_list_elem,
@@ -61,10 +61,10 @@ def parse_all_path(nested_list_of_dir):
     for list_elem in sorted(nested_list_of_dir, key= lambda sublist: len(sublist), reverse=True):
         if not _test_is_included(new_list_of_lists, list_elem):
             new_list_of_lists.append(list_elem)
-
+    # Removing duplicate
     new_list_of_lists = _merge_duplicates(new_list_of_lists)
-
-    return new_list_of_lists
+    unique_data=[list(x) for x in set(tuple(x)for x in new_list_of_lists)]
+    return unique_data
 
 def create_nested_list_of_path(directory):
     """
@@ -108,23 +108,28 @@ def is_AnDO_R(subpath, level, validate):
 
     if level < len(subpath):
         if level == 0:
-
             validate.append(is_experiment(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 1:
-
             validate.append(is_subject(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 2:
-
             validate.append(is_session(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 3:
-
             validate.append(is_source(subpath[level]))
-            validate.append(is_rawdata(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 4:
             validate.append(is_metadata(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 5:
             validate.append(is_derivatives(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 6:
+            validate.append(is_rawdata(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+    elif level < 7:
+        validate.append(False)
     return validate
 
 
@@ -155,8 +160,6 @@ def is_AnDO_verbose(directory):
 
     validate = []
     names = create_nested_list_of_path(directory)
-    for i in range(len(names)):
-        print(names[i])
 
     for item in names:
         validate.append(is_AnDO_verbose_Format(item))
@@ -237,6 +240,7 @@ def is_AnDO_verbose_Format(names):
                 bool_error = 1
 
     else:
+
         if not is_metadata(names):
             try:
                 raise MetaDataError(names)
@@ -246,7 +250,7 @@ def is_AnDO_verbose_Format(names):
         if not is_rawdata(names):
             try:
                 raise RawDataError(names)
-            except MetaDataError as e:
+            except RawDataError as e:
                 print(e.strerror)
                 bool_error = 1
         if not is_derivatives(names):
@@ -257,8 +261,8 @@ def is_AnDO_verbose_Format(names):
                 bool_error = 1
         if not is_source(names):
             try:
-                raise SourceError(names)
-            except SourceError as e:
+                raise SourceNotFound(names)
+            except SourceNotFound as e:
                 print(e.strerror)
                 bool_error = 1
     return bool_error

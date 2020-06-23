@@ -56,11 +56,9 @@ class test_parse_all_path(unittest.TestCase):
                 ['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'],
                 ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source', 'rawdata', 'derivatives', 'metadata']]
 
-        e=new_parse_all_path(list1)
-
-        print(e)
-        assert e.sort() == result.sort(), "Not as expected\n{}\n{}".format(e, result)
-
+        e=andoE.parse_all_path(list1)
+        self.assertEqual(e.sort(),result.sort())
+       
 if __name__ == '__main__':
     unittest.main()
 
