@@ -7,7 +7,9 @@ import json
 import re
 import pathlib
 from ando.error import ExperimentError, SourceError, SourceNotFound, \
-    SessionError, SubjectError
+    SessionError, SubjectError,MetaDataError,DerivativeDataError,RawDataError
+
+
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
 
@@ -36,16 +38,58 @@ def parse_all_path(nested_list_of_dir):
 
         return False
 
+    def _merge_duplicates(my_list_of_lists, max_length=3):
+        """Transform this
+        [
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'source']
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'metadata']
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'rawdata']
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'derivatives']
+        ]
+        to
+        [
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'rawdata', 'metadata', 'derivatives', 'source']
+        ]
+
+        Args:
+            my_list_of_lists ([list]): [list of path to process]
+            max_length (int, optional): [number of folder in session directory corresponding to
+            rawdata metadata derivatives and sources]. Defaults to 3.
+
+        Returns:
+            [list]: [list of concatenate sub folder at the end of the list ]
+
+        todo:
+            This might have to be re-implemented more efficiently.
+        """
+        merged_list = []
+        for my_list_elem in my_list_of_lists:
+            simil_list = []
+            for my_list_elem2 in my_list_of_lists:
+                if all([val[0]==val[1] for i,val in enumerate(zip(my_list_elem, my_list_elem2)) if i < max_length]):
+
+                    simil_list.append(my_list_elem2)
+
+            if len(simil_list) > 1:
+                new_list = simil_list[0][:max_length]
+                for remain_list in simil_list:
+                    new_list.append(remain_list[max_length])
+                merged_list.append(new_list)
+
+            else:
+                merged_list.append(simil_list[0])
+
+        return merged_list
+
+
     new_list_of_lists = []
-
-    for list_elem in sorted(nested_list_of_dir, key=lambda sublist:
-                            len(sublist), reverse=True):
-
+    for list_elem in sorted(nested_list_of_dir, key= lambda sublist: len(sublist), reverse=True):
         if not _test_is_included(new_list_of_lists, list_elem):
             new_list_of_lists.append(list_elem)
-
-    return new_list_of_lists
-
+    # Removing duplicate
+    new_list_of_lists = _merge_duplicates(new_list_of_lists)
+    unique_data=[list(x) for x in set(tuple(x)for x in new_list_of_lists)]
+    return unique_data
 
 def create_nested_list_of_path(directory):
     """
@@ -89,20 +133,28 @@ def is_AnDO_R(subpath, level, validate):
 
     if level < len(subpath):
         if level == 0:
-
             validate.append(is_experiment(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 1:
-
             validate.append(is_subject(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 2:
-
             validate.append(is_session(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 3:
-
             validate.append(is_source(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 4:
+            validate.append(is_metadata(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 5:
+            validate.append(is_derivatives(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+        if level == 6:
+            validate.append(is_rawdata(subpath[level]))
+            is_AnDO_R(subpath, level + 1, validate)
+    elif level < 7:
+        validate.append(False)
     return validate
 
 
@@ -133,6 +185,7 @@ def is_AnDO_verbose(directory):
 
     validate = []
     names = create_nested_list_of_path(directory)
+
     for item in names:
         validate.append(is_AnDO_verbose_Format(item))
 
@@ -149,7 +202,6 @@ def is_AnDO_verbose_Format(names):
     """
 
     bool_error = 0
-
     # only error that exit without checking other folder
 
     if is_experiment(names[0]):
@@ -177,30 +229,141 @@ def is_AnDO_verbose_Format(names):
         except SubjectError as e:
             print(e.strerror)
             bool_error = 1
-    if is_source(names):
-        bool_error = 0
-    else:
-        try:
-            if len(names) <= 3:
-                raise SourceNotFound(names)
-            else:
-                raise SourceError(names)
-        except (SourceError, SourceNotFound) as e:
-            print(e.strerror)
-            bool_error = 1
+    if len(names)==7 :
 
+        if is_source(names):
+            bool_error = 0
+        else:
+            try:
+                raise SourceError(names)
+            except SourceError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_rawdata(names):
+            bool_error = 0
+        else:
+            try:
+                raise RawDataError(names)
+            except RawDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_derivatives(names):
+            bool_error = 0
+        else:
+            try:
+                raise DerivativeDataError(names)
+            except DerivativeDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if is_metadata(names):
+            bool_error = 0
+        else:
+            try:
+                raise MetaDataError(names)
+            except MetaDataError as e:
+                print(e.strerror)
+                bool_error = 1
+
+    else:
+
+
+        if not is_metadata(names):
+            try:
+                raise MetaDataError(names)
+            except MetaDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_rawdata(names):
+            try:
+                raise RawDataError(names)
+            except RawDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_derivatives(names):
+            try:
+                raise DerivativeDataError(names)
+            except DerivativeDataError as e:
+                print(e.strerror)
+                bool_error = 1
+        if not is_source(names):
+            try:
+                raise SourceNotFound(names)
+            except SourceNotFound as e:
+                print(e.strerror)
+                bool_error = 1
     return bool_error
 
 
 def is_experiment(names):
-    """
-    Check names follows experiment rules
+    """[Check names follows experiment rules]
 
-    :param names: list of names founds in the path
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [type]: [true or false ]
     """
+
 
     regexps = get_regular_expressions(dir_rules
                                       + 'experiment_rules.json')
+    conditions = []
+    print(names)
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+    print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+
+def is_rawdata(names):
+    """[Check names follows rawdata rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'rawdata_rules.json')
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+def is_metadata(names):
+    """[Check names follows metadata rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'metadata_rules.json')
     conditions = []
 
     if type(names) == str:
@@ -218,11 +381,42 @@ def is_experiment(names):
     return any(flatten(conditions))
 
 
-def is_session(names):
-    """
-    Check names follows session rules
+def is_derivatives(names):
+    """[Check names follows derivatives rules]
 
-    :param names: list of names founds in the path
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(dir_rules
+                                      + 'derivatives_rules.json')
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+def is_session(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
     """
 
     regexps = get_regular_expressions(dir_rules + 'session_rules.json')
@@ -241,10 +435,13 @@ def is_session(names):
 
 
 def is_subject(names):
-    """
-    Check names follows subject rules
+    """[Check names follows subject rules]
 
-    :param names: list of names founds in the path
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
     """
 
     regexps = get_regular_expressions(dir_rules + 'subject_rules.json')
@@ -263,10 +460,13 @@ def is_subject(names):
 
 
 def is_source(names):
-    """
-    Check names follows source rules
+    """[Check names follows sources rules]
 
-    :param names: list of names founds in the path
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
     """
 
     regexps = get_regular_expressions(dir_rules + 'source_rules.json')

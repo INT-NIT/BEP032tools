@@ -41,6 +41,24 @@ class test_parse_all_path(unittest.TestCase):
 
         self.assertEqual(e.sort(),result.sort())
 
+    def test_parse_all_path_2(self):
+        list1=[['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'],
+            ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'],
+            ['exp-Landing', 'sub-enyo'],
+            ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001'],
+            ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-002'],
+            ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'derivatives'],
+            ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'metadata'],
+            ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'rawdata'] ]
+
+        result=[['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001'],
+                ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-002'],
+                ['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'],
+                ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source', 'rawdata', 'derivatives', 'metadata']]
+
+        e=andoE.parse_all_path(list1)
+        self.assertEqual(e.sort(),result.sort())
+       
 if __name__ == '__main__':
     unittest.main()
 
