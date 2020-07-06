@@ -34,9 +34,7 @@ if __name__ == '__main__':
         try:
             directory = args.path
         except IndexError:
-
             directory = '.'
-
         error = is_AnDO_verbose(directory)
 
         if error == 1:
