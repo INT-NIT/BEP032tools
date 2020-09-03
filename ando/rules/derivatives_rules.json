@@ -1,5 +1,0 @@
-{
-    "derivatives_level": {
-        "regexp": "(?:^|\\W)derivatives(?:$|\\W)"
-    }
-}

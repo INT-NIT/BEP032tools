@@ -1,5 +1,0 @@
-{
-    "metadata_level": {
-        "regexp": "(?:^|\\W)metadata(?:$|\\W)"
-    }
-}

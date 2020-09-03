@@ -1,5 +1,0 @@
-{
-    "rawdata_level": {
-        "regexp": "(?:^|\\W)rawdata(?:$|\\W)"
-    }
-}  
