@@ -1,13 +1,23 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+# File: engine.py
+# Project: ando
+# File Created: Tuesday, 30th June 2020 10:50:05 am
+# Author: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Last Modified: Thursday, 2nd July 2020 1:32:33 pm
+# Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Copyright - 2020 MIT, Institue de neurosciences de la Timone
 
+# !/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import os
 import json
 import re
 import pathlib
 from ando.error import ExperimentError, SourceError, SourceNotFound, \
-    SessionError, SubjectError,MetaDataError,DerivativeDataError,RawDataError
+    SessionError, SubjectError, MetaDataError, DerivativeDataError, \
+    RawDataError
 
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
@@ -44,17 +54,25 @@ def parse_all_path(nested_list_of_dir):
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'source']
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'metadata']
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'rawdata']
-            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'derivatives']
+            ['Landing', 'sub-anye', '180116_001_m_anye_land-001','derivatives']
         ]
         to
         [
-            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'rawdata', 'metadata', 'derivatives', 'source']
+            [
+                'Landing', 'sub-anye',
+                '180116_001_m_anye_land-001',
+                'rawdata',
+                'metadata',
+                'derivatives',
+                'source'
+            ]
         ]
 
         Args:
             my_list_of_lists ([list]): [list of path to process]
-            max_length (int, optional): [number of folder in session directory corresponding to
-            rawdata metadata derivatives and sources]. Defaults to 3.
+            max_length (int, optional): [number of folder in session directory
+            coresponding torawdata metadata derivatives and sources].
+            Defaults to 3.
 
         Returns:
             [list]: [list of concatenate sub folder at the end of the list ]
@@ -66,7 +84,9 @@ def parse_all_path(nested_list_of_dir):
         for my_list_elem in my_list_of_lists:
             simil_list = []
             for my_list_elem2 in my_list_of_lists:
-                if all([val[0]==val[1] for i,val in enumerate(zip(my_list_elem, my_list_elem2)) if i < max_length]):
+                if all([val[0] == val[1] for i, val in
+                        enumerate(zip(my_list_elem, my_list_elem2))
+                        if i < max_length]):
 
                     simil_list.append(my_list_elem2)
 
@@ -81,15 +101,16 @@ def parse_all_path(nested_list_of_dir):
 
         return merged_list
 
-
     new_list_of_lists = []
-    for list_elem in sorted(nested_list_of_dir, key= lambda sublist: len(sublist), reverse=True):
+    for list_elem in sorted(nested_list_of_dir,
+                            key=lambda sublist: len(sublist), reverse=True):
         if not _test_is_included(new_list_of_lists, list_elem):
             new_list_of_lists.append(list_elem)
     # Removing duplicate
     new_list_of_lists = _merge_duplicates(new_list_of_lists)
-    unique_data=[list(x) for x in set(tuple(x)for x in new_list_of_lists)]
+    unique_data = [list(x) for x in set(tuple(x)for x in new_list_of_lists)]
     return unique_data
+
 
 def create_nested_list_of_path(directory):
     """
@@ -124,12 +145,20 @@ def create_nested_list_of_path(directory):
 
 def is_AnDO_R(subpath, level, validate):
     """
+
     Check if file path adheres to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
-    :param names:
-     """
+
+    Args:
+        subpath ([list]): [list of names]
+        level ([int]): [level of the folder , 0 : experiment, 1 : subject ...]
+        validate ([list]): [list of boolean corresponding of each level]
+
+    Returns:
+        [list]: [validate : list of boolean corresponding of each level]
+    """
 
     if level < len(subpath):
         if level == 0:
@@ -160,11 +189,17 @@ def is_AnDO_R(subpath, level, validate):
 
 def is_AnDO(directory):
     """
+
     Check if file path adheres to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
-    :param names:
+
+    Args:
+        directory ([str]): [names of the directory to check]
+
+    Returns:
+        [bool]: [does the directory adheres to the ando specification]
     """
 
     validate = []
@@ -180,7 +215,12 @@ def is_AnDO_verbose(directory):
     """
     Call the function is_AnDO_verbose_Format on every path in the list
 
-    :param names:
+
+    Args:
+        directory ([str]): [names of the directory to check]
+
+    Returns:
+        [bool]: [does the directory adheres to the ando specification]
     """
 
     validate = []
@@ -188,7 +228,7 @@ def is_AnDO_verbose(directory):
 
     for item in names:
         validate.append(is_AnDO_verbose_Format(item))
-
+    
     return any(validate)
 
 
@@ -198,10 +238,26 @@ def is_AnDO_verbose_Format(names):
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
-    :param names: list of names founds in the path
+    Args:
+        names ([list]): [names to check]
+
+    Raises:
+        ExperimentError: raised if it doesn't the experiment rules
+        SessionError: raised if it doesn't the session rules
+        SubjectError: raised if it doesn't the subject rules
+        SourceError: raised if it doesn't the source rules
+        RawDataError: raised if it doesn't the rawdata rules
+        DerivativeDataError: raised if it doesn't the derivatives rules
+        MetaDataError: raised if it doesn't the metadata rules
+        SourceNotFound: raised if it doesn't the source rules
+
+    Returns:
+        [bool]: true if error is found else false
+        [out]: feedback for the web api
     """
 
     bool_error = 0
+    out = list()
     # only error that exit without checking other folder
 
     if is_experiment(names[0]):
@@ -211,8 +267,10 @@ def is_AnDO_verbose_Format(names):
             raise ExperimentError(names)
         except ExperimentError as e:
             print(e.strerror)
+            out.append(e.strout)
             bool_error = 1
-            exit(1)
+            return bool_error, out
+
     if is_session(names):
         bool_error = 0
     else:
@@ -220,6 +278,7 @@ def is_AnDO_verbose_Format(names):
             raise SessionError(names)
         except SessionError as e:
             print(e.strerror)
+            out.append(e.strout)
             bool_error = 1
     if is_subject(names):
         bool_error = 0
@@ -228,8 +287,9 @@ def is_AnDO_verbose_Format(names):
             raise SubjectError(names)
         except SubjectError as e:
             print(e.strerror)
+            out.append(e.strout)
             bool_error = 1
-    if len(names)==7 :
+    if len(names) == 7:
 
         if is_source(names):
             bool_error = 0
@@ -238,6 +298,7 @@ def is_AnDO_verbose_Format(names):
                 raise SourceError(names)
             except SourceError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if is_rawdata(names):
             bool_error = 0
@@ -246,6 +307,7 @@ def is_AnDO_verbose_Format(names):
                 raise RawDataError(names)
             except RawDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if is_derivatives(names):
             bool_error = 0
@@ -254,6 +316,7 @@ def is_AnDO_verbose_Format(names):
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if is_metadata(names):
             bool_error = 0
@@ -262,36 +325,43 @@ def is_AnDO_verbose_Format(names):
                 raise MetaDataError(names)
             except MetaDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
 
     else:
-
 
         if not is_metadata(names):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if not is_rawdata(names):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if not is_derivatives(names):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
         if not is_source(names):
             try:
                 raise SourceNotFound(names)
             except SourceNotFound as e:
                 print(e.strerror)
+                out.append(e.strout)
                 bool_error = 1
-    return bool_error
+    if len(out) >1 :
+        return bool_error, out
+    else:
+        return bool_error
 
 
 def is_experiment(names):
@@ -304,11 +374,9 @@ def is_experiment(names):
         [type]: [true or false ]
     """
 
-
     regexps = get_regular_expressions(dir_rules
                                       + 'experiment_rules.json')
     conditions = []
-    print(names)
     if type(names) == str:
 
         conditions.append([re.compile(x).search(names) is not None
@@ -318,8 +386,6 @@ def is_experiment(names):
         for word in names:
             conditions.append([re.compile(x).search(word) is not None
                               for x in regexps])
-
-    print(flatten(conditions))
 
     return any(flatten(conditions))
 
@@ -351,6 +417,7 @@ def is_rawdata(names):
         # print(flatten(conditions))
 
     return any(flatten(conditions))
+
 
 def is_metadata(names):
     """[Check names follows metadata rules]
@@ -409,6 +476,7 @@ def is_derivatives(names):
 
     return any(flatten(conditions))
 
+
 def is_session(names):
     """[Check names follows session rules]
 
@@ -424,7 +492,8 @@ def is_session(names):
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
-    else:
+    elif type(names) == list:
+
         for word in names:
             conditions.append([re.compile(x).search(word) is not None
                               for x in regexps])
@@ -449,7 +518,8 @@ def is_subject(names):
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
-    else:
+    elif type(names) == list:
+
         for word in names:
             conditions.append([re.compile(x).search(word) is not None
                               for x in regexps])
@@ -474,7 +544,8 @@ def is_source(names):
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
                           for x in regexps])
-    else:
+    elif type(names) == list:
+
         for word in names:
             conditions.append([re.compile(x).search(word) is not None
                               for x in regexps])

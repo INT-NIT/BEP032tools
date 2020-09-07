@@ -1,5 +1,17 @@
-#!/usr/bin/python
+# File: checker.py
+# Project: ando
+# File Created: Tuesday, 30th June 2020 10:50:05 am
+# Author: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Last Modified: Thursday, 2nd July 2020 1:29:58 pm
+# Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Copyright - 2020 MIT, Institue de neurosciences de la Timone
+
+
+# !/usr/bin/python
 # -*- coding: utf-8 -*-
+
 
 import os
 import argparse
@@ -7,22 +19,7 @@ import argparse
 from ando.engine import is_AnDO, is_AnDO_verbose
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
-
-if __name__ == '__main__':
-    """
-    Main function :
-
-    usage: AnDOChecker.py [-h] [-v] pathToFolder
-
-        positional arguments:
-        path           Path to your folder
-
-        optional arguments:
-        -h, --help     show this help message and exit
-        -v, --verbose  increase output verbosity
-
-    """
-    # add argparse for verbose option
+def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -36,7 +33,7 @@ if __name__ == '__main__':
         except IndexError:
             directory = '.'
         error = is_AnDO_verbose(directory)
-
+        
         if error == 1:
             print("\n" +
                   directory +
@@ -61,3 +58,20 @@ if __name__ == '__main__':
             print("\n" +
                   directory +
                   ": Is validated by AnDOChecker")
+
+if __name__ == '__main__':
+    """
+    Main function :
+
+    usage: AnDOChecker.py [-h] [-v] pathToFolder
+
+        positional arguments:
+        path           Path to your folder
+
+        optional arguments:
+        -h, --help     show this help message and exit
+        -v, --verbose  increase output verbosity
+
+    """
+    # add argparse for verbose option
+    main()
