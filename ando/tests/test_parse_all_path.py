@@ -1,9 +1,18 @@
+# File: test_parse_all_path.py
+# Project: tests
+# File Created: Tuesday, 30th June 2020 10:50:05 am
+# Author: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Last Modified: Thursday, 2nd July 2020 1:33:58 pm
+# Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
+# -----
+# Copyright - 2020 MIT, Institue de neurosciences de la Timone
+
+
 import unittest
-
 import ando.engine as andoE
-
 import os
-path=os.getcwd()
+path = os.getcwd()
 
 
 class test_parse_all_path(unittest.TestCase):
@@ -26,21 +35,21 @@ class test_parse_all_path(unittest.TestCase):
     """
     def setUp(self):
         pass
-
-    def test_parse_all_path(self):
+    
+    def test_parse_all_path(self):# noqa: E501
         result=[['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001'],['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'],['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source']]
         list1=[['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'], ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'], ['exp-Landing', 'sub-enyo'], ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001']]
         e=andoE.parse_all_path(list1)
 
         self.assertEqual(e.sort(),result.sort())
-    
+    # flake8: noqa: E501
     def test_parse_all_path_1(self):
         result=[['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'], ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'], ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001'], ['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'], ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001'], ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'], ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001']]
         list1=[['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'], ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'], ['exp-Landing', 'sub-enyo'], ['exp-Landing', 'sub-enyo', '180116_001_m_enyo_land-001']]
         e=andoE.parse_all_path(list1)
 
         self.assertEqual(e.sort(),result.sort())
-
+    # flake8: noqa: E501
     def test_parse_all_path_2(self):
         list1=[['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001'],
             ['exp-Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'],
@@ -58,7 +67,8 @@ class test_parse_all_path(unittest.TestCase):
 
         e=andoE.parse_all_path(list1)
         self.assertEqual(e.sort(),result.sort())
-       
+
+
 if __name__ == '__main__':
     unittest.main()
 
