@@ -37,7 +37,7 @@ class ExperimentError(Exception):
             + '  It should follow the exp-NAME format, where:\n' \
             + '    - NAME is a string designating the name of your experiment\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at experiment folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[Experiment folder error] at : "+names[0]+" </strong></h4><br><b><i>" \
                 + '</b></i>It should follow the exp-NAME format, where:  '\
@@ -57,7 +57,7 @@ class SubjectError(Exception):
             + '  It should follow the sub-ID format, where:\n' \
             + '    - ID is a string designating the IDentifier of the animal\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at subject folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[Subject folder error] at : "+names[0]+" </strong></h4><br><b><i>" \
                 + '</b></i>It should follow the sub-ID format, where:  '\
@@ -83,14 +83,14 @@ class SessionError(Exception):
             + '      the version of the experimental protocol, on the type of preparation, on the user-friendly name of the animal etc.);\n' \
             + '      this string cannot contain the underscore character.\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at Session folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[session folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i>It should follow the Session format, where:  '\
-                + ' <ul><li>‘ses-’ is an imposed prefix</li>
-                + '<li>‘YYYYMMDD’ is the date of the session (8 digits, for instance 20180430 for April 30, 2018)</li>'
-                + '<li>BBBB is a string freely usable by the research group / user</li>
-                + '<li>this string cannot contain the underscore character.</li><ul></div></div>'
+                + '</b></i>It should follow the ses-YYYYMMDD_XXX_BBBB format format, where:  '\
+                + ' <ul><li>"ses-" is an imposed prefix</li>'\
+                + '<li>"YYYYMMDD" is the date of the session (8 digits, for instance 20180430 for April 30, 2018)</li>'\
+                + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
+                + '<ul></div></div>'
 
 class SourceError(Exception):
     """Exception raise when the name doesn't follow the AnDO specification of error level
@@ -124,7 +124,7 @@ class RawDataError(Exception):
         self.strerror = 'Level 4 error [rawdata folder missing]\n' \
             + '  A folder called rawdata should be present in the session folder ' + names[2] + '\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at rawdata folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[rawdata folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
                 + '</b></i> A folder called  <i><b>"rawdata" </i></b>'\
@@ -142,7 +142,7 @@ class MetaDataError(Exception):
         self.strerror = 'Level 4 error [metadata folder missing]\n' \
             + '  A folder called metadata should be present in the session folder ' + names[2] + '\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at metadata folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[metadata folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
                 + '</b></i> A folder called  <i><b>"metadata" </i></b>'\
@@ -160,7 +160,7 @@ class DerivativeDataError(Exception):
         self.strerror ='Level 4 error [derivatives folder missing]\n' \
             + '  A folder called derivatives should be present in the session folder ' + names[2] + '\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
+                + '1 error found at derivatives folder level.  </div><div class="card-body"> ' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
                 + "[derivatives folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
                 + '</b></i> A folder called  <i><b>"derivatives" </i></b>'\
