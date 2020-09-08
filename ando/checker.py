@@ -6,7 +6,7 @@
 # Last Modified: Thursday, 2nd July 2020 1:29:58 pm
 # Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
 # -----
-# Copyright - 2020 MIT, Institue de neurosciences de la Timone
+# Copyright - 2020 MIT, Institut de Neurosciences de la Timone,CNRS
 
 
 # !/usr/bin/python

@@ -6,7 +6,7 @@
 # Last Modified: Thursday, 2nd July 2020 1:32:33 pm
 # Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
 # -----
-# Copyright - 2020 MIT, Institue de neurosciences de la Timone
+# Copyright - 2020 MIT, Institut de Neurosciences de la Timone,CNRS
 
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
@@ -146,7 +146,7 @@ def create_nested_list_of_path(directory):
 def is_AnDO_R(subpath, level, validate):
     """
 
-    Check if file path adheres to AnDO.
+    Check if file path adhere to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
@@ -190,7 +190,7 @@ def is_AnDO_R(subpath, level, validate):
 def is_AnDO(directory):
     """
 
-    Check if file path adheres to AnDO.
+    Check if file path adhere to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
@@ -199,7 +199,7 @@ def is_AnDO(directory):
         directory ([str]): [names of the directory to check]
 
     Returns:
-        [bool]: [does the directory adheres to the ando specification]
+        [bool]: [does the directory adhere to the ando specification]
     """
 
     validate = []
@@ -220,7 +220,7 @@ def is_AnDO_verbose(directory):
         directory ([str]): [names of the directory to check]
 
     Returns:
-        [bool]: [does the directory adheres to the ando specification]
+        [bool]: [does the directory adhere to the ando specification]
     """
 
     validate = []
@@ -234,7 +234,7 @@ def is_AnDO_verbose(directory):
 
 def is_AnDO_verbose_Format(names):
     """
-    Check if file path adheres to AnDO.
+    Check if file path adhere to AnDO.
     Main method of the validator. uses other class methods for checking
     different aspects of the directory path.
 
@@ -242,18 +242,18 @@ def is_AnDO_verbose_Format(names):
         names ([list]): [names to check]
 
     Raises:
-        ExperimentError: raised if it doesn't the experiment rules
-        SessionError: raised if it doesn't the session rules
-        SubjectError: raised if it doesn't the subject rules
-        SourceError: raised if it doesn't the source rules
-        RawDataError: raised if it doesn't the rawdata rules
-        DerivativeDataError: raised if it doesn't the derivatives rules
-        MetaDataError: raised if it doesn't the metadata rules
-        SourceNotFound: raised if it doesn't the source rules
+        ExperimentError: raised if it does not respect respect respect respect respect the experiment rules
+        SessionError: raised if it does not respect respect the session rules
+        SubjectError: raised if it does not respect the subject rules
+        SourceError: raised if it does not respect the source rules
+        RawDataError: raised if it does not respect the rawdata rules
+        DerivativeDataError: raised if it does not respect the derivatives rules
+        MetaDataError: raised if it does not respect the metadata rules
+        SourceNotFound: raised if it does not respect the source rules
 
     Returns:
         [bool]: true if error is found else false
-        [out]: feedback for the web api
+        [out]: feedback for the web page
     """
 
     bool_error = 0
