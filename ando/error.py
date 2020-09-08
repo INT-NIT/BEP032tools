@@ -6,13 +6,13 @@
 # Last Modified: Thursday, 2nd July 2020 1:31:40 pm
 # Modified By: garcia.j (Jeremy.garcia@univ-amu.fr)
 # -----
-# Copyright - 2020 MIT, Institue de neurosciences de la Timone
+# Copyright - 2020 MIT, Institut de Neurosciences de la Timone,CNRS
 
 
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 
-"""[Exception raise when the name doesn't follow the AnDO specification
+"""[Exception raised  when the name does not follow the AnDO specification
 
     self.strerror : corresponding to the output in CLI mod
     self.strout : corresponding to the output of web mod by returning
@@ -24,7 +24,7 @@
 # flake8: noqa: E501
 class ExperimentError(Exception):
     """
-    Exception raise when the name doesn't follow the AnDO specification
+    Exception raised when the name does not follow the AnDO specification
 
 
     Args:
@@ -44,7 +44,7 @@ class ExperimentError(Exception):
                 + ' <ul><li> NAME is a string designating the name of your experiment</li><ul></div></div>'
 
 class SubjectError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of subject level
+    """Exception raised when the name does not follow the AnDO specification of subject level
 
 
     Args:
@@ -64,7 +64,7 @@ class SubjectError(Exception):
                 + ' <ul><li> ID is a string designating the IDentifier of the animal</li><ul></div></div>'
 
 class SessionError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of session level
+    """Exception raised when the name does not follow the AnDO specification of session level
 
 
     Args:
@@ -93,7 +93,7 @@ class SessionError(Exception):
                 + '<ul></div></div>'
 
 class SourceError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of error level
+    """Exception raised when the name does not follow the AnDO specification of error level
 
 
     Args:
@@ -112,7 +112,7 @@ class SourceError(Exception):
                 + '</b></i> A folder called  <i><b>"source" </i></b>'\
                 + ' should be present in the session folder. OR does not follow specification</div></div>'
 class RawDataError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of rawdata level
+    """Exception raised when the name does not follow the AnDO specification of rawdata level
 
 
     Args:
@@ -130,7 +130,7 @@ class RawDataError(Exception):
                 + '</b></i> A folder called  <i><b>"rawdata" </i></b>'\
                 + ' should be present in the session folder.</div></div>'
 class MetaDataError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of rawdata level
+    """Exception raised when the name does not follow the AnDO specification of rawdata level
 
 
     Args:
@@ -148,7 +148,7 @@ class MetaDataError(Exception):
                 + '</b></i> A folder called  <i><b>"metadata" </i></b>'\
                 + ' should be present in the session folder.</div></div>'
 class DerivativeDataError(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of derivatives level
+    """Exception raised when the name does not follow the AnDO specification of derivatives level
 
 
     Args:
@@ -167,7 +167,7 @@ class DerivativeDataError(Exception):
                 + ' should be present in the session folder.</div></div>'
 
 class SourceNotFound(Exception):
-    """Exception raise when the name doesn't follow the AnDO specification of source level
+    """Exception raised when the name does not follow the AnDO specification of source level
 
 
     Args:
