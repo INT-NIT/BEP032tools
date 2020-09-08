@@ -242,8 +242,8 @@ def is_AnDO_verbose_Format(names):
         names ([list]): [names to check]
 
     Raises:
-        ExperimentError: raised if it does not respect respect respect respect respect the experiment rules
-        SessionError: raised if it does not respect respect the session rules
+        ExperimentError: raised if it does not  respect the experiment rules
+        SessionError: raised if it does not respect  the session rules
         SubjectError: raised if it does not respect the subject rules
         SourceError: raised if it does not respect the source rules
         RawDataError: raised if it does not respect the rawdata rules
