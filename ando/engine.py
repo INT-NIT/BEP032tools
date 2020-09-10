@@ -227,8 +227,8 @@ def is_AnDO_verbose(directory):
     names = create_nested_list_of_path(directory)
 
     for item in names:
-        validate.append(is_AnDO_verbose_Format(item))
-    
+        validate.append(is_AnDO_verbose_Format(item)[0])
+    print(validate)
     return any(validate)
 
 
@@ -260,67 +260,54 @@ def is_AnDO_verbose_Format(names):
     out = list()
     # only error that exit without checking other folder
 
-    if is_experiment(names[0]):
-        bool_error = 0
-    else:
+    if not is_experiment(names[0]):
         try:
             raise ExperimentError(names)
         except ExperimentError as e:
-            print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-            return bool_error, out
+                print(e.strerror)
+                out.append(e.strout)
+                bool_error = 1
+                return bool_error, out
 
-    if is_session(names):
-        bool_error = 0
-    else:
+    if not is_session(names):
         try:
             raise SessionError(names)
         except SessionError as e:
-            print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-    if is_subject(names):
-        bool_error = 0
-    else:
+                print(e.strerror)
+                out.append(e.strout)
+                bool_error = 1
+    if not is_subject(names):
         try:
             raise SubjectError(names)
         except SubjectError as e:
-            print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
+                print(e.strerror)
+                out.append(e.strout)
+                bool_error = 1
+
     if len(names) == 7:
 
-        if is_source(names):
-            bool_error = 0
-        else:
+        if  not is_source(names):
             try:
                 raise SourceError(names)
             except SourceError as e:
                 print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-        if is_rawdata(names):
-            bool_error = 0
-        else:
+        if not is_rawdata(names):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
                 print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-        if is_derivatives(names):
-            bool_error = 0
-        else:
+        if not is_derivatives(names):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
                 print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-        if is_metadata(names):
-            bool_error = 0
-        else:
+        if not is_metadata(names):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
@@ -358,7 +345,8 @@ def is_AnDO_verbose_Format(names):
                 print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-    if len(out) >1 :
+    if len(out) >=1 :
+        print(bool_error)
         return bool_error, out
     else:
         return bool_error
