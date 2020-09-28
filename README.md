@@ -8,7 +8,7 @@ Jérémy Garcia (jeremy.garcia@univ-amu.fr)*
 
 ## 1. Introduction
 
-This is the very first draft of a BIDS-like ( <https://bids.neuroimaging.io/> ) set of specifications for a directory organization and a file naming convention dedicated to experimental data recorded in animals. It is very inspired by the BIDS specifications themselves ( <https://bids-specification.readthedocs.io> ; <https://github.com/bids-standard/bids-specification> ). The main difference lies in the fact that in experiments conducted with animals, it is very common to have different settings for different sessions, and more importantly for different animals (whereas research on human subjects tends to have exactly the same protocol used for all subjects, as looked after by the BIDS specifications).
+Animal Data Organization (AnDO) is a set of specifications for a directory organization and a file naming convention dedicated to experimental data recorded in animals. It is very inspired by the BIDS specifications themselves ( <https://bids-specification.readthedocs.io> ; <https://github.com/bids-standard/bids-specification> ). The main difference lies in the fact that in experiments conducted with animals, it is very common to have different settings for different sessions, and more importantly for different animals (whereas research on human subjects tends to have exactly the same protocol used for all subjects, as looked after by the BIDS specifications).
 
 It follows a hierarchy of directories matched with the following concepts, as they are used in research studies conducted with animal models:
 
@@ -66,10 +66,10 @@ Within each session directory, three sub-directories must be present:
 ### 2.5 Exemples
 
 
-- Data/exp-[project name]/sub-[subject name]/ses-YYYYMMDD_XXX_BBBB
-- Data/exp-[project name]/sub-[subject name]/ses-YYYYMMDD_XXX_BBBB/rawdata
-- Data/exp-[project name]/sub-[subject name]/ses-YYYYMMDD_XXX_BBBB/metadata
-- Data/exp-[project name]/sub-[subject name]/ses-YYYYMMDD_XXX_BBBB/derivatives
+- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB
+- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/rawdata
+- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/metadata
+- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/derivatives
 
 
 
