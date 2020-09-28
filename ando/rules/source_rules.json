@@ -1,5 +1,0 @@
-{
-    "source_level": {
-        "regexp": "(?:^|\\W)source(?:$|\\W)"
-    }
-}  

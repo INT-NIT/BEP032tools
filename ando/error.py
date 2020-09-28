@@ -91,26 +91,6 @@ class SessionError(Exception):
                 + '<li>"YYYYMMDD" is the date of the session (8 digits, for instance 20180430 for April 30, 2018)</li>'\
                 + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
                 + '<ul></div></div>'
-
-class SourceError(Exception):
-    """Exception raised when the name does not follow the AnDO specification of error level
-
-
-    Args:
-        Exception ([Exception]): [raised in engine.py]
-    """
-
-    def __init__(self, arg):
-        names = arg
-        self.strerror = 'Level 4 error [source folder] at : ' + names[2] + '\n' \
-            + '  A single folder called source is authorized within a session folder\n'
-
-        self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Source folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-                + "[source folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i> A folder called  <i><b>"source" </i></b>'\
-                + ' should be present in the session folder. OR does not follow specification</div></div>'
 class RawDataError(Exception):
     """Exception raised when the name does not follow the AnDO specification of rawdata level
 
@@ -165,23 +145,3 @@ class DerivativeDataError(Exception):
                 + "[derivatives folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
                 + '</b></i> A folder called  <i><b>"derivatives" </i></b>'\
                 + ' should be present in the session folder.</div></div>'
-
-class SourceNotFound(Exception):
-    """Exception raised when the name does not follow the AnDO specification of source level
-
-
-    Args:
-        Exception ([Exception]): [raised in engine.py]
-     """
-    def __init__(self, arg):
-        names = arg
-        self.strerror = 'Level 4 error [source folder missing]\n' \
-            + '  A folder called source should be present in the session folder ' + names[2] + '\n'
-
-        self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-            + '1 error found at Source folder level.  </div><div class="card-body"> ' \
-            + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-            + "[Source folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-            + '</b></i> A folder called  <i><b>"source" </i></b>'\
-            + ' should be present in the session folder.</div></div>'
-
