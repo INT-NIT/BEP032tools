@@ -15,7 +15,7 @@ import os
 import json
 import re
 import pathlib
-from ando.error import ExperimentError, SourceError, SourceNotFound, \
+from ando.error import ExperimentError, \
     SessionError, SubjectError, MetaDataError, DerivativeDataError, \
     RawDataError
 
@@ -159,7 +159,6 @@ def is_AnDO_R(subpath, level, validate):
     Returns:
         [list]: [validate : list of boolean corresponding of each level]
     """
-
     if level < len(subpath):
         if level == 0:
             validate.append(is_experiment(subpath[level]))
@@ -171,18 +170,21 @@ def is_AnDO_R(subpath, level, validate):
             validate.append(is_session(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 3:
-            validate.append(is_source(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
+            if(subpath[level] == "rawdata"):
+                validate.append(is_rawdata(subpath[level]))
+            elif (subpath[level] == "metadata"):
+                validate.append(is_metadata(subpath[level]))
         if level == 4:
-            validate.append(is_metadata(subpath[level]))
+            if(subpath[level] == "rawdata"):
+                validate.append(is_rawdata(subpath[level]))
+            elif (subpath[level] == "metadata"):
+                validate.append(is_metadata(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
         if level == 5:
             validate.append(is_derivatives(subpath[level]))
             is_AnDO_R(subpath, level + 1, validate)
-        if level == 6:
-            validate.append(is_rawdata(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-    elif level < 7:
+        
+    elif level < 6:
         validate.append(False)
     return validate
 
@@ -227,8 +229,7 @@ def is_AnDO_verbose(directory):
     names = create_nested_list_of_path(directory)
 
     for item in names:
-        validate.append(is_AnDO_verbose_Format(item)[0])
-    print(validate)
+        validate.append(is_AnDO_verbose_Format(item))
     return any(validate)
 
 
@@ -245,17 +246,14 @@ def is_AnDO_verbose_Format(names):
         ExperimentError: raised if it does not  respect the experiment rules
         SessionError: raised if it does not respect  the session rules
         SubjectError: raised if it does not respect the subject rules
-        SourceError: raised if it does not respect the source rules
         RawDataError: raised if it does not respect the rawdata rules
         DerivativeDataError: raised if it does not respect the derivatives rules
         MetaDataError: raised if it does not respect the metadata rules
-        SourceNotFound: raised if it does not respect the source rules
 
     Returns:
         [bool]: true if error is found else false
         [out]: feedback for the web page
     """
-
     bool_error = 0
     out = list()
     # only error that exit without checking other folder
@@ -284,15 +282,8 @@ def is_AnDO_verbose_Format(names):
                 out.append(e.strout)
                 bool_error = 1
 
-    if len(names) == 7:
+    if len(names) == 6:
 
-        if  not is_source(names):
-            try:
-                raise SourceError(names)
-            except SourceError as e:
-                print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
         if not is_rawdata(names):
             try:
                 raise RawDataError(names)
@@ -338,15 +329,7 @@ def is_AnDO_verbose_Format(names):
                 print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-        if not is_source(names):
-            try:
-                raise SourceNotFound(names)
-            except SourceNotFound as e:
-                print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
     if len(out) >=1 :
-        print(bool_error)
         return bool_error, out
     else:
         return bool_error
@@ -502,32 +485,6 @@ def is_subject(names):
     """
 
     regexps = get_regular_expressions(dir_rules + 'subject_rules.json')
-    conditions = []
-    if type(names) == str:
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        #  print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
-def is_source(names):
-    """[Check names follows sources rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(dir_rules + 'source_rules.json')
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None

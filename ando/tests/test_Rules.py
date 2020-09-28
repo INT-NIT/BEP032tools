@@ -35,19 +35,6 @@ class Test_Rules(unittest.TestCase):
         list = ["ses-180116_001_m_land_001"]
         self.assertEqual(andoE.is_session(list), False)
 
-    '''testing source rules'''
-    def test_source_rules(self):
-        list = ["source"]
-        self.assertEqual(andoE.is_source(list), True)
-
-    def test_source_rules_1(self):
-        list = ["Source"]
-        self.assertEqual(andoE.is_source(list), False)
-
-    def test_source_rules_2(self):
-        list = ["sources"]
-        self.assertEqual(andoE.is_source(list), False)
-
     '''testing subject rules'''
     def test_subject_rules(self):
         list = ["sub-001"]
