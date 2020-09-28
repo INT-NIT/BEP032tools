@@ -16,6 +16,8 @@ Dataset. A set of experimental data acquired for the purpose of a particular stu
 Subject. An animal that was included in the study.
 Session. A temporal grouping of experimental data recorded in a given animal, on a given day. There can be several sessions on the same day if the recording settings are modified between sessions or if the recording needs to be interrupted and restarted.
 
+Feel free to post issues or help by  contributing on github developer's page :  <https://github.com/INT-NIT/AnDOChecker> 
+
 ## 2.Directory organization and naming
 
 ### 2.1 Dataset directory
