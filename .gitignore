@@ -5,3 +5,5 @@ ando/*.pyc
 .idea/
 .vscode/
 Ando_web/
+dist/*
+build/*
