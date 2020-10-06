@@ -8,15 +8,15 @@ Jérémy Garcia (jeremy.garcia@univ-amu.fr)*
 
 ## 1. Introduction
 
-Animal Data Organization (AnDO) is a set of specifications for a directory organization and a file naming convention dedicated to experimental data recorded in animals. It is very inspired by the BIDS specifications themselves ( <https://bids-specification.readthedocs.io> ; <https://github.com/bids-standard/bids-specification> ). The main difference lies in the fact that in experiments conducted with animals, it is very common to have different settings for different sessions, and more importantly for different animals (whereas research on human subjects tends to have exactly the same protocol used for all subjects, as looked after by the BIDS specifications).
+The Animal Data Organization (AnDO) is a set of specifications for the organization of a directory containing experimental data recorded in animals. It is very inspired by the BIDS specifications ( <https://bids-specification.readthedocs.io> ). The main difference lies in the fact that in experiments conducted with animals, it is very common to have different settings for different sessions, and more importantly for different animals (whereas research on human subjects tends to have exactly the same protocol used for all subjects, as looked after by the BIDS specifications).
 
 It follows a hierarchy of directories matched with the following concepts, as they are used in research studies conducted with animal models:
 
-Dataset. A set of experimental data acquired for the purpose of a particular study. It is composed of data acquired in one or more animals, with one or more sessions recorded in each animal.
+Dataset. A set of experimental data acquired for the purpose of a particular study / experiment. It is composed of data acquired in one or more animals, with one or more sessions recorded in each animal.
 Subject. An animal that was included in the study.
 Session. A temporal grouping of experimental data recorded in a given animal, on a given day. There can be several sessions on the same day if the recording settings are modified between sessions or if the recording needs to be interrupted and restarted.
 
-Feel free to post issues or help by  contributing on github developer's page :  <https://github.com/INT-NIT/AnDOChecker> 
+We describe below the set of specifications themselves, as well as an application -- the AnDOChecker -- that was developed to check whether a directory given as input respects the AnDO.
 
 ## 2.Directory organization and naming
 
@@ -79,5 +79,13 @@ Within each session directory, three sub-directories must be present:
 
 ## 3. The AnDOChecker application
 
-We have developed an application that allows checking the validity of a top-level directory (dataset directory) given as input with respect to the specifications detailed in the previous section. The version v0.1 of this application provides a command line interface. A web-based interface will be provided in the following version, which should be available before the end of May 2020.
+The AnDOChecker is an application that allows checking the validity of a top-level directory (experiment/dataset directory) with respect to the specifications detailed in the previous section. A command line interface (CLI) is available, as well as a web-based version which necessitates a host server.
 
+To install the CLI, the easiest is to install the package using pip:
+
+```bash
+> pip install AnDOChecker
+```
+Instructions will be available soon to setup a server that can host the web-based service.
+
+Please feel free to send us feedback and comments, or to report bugs, using the developer's page ( <https://github.com/INT-NIT/AnDOChecker> ) using the Issues section. You can also participate in ongoing discussions about the definition of a community-wide standard at <https://github.com/INCF/neuroscience-data-structure>
