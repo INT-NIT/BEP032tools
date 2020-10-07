@@ -20,39 +20,39 @@ class test_AnDO(unittest.TestCase):
     def setUp(self):
         pass
 
-    '''testing ds001 folder'''
+    '''testing dataset001 folder'''
     def test_AnDO_dataset_1(self):
-        directory = currpath+"/ds001/Data/Landing"
+        directory = currpath+"/dataset001/Landing"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds002 folder'''
+    '''testing dataset002 folder'''
     def test_AnDO_dataset_2(self):
-        directory = currpath+"/ds002/data/exp-Landing"
+        directory = currpath+"/dataset002/exp-Landing"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds003 folder'''
+    '''testing dataset003 folder'''
     def test_AnDO_dataset_3(self):
-        directory = currpath+"/ds003/data/my_experiment"
+        directory = currpath+"/dataset003/my_experiment"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds004 folder'''
+    '''testing dataset004 folder'''
     def test_AnDO_dataset_4(self):
-        directory = currpath+"/ds004/data/newexp_vision"
+        directory = currpath+"/dataset004/newexp_vision"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds005 folder'''
+    '''testing dataset005 folder'''
     def test_AnDO_dataset_5(self):
-        directory = currpath+"/ds005/data/my_experiment"
+        directory = currpath+"/dataset005/my_experiment"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds006 folder'''
+    '''testing dataset006 folder'''
     def test_AnDO_dataset_6(self):
-        directory = currpath+"/ds006/data/Landing"
+        directory = currpath+"/dataset006/Landing"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
-    '''testing ds007 folder'''
+    '''testing dataset007 folder'''
     def test_AnDO_dataset_7(self):
-        directory = currpath+"/ds007/data/exp-Landing/"
+        directory = currpath+"/dataset007/exp-Landing/"
         self.assertEqual(andoE.is_AnDO(directory), False)
 
 
