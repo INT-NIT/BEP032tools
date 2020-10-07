@@ -32,5 +32,6 @@ setup(
     include_package_data=True,
     entry_points = {
         'console_scripts': ['AnDOChecker=ando.checker:main'],
-    }
+    },
+    python_requires='>=3.6',
 )
