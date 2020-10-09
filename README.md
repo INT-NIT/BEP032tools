@@ -12,11 +12,11 @@ Futher information on Specs : https://int-nit.github.io/AnDOChecker/
 AnDOChecker requires:
 
 - Python (>= 3.6)
-- Pip
+- Pip3
 
 ### User installation
 ```bash
-> Pip3 install AnDOchecker
+> pip install AnDOchecker
 ```
 
 ## General usage
@@ -35,16 +35,21 @@ optional arguments:  -h, --help     show this help message and exit
 ## Specific usage
 
 ```bash
-> Python3 checker/AnDOChecker.py tests/ds001/data/Enya
+> python checker/AnDOChecker.py tests/dataset001/Landing
 ```
 
 OR verbose usage
 
 ```bash
-> Python3 checker/AnDOChecker.py -v tests/ds001/data/Enya
+> python checker/AnDOChecker.py -v tests/dataset001/Landing
 
 ```
+OR CLI script
 
+```bash
+> AnDOChecker -v tests/dataset001/Landing
+
+```
 # Development
 
 We welcome new contributors of all experience levels.  The
@@ -58,7 +63,7 @@ Important links
 -   Official source code repo: https://github.com/INT-NIT/AnDOChecker
 -   Download releases: https://pypi.org/project/AnDOChecker/
 -   Issue tracker:https://github.com/INT-NIT/AnDOChecker/issues
-Source code
+
 -----------
 
 You can check the latest sources with the command:
@@ -68,21 +73,5 @@ You can check the latest sources with the command:
 Contributing
 ------------
 
-To learn more about making a contribution to scikit-learn, please see
+To learn more about making a contribution to AnDoChecker, please see
 our [Contributing guide][].
-
-Testing
--------
-
-After installation, you can launch the test suite from outside the
-source directory (you will need to have `pytest` installed):
-
-    pytest ando
-
-
-
-Submitting a Pull Request
--------------------------
-
-Before opening a Pull Request, have a look at the full Contributing page
-to make sure your code complies with our guidelines.
