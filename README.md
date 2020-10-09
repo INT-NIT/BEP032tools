@@ -44,7 +44,7 @@ OR verbose usage
 > python checker/AnDOChecker.py -v tests/dataset001/Landing
 
 ```
-OR CLI script
+OR, in an equivalent, you can use the command line interface (CLI) provided with the package:
 
 ```bash
 > AnDOChecker -v tests/dataset001/Landing
