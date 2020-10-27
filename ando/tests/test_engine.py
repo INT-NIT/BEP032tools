@@ -34,7 +34,7 @@ class test_AnDO(unittest.TestCase):
         names = ['Landing', 'sub-anye', '180116_001_m_anye_land-001',
                  'source']
         validate = list()
-        self.assertEqual(all(andoE.is_AnDO_R(names, 0, validate)), False)
+        self.assertEqual((andoE.is_AnDO(names,False)), False)
 
     def test_AnDO_Func_subject_level(self):
         """
@@ -45,7 +45,7 @@ class test_AnDO(unittest.TestCase):
         names = ['exp-Landing', 'anye', 'sess-180116_001_m_anye_land-001',
                  'source']
         validate = list()
-        self.assertEqual(all(andoE.is_AnDO_R(names, 0, validate)), False)
+        self.assertEqual((andoE.is_AnDO(names,False)), False)
 
     def test_AnDO_Func_session_level(self):
         """
@@ -56,7 +56,7 @@ class test_AnDO(unittest.TestCase):
         names = ['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001',
                  'source']
         validate = list()
-        self.assertEqual(all(andoE.is_AnDO_R(names, 0, validate)), False)
+        self.assertEqual((andoE.is_AnDO(names,False)), False)
 
     def test_AnDO_Func_sources_level(self):
         """
@@ -67,7 +67,7 @@ class test_AnDO(unittest.TestCase):
         names = ['exp-Landing', 'sub-anye', 'sess-180116_001_m_anye_land-001',
                  'sources']
         validate = list()
-        self.assertEqual(all(andoE.is_AnDO_R(names, 0, validate)), False)
+        self.assertEqual((andoE.is_AnDO(names,False)), False)
 
 
 if __name__ == '__main__':

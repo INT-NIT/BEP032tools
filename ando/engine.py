@@ -51,7 +51,7 @@ def parse_all_path(nested_list_of_dir):
     def _merge_duplicates(my_list_of_lists, max_length=3):
         """Transform this
         [
-            ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'source']
+
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'metadata']
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'rawdata']
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001','derivatives']
@@ -64,14 +64,13 @@ def parse_all_path(nested_list_of_dir):
                 'rawdata',
                 'metadata',
                 'derivatives',
-                'source'
             ]
         ]
 
         Args:
             my_list_of_lists ([list]): [list of path to process]
             max_length (int, optional): [number of folder in session directory
-            coresponding torawdata metadata derivatives and sources].
+            coresponding to rawdata metadata derivatives and sources].
             Defaults to 3.
 
         Returns:
@@ -143,53 +142,7 @@ def create_nested_list_of_path(directory):
     return nested_list_of_dir_parsed
 
 
-def is_AnDO_R(subpath, level, validate):
-    """
-
-    Check if file path adhere to AnDO.
-    Main method of the validator. uses other class methods for checking
-    different aspects of the directory path.
-
-
-    Args:
-        subpath ([list]): [list of names]
-        level ([int]): [level of the folder , 0 : experiment, 1 : subject ...]
-        validate ([list]): [list of boolean corresponding of each level]
-
-    Returns:
-        [list]: [validate : list of boolean corresponding of each level]
-    """
-    if level < len(subpath):
-        if level == 0:
-            validate.append(is_experiment(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-        if level == 1:
-            validate.append(is_subject(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-        if level == 2:
-            validate.append(is_session(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-        if level == 3:
-            if(subpath[level] == "rawdata"):
-                validate.append(is_rawdata(subpath[level]))
-            elif (subpath[level] == "metadata"):
-                validate.append(is_metadata(subpath[level]))
-        if level == 4:
-            if(subpath[level] == "rawdata"):
-                validate.append(is_rawdata(subpath[level]))
-            elif (subpath[level] == "metadata"):
-                validate.append(is_metadata(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-        if level == 5:
-            validate.append(is_derivatives(subpath[level]))
-            is_AnDO_R(subpath, level + 1, validate)
-        
-    elif level < 6:
-        validate.append(False)
-    return validate
-
-
-def is_AnDO(directory):
+def is_AnDO(directory,verbose):
     """
 
     Check if file path adhere to AnDO.
@@ -208,32 +161,13 @@ def is_AnDO(directory):
     names = create_nested_list_of_path(directory)
 
     for item in names:
-        is_AnDO_R(item, 0, validate)
-
-    return all(validate)
-
-
-def is_AnDO_verbose(directory):
-    """
-    Call the function is_AnDO_verbose_Format on every path in the list
-
-
-    Args:
-        directory ([str]): [names of the directory to check]
-
-    Returns:
-        [bool]: [does the directory adhere to the ando specification]
-    """
-
-    validate = []
-    names = create_nested_list_of_path(directory)
-
-    for item in names:
-        validate.append(is_AnDO_verbose_Format(item))
+       validate.append(is_AnDO(item,verbose))
+    print (validate)
     return any(validate)
 
 
-def is_AnDO_verbose_Format(names):
+
+def is_AnDO(names, verbose):
     """
     Check if file path adhere to AnDO.
     Main method of the validator. uses other class methods for checking
@@ -262,7 +196,8 @@ def is_AnDO_verbose_Format(names):
         try:
             raise ExperimentError(names)
         except ExperimentError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
                 return bool_error, out
@@ -271,14 +206,16 @@ def is_AnDO_verbose_Format(names):
         try:
             raise SessionError(names)
         except SessionError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
     if not is_subject(names):
         try:
             raise SubjectError(names)
         except SubjectError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
 
@@ -288,21 +225,24 @@ def is_AnDO_verbose_Format(names):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_derivatives(names):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_metadata(names):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
 
@@ -312,21 +252,24 @@ def is_AnDO_verbose_Format(names):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_rawdata(names):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_derivatives(names):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
-                print(e.strerror)
+                if(verbose==True):
+                    print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
     if len(out) >=1 :
@@ -342,7 +285,7 @@ def is_experiment(names):
         names ([str]): [names founds in the path]
 
     Returns:
-        [type]: [true or false ]
+        [type]: [True or false ]
     """
 
     regexps = get_regular_expressions(dir_rules
