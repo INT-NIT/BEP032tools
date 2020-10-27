@@ -32,9 +32,8 @@ def main():
             directory = args.path
         except IndexError:
             directory = '.'
-        error = is_AnDO_verbose(directory,True)
-        
-        if error == 1:
+        error_found = is_AnDO(directory,True)[0]
+        if error_found:
             print("\n" +
                   directory +
                   ": Is Not validated by AnDOChecker")
@@ -49,7 +48,7 @@ def main():
 
             directory = '.'
 
-        error_found = is_AnDO(directory,False)
+        error_found = is_AnDO(directory,False)[0]
         if error_found:
             print("\n" +
                   directory +
