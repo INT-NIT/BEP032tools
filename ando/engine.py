@@ -164,10 +164,8 @@ def is_AnDO(directory, verbose):
     names = create_nested_list_of_path(directory)
     print(names)
     for item in names:
-       validate.append(is_AnDO(item, verbose))
-    print (validate)
+        validate.append(is_AnDO(item, verbose))
     return any(validate)
-
 
 
 def is_AnDO(names, verbose):
@@ -199,28 +197,28 @@ def is_AnDO(names, verbose):
         try:
             raise ExperimentError(names)
         except ExperimentError as e:
-                if(verbose==True):
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-                return bool_error, out
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+            return bool_error, out
 
     if not is_session(names):
         try:
             raise SessionError(names)
         except SessionError as e:
-                if(verbose==True):
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
     if not is_subject(names):
         try:
             raise SubjectError(names)
         except SubjectError as e:
-                if(verbose==True):
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
 
     if len(names) == 6:
 
@@ -228,7 +226,7 @@ def is_AnDO(names, verbose):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
@@ -236,7 +234,7 @@ def is_AnDO(names, verbose):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
@@ -244,7 +242,7 @@ def is_AnDO(names, verbose):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
@@ -255,7 +253,7 @@ def is_AnDO(names, verbose):
             try:
                 raise MetaDataError(names)
             except MetaDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
@@ -263,7 +261,7 @@ def is_AnDO(names, verbose):
             try:
                 raise RawDataError(names)
             except RawDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
@@ -271,11 +269,11 @@ def is_AnDO(names, verbose):
             try:
                 raise DerivativeDataError(names)
             except DerivativeDataError as e:
-                if(verbose==True):
+                if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
-    if len(out) >=1 :
+    if len(out) >= 1:
         return bool_error, out
     else:
         return bool_error

@@ -19,9 +19,11 @@ import argparse
 from ando.engine import is_AnDO
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
+
+
 def main():
+
     """
-     
     Main file of the validator. uses other class methods for checking
     different aspects of the directory path.
 
@@ -75,4 +77,5 @@ def main():
                   ": Is validated by AnDOChecker")
 
 if __name__ == '__main__':
+
     main()
