@@ -25,8 +25,6 @@ def main():
     Main file of the validator. uses other class methods for checking
     different aspects of the directory path.
 
-    Now uses same function for verbose and not verbose mode 
-
     usage: checker.py [-h] [-v] path
 
             positional arguments:
@@ -50,7 +48,7 @@ def main():
             directory = args.path
         except IndexError:
             directory = '.'
-        error_found = is_AnDO(directory,True)[0]
+        error_found = is_AnDO(directory, True)[0]
         if error_found:
             print("\n" +
                   directory +
@@ -66,7 +64,7 @@ def main():
 
             directory = '.'
 
-        error_found = is_AnDO(directory,False)[0]
+        error_found = is_AnDO(directory, False)[0]
         if error_found:
             print("\n" +
                   directory +

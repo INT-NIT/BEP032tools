@@ -145,7 +145,7 @@ def create_nested_list_of_path(directory):
     return nested_list_of_dir_parsed
 
 
-def is_AnDO(directory,verbose):
+def is_AnDO(directory, verbose):
     """
 
     Check if file path adhere to AnDO.
@@ -164,7 +164,7 @@ def is_AnDO(directory,verbose):
     names = create_nested_list_of_path(directory)
     print(names)
     for item in names:
-       validate.append(is_AnDO(item,verbose))
+       validate.append(is_AnDO(item, verbose))
     print (validate)
     return any(validate)
 
