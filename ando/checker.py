@@ -20,6 +20,24 @@ from ando.engine import is_AnDO
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 def main():
+    """
+     
+    Main file of the validator. uses other class methods for checking
+    different aspects of the directory path.
+
+    Now uses same function for verbose and not verbose mode 
+
+    usage: checker.py [-h] [-v] path
+
+            positional arguments:
+            path           Path to your folder
+
+            optional arguments:
+            -h, --help     show this help message and exit
+            -v, --verbose  increase output verbosity
+
+
+    """
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -59,18 +77,4 @@ def main():
                   ": Is validated by AnDOChecker")
 
 if __name__ == '__main__':
-    """
-    Main function :
-
-    usage: AnDOChecker.py [-h] [-v] pathToFolder
-
-        positional arguments:
-        path           Path to your folder
-
-        optional arguments:
-        -h, --help     show this help message and exit
-        -v, --verbose  increase output verbosity
-
-    """
-    # add argparse for verbose option
     main()
