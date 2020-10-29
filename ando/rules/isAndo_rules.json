@@ -1,4 +1,5 @@
-{
+// new rules with optional token not used yet
+{ 
     "isAndo": {
         "regexp": "^(@@@_exp_lvl_@@@)((@@@_sub_lvl_@@@))((@@@_ses_lvl_@@@)?)((@@@_in_ses_@@@)?)",
         "tokens": {
