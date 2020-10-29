@@ -78,6 +78,9 @@ def parse_all_path(nested_list_of_dir):
 
         todo:
             This might have to be re-implemented more efficiently.
+            At the moment this is the best solution so far to get feedbacks on where does the error happen.
+            if we use the BIDS implementation we can just say if the Directory follows the AnDO specs .
+
         """
         merged_list = []
         for my_list_elem in my_list_of_lists:
@@ -159,7 +162,7 @@ def is_AnDO(directory,verbose):
 
     validate = []
     names = create_nested_list_of_path(directory)
-
+    print(names)
     for item in names:
        validate.append(is_AnDO(item,verbose))
     print (validate)
