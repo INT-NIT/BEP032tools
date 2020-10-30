@@ -32,28 +32,28 @@ class test_AnDO(unittest.TestCase):
 
     '''testing dataset003 folder'''
     def test_AnDO_dataset_3(self):
-        directory = currpath+"/dataset003/my_experiment"
+        directory = currpath+"/dataset003/exp-landing"
         self.assertEqual(andoE.is_AnDO(directory, False), True)
 
     '''testing dataset004 folder'''
     def test_AnDO_dataset_4(self):
-        directory = currpath+"/dataset004/newexp_vision"
+        directory = currpath+"/dataset004/exp_vision"
         self.assertEqual(andoE.is_AnDO(directory, False), True)
 
     '''testing dataset005 folder'''
     def test_AnDO_dataset_5(self):
-        directory = currpath+"/dataset005/my_experiment"
+        directory = currpath+"/dataset005/exp-myexperiment"
         self.assertEqual(andoE.is_AnDO(directory, False), True)
 
     '''testing dataset006 folder'''
     def test_AnDO_dataset_6(self):
-        directory = currpath+"/dataset006/Landing"
+        directory = currpath+"/dataset006/exp-Landing"
         self.assertEqual(andoE.is_AnDO(directory, False), True)
 
     '''testing dataset007 folder'''
     def test_AnDO_dataset_7(self):
         directory = currpath+"/dataset007/exp-Landing/"
-        self.assertEqual(andoE.is_AnDO(directory, False), True)
+        self.assertEqual(andoE.is_AnDO(directory, False), False)
 
 
 if __name__ == '__main__':
