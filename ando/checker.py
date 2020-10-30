@@ -16,7 +16,7 @@
 import os
 import argparse
 
-from ando.engine import is_AnDO_From_Main
+from ando.engine import is_AnDO
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
@@ -50,7 +50,7 @@ def main():
             directory = args.path
         except IndexError:
             directory = '.'
-        error_found = is_AnDO_From_Main(directory, True)
+        error_found = is_AnDO(directory, True)
         if error_found == 1:
             print("\n" +
                   directory +
@@ -66,7 +66,7 @@ def main():
 
             directory = '.'
 
-        error_found = is_AnDO_From_Main(directory, False)
+        error_found = is_AnDO(directory, False)
         if error_found:
             print("\n" +
                   directory +
