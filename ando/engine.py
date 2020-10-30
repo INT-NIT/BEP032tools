@@ -146,7 +146,7 @@ def create_nested_list_of_path(directory):
     return nested_list_of_dir_parsed
 
 
-def is_AnDO_From_Main(directory, verbose):
+def is_AnDO(directory, verbose):
     """
 
     Check if file path adhere to AnDO.
@@ -164,11 +164,11 @@ def is_AnDO_From_Main(directory, verbose):
     validate = []
     names = create_nested_list_of_path(directory)
     for item in names:
-        validate.append(is_AnDO(item, verbose))
+        validate.append(check_Path(item, verbose))
     return any(validate)
 
 
-def is_AnDO(names, verbose):
+def check_Path(names, verbose):
     """
     Check if file path adhere to AnDO.
     Main method of the validator. uses other class methods for checking
