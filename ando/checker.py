@@ -16,7 +16,7 @@
 import os
 import argparse
 
-from ando.engine import is_AnDO
+from ando.engine import is_AnDO_From_Main
 
 dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
 
@@ -50,8 +50,8 @@ def main():
             directory = args.path
         except IndexError:
             directory = '.'
-        error_found = is_AnDO(directory, True)[0]
-        if error_found:
+        error_found = is_AnDO_From_Main(directory, True)
+        if error_found == 1:
             print("\n" +
                   directory +
                   ": Is Not validated by AnDOChecker")
@@ -66,7 +66,7 @@ def main():
 
             directory = '.'
 
-        error_found = is_AnDO(directory, False)[0]
+        error_found = is_AnDO_From_Main(directory, False)
         if error_found:
             print("\n" +
                   directory +
