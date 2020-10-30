@@ -142,10 +142,11 @@ def create_nested_list_of_path(directory):
     for each in list_of_dir:
         nested_list_of_dir.append(each.split(os.sep))
     nested_list_of_dir_parsed = parse_all_path(nested_list_of_dir)
+
     return nested_list_of_dir_parsed
 
 
-def is_AnDO(directory, verbose):
+def is_AnDO_From_Main(directory, verbose):
     """
 
     Check if file path adhere to AnDO.
@@ -162,7 +163,6 @@ def is_AnDO(directory, verbose):
 
     validate = []
     names = create_nested_list_of_path(directory)
-    print(names)
     for item in names:
         validate.append(is_AnDO(item, verbose))
     return any(validate)
@@ -192,12 +192,12 @@ def is_AnDO(names, verbose):
     bool_error = 0
     out = list()
     # only error that exit without checking other folder
-
     if not is_experiment(names[0]):
         try:
             raise ExperimentError(names)
         except ExperimentError as e:
             if verbose is True:
+                print(names)
                 print(e.strerror)
             out.append(e.strout)
             bool_error = 1
