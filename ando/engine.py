@@ -25,19 +25,19 @@ dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
 
 def parse_all_path(nested_list_of_dir):
     """
-    Transform this
+    Transforms this
     [
         ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'source'],
         ['Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'],
         ['Landing', 'sub-enyo'],
         ['Landing', 'sub-enyo', '180116_001_m_enyo_land-001']
     ]
-    to
+    into
     [
         ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'source'],
         ['Landing', 'sub-enya', '180116_001_m_enya_land-001', 'source'],
     ]
-    Checking for the longest chain with the same sub chain
+    Checking for the longest chain with the same sub-chain
     """
 
     def _test_is_included(my_list_of_lists, list_elem):
