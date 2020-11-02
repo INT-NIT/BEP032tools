@@ -49,7 +49,8 @@ def parse_all_path(nested_list_of_dir):
         return False
 
     def _merge_duplicates(my_list_of_lists, max_length=3):
-        """Transform this
+        """
+        Transform this
         [
 
             ['Landing', 'sub-anye', '180116_001_m_anye_land-001', 'metadata']
