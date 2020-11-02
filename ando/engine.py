@@ -197,7 +197,6 @@ def check_Path(names, verbose):
             raise ExperimentError(names)
         except ExperimentError as e:
             if verbose is True:
-                print(names)
                 print(e.strerror)
             out.append(e.strout)
             bool_error = 1
