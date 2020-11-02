@@ -53,8 +53,8 @@ def main():
             directory = '.'
       
         if not os.path.isdir(args.path):
-            print('Directory does not exist: %s' % args.path)
-            exit
+            print('Directory does not exist:', args.path)
+            exit(1)
         error_found = is_AnDO(directory, True)
         if error_found == 1:
             print("\n" +
@@ -70,8 +70,8 @@ def main():
         except IndexError:
             directory = '.'
         if not os.path.isdir(args.path):
-            print('Directory does not exist: %s' % args.path)
-            exit
+            print('Directory does not exist:', args.path)
+            exit(1)
         error_found = is_AnDO(directory, False)
         if error_found:
             print("\n" +
