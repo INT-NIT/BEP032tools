@@ -169,7 +169,10 @@ def is_AnDO(directory, verbose, webcall):
             validate.append(check_Path(item, verbose))
         return any(validate)
     else :
-        return check_Path(directory, True)
+        found_err = check_Path(directory, True)
+        if found_err == False :
+            return 0,None;
+        else : return found_err
 
 
 def check_Path(names, verbose):
