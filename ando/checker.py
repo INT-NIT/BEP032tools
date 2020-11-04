@@ -55,7 +55,7 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        error_found = is_AnDO(directory, True)
+        error_found = is_AnDO(directory, True , False)
         if error_found == 1:
             print("\n" +
                   directory +
@@ -72,7 +72,7 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        error_found = is_AnDO(directory, False)
+        error_found = is_AnDO(directory, False, False)
         if error_found:
             print("\n" +
                   directory +

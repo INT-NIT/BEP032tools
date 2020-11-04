@@ -147,7 +147,7 @@ def create_nested_list_of_path(directory):
     return nested_list_of_dir_parsed
 
 
-def is_AnDO(directory, verbose):
+def is_AnDO(directory, verbose, webcall):
     """
 
     Check if file path adhere to AnDO.
@@ -161,12 +161,15 @@ def is_AnDO(directory, verbose):
     Returns:
         [bool]: [does the directory adhere to the ando specification]
     """
+    if webcall == False :
 
-    validate = []
-    names = create_nested_list_of_path(directory)
-    for item in names:
-        validate.append(check_Path(item, verbose))
-    return any(validate)
+        validate = []
+        names = create_nested_list_of_path(directory)
+        for item in names:
+            validate.append(check_Path(item, verbose))
+        return any(validate)
+    else :
+        return check_Path(directory, True)
 
 
 def check_Path(names, verbose):
