@@ -86,7 +86,6 @@ def create_Struct(csv_file, pathToDir):
 def main():
     """
     usage: AnDO_Creator.py [-h] pathToCsv pathToDir
-    usage: AnDO_Creator.py [-h] pathToCsv pathToDir
 
     positional arguments:
     pathToCsv   Path to your folder
