@@ -1,10 +1,11 @@
 # AnDOtools
 
 AnDOtools is a little project that contain two scripts :
-- a script to help users generate an AnDO structure
+- a script to help users generate an AnDO structure based on a csv file 
+(You can find in the Creator folder one exemple of a CSV file names "exemple.csv")
 - a script to help users to dispay an AnDO structure
 
-You can find in the Creator folder one exemple of a CSV file names "exemple.csv"
+
 
 ## Installation
 ### Dependencies
@@ -16,12 +17,11 @@ AnDOChecker requires:
 - tree
 
 ### User installation 
-For both script go to the script folder, for exemple creator and follows the comand below 
-```bash
-> python setup.py develop
-```
-For viewer installation same as above but in the veiwer folder 
 
+```bash
+> pip install AnDOcreator
+> pip install AnDOviewer
+```
 
 ### General usage for the creator script 
 
