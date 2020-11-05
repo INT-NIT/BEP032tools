@@ -7,3 +7,8 @@ ando/*.pyc
 Ando_web/
 dist/*
 build/*
+
+tools/creator/dist/*
+tools/creator/build/*
+tools/viewer/build/*
+tools/viewer/dist/*

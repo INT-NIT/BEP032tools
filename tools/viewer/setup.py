@@ -9,7 +9,7 @@ import re
 
 verstr = "unknown"
 try:
-    verstrline = open('_version.py', "rt").read()
+    verstrline = open('script/_version.py', "rt").read()
 except EnvironmentError:
     pass # Okay, there is no version file.
 else:
@@ -35,7 +35,7 @@ setup(
     install_requires=['flake8','pytest'],
     include_package_data=True,
     entry_points = {
-        'console_scripts': ['AnDOviewer=AnDO_Viewer:main'],
+        'console_scripts': ['AnDOviewer=script.AnDOviewer:main'],
     },
     python_requires='>=3.6',
 )
