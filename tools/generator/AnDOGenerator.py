@@ -75,7 +75,7 @@ def generate_Struct(csv_file, pathToDir):
 
         try:
             # Create the directories is they do not exist
-            os.makedirs(pathToDir+str(directory))
+            os.makedirs(pathToDir+'/'+str(directory))
         except OSError:
             # Error handling when directory already exists
             print("Creation of the directory %s failed, already exist" % directory)
