@@ -10,7 +10,7 @@ COLUMNS = ["experiments_name", "subjects_names",
            ]
 
 
-def create_Struct(csv_file, pathToDir):
+def generate_Struct(csv_file, pathToDir):
     """
     Create structure with csvfile given in argument
     This file must follows format where :
@@ -108,7 +108,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
             print('Directory does not exist:', args.pathToDir)
             exit(1)
-    create_Struct(args.pathToCsv, args.pathToDir)
+    generate_Struct(args.pathToCsv, args.pathToDir)
     
 
 
