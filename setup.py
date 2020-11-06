@@ -31,7 +31,9 @@ setup(
     install_requires=['flake8','pytest'],
     include_package_data=True,
     entry_points = {
-        'console_scripts': ['AnDOChecker=ando.checker:main'],
+        'console_scripts': ['AnDOChecker=ando.checker:main',
+                            'AnDOGenerator=tools.generator.AnDOGenerator:main',
+                            'AnDOViewer=tools.viewer.AnDOViewer:main',],
     },
     python_requires='>=3.6',
 )
