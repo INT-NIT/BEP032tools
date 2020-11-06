@@ -8,7 +8,7 @@ import re
 
 verstr = "unknown"
 try:
-    verstrline = open('ando/_version.py', "rt").read()
+    verstrline = open('_version.py', "rt").read()
 except EnvironmentError:
     pass # Okay, there is no version file.
 else:
