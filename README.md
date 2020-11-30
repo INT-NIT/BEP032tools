@@ -104,14 +104,14 @@ optional arguments:
 OR, in an equivalent manner, you can use the command line interface (CLI) provided with the package:
 
 ```bash
-> AnDOcreator data.csv data/
+> AnDOCreator data.csv data/
 
 ```
 
 OR
 
 ```bash
-> AnDOviewer data/
+> AnDOViewer data/
 
 ```
 
