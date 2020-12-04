@@ -24,7 +24,7 @@ We describe below the set of specifications themselves, as well as an applicatio
 
 At the top level of the hierarchy, a single directory contains all the sub-directories and files associated with a dataset, which corresponds to an experiment. It must be called:
 
-**exp-NAME**
+**exp-*expName***
 
 where:
 - ‘exp-’ is an imposed prefix;
@@ -34,11 +34,11 @@ where:
 
 Within the top-level dataset directory, there should be one directory for each animal subject that was included in the study. Each subject directory should be called:
 
-**sub-GUID**
+**sub-*guid***
 
 where:
 - ‘sub-’ is an imposed prefix;
-- ‘GUID’ is a string designating the Global Unique IDentifier of the animal.
+- ‘guid’ is a string designating the Global Unique IDentifier of the animal.
 
 No other file or directory can be present within a dataset directory.
 
@@ -46,14 +46,14 @@ No other file or directory can be present within a dataset directory.
 
 Within each subject directory, there should be one directory for each data recording session that was performed with this animal. Each session directory should be called:
 
-**ses-YYYYMMDD_XXX_BBBB**
+**ses-*yyyymmdd_sesNumber_customSesField***
 
 Where:
 - ‘ses-’ is an imposed prefix;
-- ‘YYYYMMDD’ is the date of the session (6 digits, for instance 20180430 for April 30, 2018);
-- ‘XXX’ is the number of the session acquired on that date (3 digits, for instance 001 for the first session);
+- ‘yyyymmdd’ is the date of the session (6 digits, for instance 20180430 for April 30, 2018);
+- ‘sesNumber’ is the number of the session acquired on that date (3 digits, for instance 001 for the first session);
 
-- ‘BBBB’ is a string freely usable by the research group / user (for instance to add extra info on the version of the experimental protocol, on the type of preparation, on the user-friendly name of the animal etc.); this string cannot contain the underscore character.
+- ‘customSesField’ is a string freely usable by the research group / user (for instance to add extra info on the version of the experimental protocol, on the type of preparation, on the user-friendly name of the animal etc.); this string cannot contain the underscore character.
 
 No other file or directory can be present within a subject directory.
 
@@ -68,10 +68,10 @@ Within each session directory, three sub-directories must be present:
 ### 2.5 Exemples
 
 
-- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB
-- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/rawdata
-- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/metadata
-- Data/exp-[project name]/sub-[GUID]/ses-YYYYMMDD_XXX_BBBB/derivatives
+- Data/exp-[project name]/sub-[GUID]/ses-yyyymmdd_sesNumber_customSesField 
+- Data/exp-[project name]/sub-[GUID]/ses-yyyymmdd_sesNumber_customSesField/rawdata
+- Data/exp-[project name]/sub-[GUID]/ses-yyyymmdd_sesNumber_customSesField/metadata
+- Data/exp-[project name]/sub-[GUID]/ses-yyyymmdd_sesNumber_customSesField/derivatives
 
 
 
