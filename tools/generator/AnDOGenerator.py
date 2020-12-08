@@ -1,13 +1,129 @@
 import pandas as pd
+import datetime
+import warnings
 import argparse
 import os
-import sys
+import re
+
+import ando
+from ando.engine import check_Path, get_regular_expressions
 
 # columns required
 COLUMNS = ["experiments_name", "subjects_names",
            "years", "months", "days",
            "sessions_numbers", "comments"
            ]
+
+
+class AnDOSesID:
+
+    def __init__(self, sesID=None, date=None, sesNumber=None, customSesField=None):
+        """
+        Representation of an AnDO session ID, as defined in `ando/rules/session_rules.json`
+
+        Parameters
+        ----------
+        sesID: (str)
+            complete session identifier, e.g. `20000101_001_test`
+        date: (str or datetime)
+            date subinfo of session ID, e.g. `20000101`
+        sesNumber: (str)
+            session number subinfo of session ID, e.g. `001`
+        customSesField: (str)
+            custom session field subinfo of session ID
+        """
+
+        # Inform user if insufficient or duplicate information is provided
+        if sesID is not None:
+            if (date is None) or (sesNumber is None) or (customSesField is None):
+                warnings.warn(f'Using sesID ({sesID}) in favour alternative parameters date, '
+                              f'sesNumber and customSesField')
+        elif (date is None) or (sesNumber is None):
+            raise ValueError('Incomplete information for generating a session ID.')
+
+
+        if sesID is None:
+            self.sesNumber = sesNumber
+
+            # Define default value for custom session field
+            if customSesField is None:
+                self.customSesField = ''
+            else:
+                self.customSesField = customSesField
+
+            if isinstance(date, datetime.datetime):
+                self.date = date.strftime('%Y%m%d')
+            else:
+                self.date = date
+
+        # if only sesID is provided, we use the session regex to extract infos
+        else:
+            rules_dir = os.path.join(os.path.dirname(ando.__file__), 'rules')
+            regexps = get_regular_expressions(os.path.join(rules_dir, 'session_rules.json'))
+            for regexp in regexps:
+                match = re.match(regexp, f'ses-{sesID}')
+                if match:
+                    self.date = match.groupdict()['date']
+                    self.sesNumber = match.groupdict()['sesNumber']
+                    self.customSesField = match.groupdict()['customSesField']
+
+    def __str__(self):
+        return f'{self.date}_{self.sesNumber}_{self.customSesField}'
+
+
+class AnDOSession:
+
+    def __init__(self, expName, guid, sesID=None, date=None, sesNumber=None, customSesField=None):
+        """
+        Representation of all AnDO Session, as specified by the AnDOChecker
+
+        Parameters
+        ----------
+        expName: (str)
+            The name of the experiment
+        guid: (str)
+            Global unique identifier of the subject
+        sesID: (str)
+            complete session identifier, e.g. `20000101_001_test`
+        date: (str or datetime)
+            date subinfo of session ID, e.g. `20000101`
+        sesNumber: (str)
+            session number subinfo of session ID, e.g. `001`
+        customSesField: (str)
+            custom session field subinfo of session ID
+        """
+
+        if expName is None:
+            raise ValueError('The experiment name (expName) can not be `None`.')
+        if guid is None:
+            raise ValueError('The global unique identifier (guid) can not be `None`.')
+
+        self.expName = expName
+        self.guid = guid
+        self.sesID = AnDOSesID(sesID=sesID,
+                               date=date,
+                               sesNumber=sesNumber,
+                               customSesField=customSesField)
+
+    def get_session_path(self):
+        path = os.path.join(f'exp-{self.expName}',
+                            f'sub-{self.guid}',
+                            f'ses-{self.sesID}')
+        return path
+
+    def get_all_folder_paths(self):
+        paths = []
+        session = self.get_session_path()
+        for datafolder in ['rawdata', 'metadata', 'derivatives']:
+            paths.append(os.path.join(session, datafolder))
+
+        # validate generated paths with AnDO
+        for path in paths:
+            assert not check_Path(path.split(os.path.sep), verbose=False)[0], \
+                'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
+                'specifications'
+
+        return paths
 
 
 def generate_Struct(csv_file, pathToDir):
