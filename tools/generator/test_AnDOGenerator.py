@@ -7,8 +7,8 @@ class Test_AnDOSesID(unittest.TestCase):
     def setUp(self):
         self.date = '20000101'
         self.sesNumber = '100'
-        self.customField = 'test'
-        self.sesID = f'{self.date}_{self.sesNumber}_{self.customField}'
+        self.customSesField = 'test'
+        self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
 
     def test_user_input_warning(self):
         with self.assertWarns(Warning):
@@ -29,15 +29,15 @@ class Test_AnDOSesID(unittest.TestCase):
         self.assertEqual(self.sesID, str(sesID))
         self.assertEqual(self.date, sesID.date)
         self.assertEqual(self.sesNumber, sesID.sesNumber)
-        self.assertEqual(self.customField, sesID.customSesField)
+        self.assertEqual(self.customSesField, sesID.customSesField)
 
     def test_no_sesID(self):
-        sesID = AnDOSesID(date=self.date, sesNumber=self.sesNumber, customSesField=self.customField)
+        sesID = AnDOSesID(date=self.date, sesNumber=self.sesNumber, customSesField=self.customSesField)
 
         self.assertEqual(self.sesID, str(sesID))
         self.assertEqual(self.date, sesID.date)
         self.assertEqual(self.sesNumber, sesID.sesNumber)
-        self.assertEqual(self.customField, sesID.customSesField)
+        self.assertEqual(self.customSesField, sesID.customSesField)
 
 
 class Test_AnDOSession(unittest.TestCase):
@@ -47,8 +47,8 @@ class Test_AnDOSession(unittest.TestCase):
         self.guid = '1234'
         self.date = '20000101'
         self.sesNumber = '100'
-        self.customField = 'test'
-        self.sesID = f'{self.date}_{self.sesNumber}_{self.customField}'
+        self.customSesField = 'test'
+        self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
 
 
     def test_insufficient_input(self):
@@ -70,7 +70,7 @@ class Test_AnDOSession(unittest.TestCase):
                           self.guid,
                           sesNumber=self.sesNumber,
                           date=self.date,
-                          customSesField=self.customField)
+                          customSesField=self.customSesField)
 
         self.assertEqual(self.expName, ses.expName)
         self.assertEqual(self.guid, ses.guid)
