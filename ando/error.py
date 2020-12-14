@@ -91,57 +91,25 @@ class SessionError(Exception):
                 + '<li>"YYYYMMDD" is the date of the session (8 digits, for instance 20180430 for April 30, 2018)</li>'\
                 + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
                 + '<ul></div></div>'
-class RawDataError(Exception):
-    """Exception raised when the name does not follow the AnDO specification of rawdata level
 
+
+class DataError(Exception):
+    """
+    Exception raised when the name does not follow the AnDO specification at the data folder level
 
     Args:
         Exception ([Exception]): [raised in engine.py]
     """
 
-    def __init__(self, arg):
+    def __init__(self, arg, type='rawdata/metadata/derivatives'):
+        if type not in ['rawdata/metadata/derivatives', 'derivatives', 'metadata', 'rawdata']:
+            raise ValueError(f'Invalid missing folder type on data level (Level 4): {type}')
         names = arg
-        self.strerror = 'Level 4 error [rawdata folder missing]\n' \
-            + '  A folder called rawdata should be present in the session folder ' + names[2] + '\n'
+        self.strerror = f'Level 4 error [data folder missing]\n' \
+                        f'A subfolder "{type}" is required in the session folder "{names[2]}"\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at rawdata folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-                + "[rawdata folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i> A folder called  <i><b>"rawdata" </i></b>'\
-                + ' should be present in the session folder.</div></div>'
-class MetaDataError(Exception):
-    """Exception raised when the name does not follow the AnDO specification of rawdata level
-
-
-    Args:
-        Exception ([Exception]): [raised in engine.py]
-    """
-
-    def __init__(self, arg):
-        names = arg
-        self.strerror = 'Level 4 error [metadata folder missing]\n' \
-            + '  A folder called metadata should be present in the session folder ' + names[2] + '\n'
-        self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at metadata folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-                + "[metadata folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i> A folder called  <i><b>"metadata" </i></b>'\
-                + ' should be present in the session folder.</div></div>'
-class DerivativeDataError(Exception):
-    """Exception raised when the name does not follow the AnDO specification of derivatives level
-
-
-    Args:
-        Exception ([Exception]): [raised in engine.py]
-    """
-
-    def __init__(self, arg):
-        names = arg
-        self.strerror ='Level 4 error [derivatives folder missing]\n' \
-            + '  A folder called derivatives should be present in the session folder ' + names[2] + '\n'
-        self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at derivatives folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-                + "[derivatives folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i> A folder called  <i><b>"derivatives" </i></b>'\
-                + ' should be present in the session folder.</div></div>'
+                      '1 error found at data folder level.  </div><div class="card-body"> ' \
+                      '<h4 class="em-header clearfix"><strong class="em-header pull-left">' \
+                      f'Error at level 4 [data folder error] at : {names[2]} </strong>' \
+                      f'</h4><br> A subfolder <i><b>{type}</i></b> is required in the session ' \
+                      f'folder "{names[2]}".</div></div>'

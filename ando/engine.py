@@ -15,9 +15,7 @@ import os
 import json
 import re
 import pathlib
-from ando.error import ExperimentError, \
-    SessionError, SubjectError, MetaDataError, DerivativeDataError, \
-    RawDataError
+from ando.error import ExperimentError, SessionError, SubjectError, DataError
 
 
 dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
@@ -123,7 +121,7 @@ def create_nested_list_of_path(directory):
     dir as follow:
     /home/AnDOChecker/checker/tests/ds001/Data/Landing/
     to
-    [['Landing', 'sub-enya', 'y180116-land-001', 'Sources']]
+    [['Landing', 'sub-enya', 'y180116-land-001', 'rawdata']]
 
     """
 
@@ -230,24 +228,24 @@ def check_Path(names, verbose):
 
         if not is_rawdata(names):
             try:
-                raise RawDataError(names)
-            except RawDataError as e:
+                raise DataError(names, type='raw')
+            except DataError as e:
                 if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_derivatives(names):
             try:
-                raise DerivativeDataError(names)
-            except DerivativeDataError as e:
+                raise DataError(names)
+            except DataError as e:
                 if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
                 bool_error = 1
         if not is_metadata(names):
             try:
-                raise MetaDataError(names)
-            except MetaDataError as e:
+                raise DataError(names, type='metadata')
+            except DataError as e:
                 if verbose is True:
                     print(e.strerror)
                 out.append(e.strout)
@@ -255,34 +253,20 @@ def check_Path(names, verbose):
 
     else:
 
-        if not is_metadata(names):
-            try:
-                raise MetaDataError(names)
-            except MetaDataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-        if not is_rawdata(names):
-            try:
-                raise RawDataError(names)
-            except RawDataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-        if not is_derivatives(names):
-            try:
-                raise DerivativeDataError(names)
-            except DerivativeDataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
+        for data_lvl_validator in [is_metadata, is_rawdata, is_derivatives]:
+            if not data_lvl_validator(names):
+                try:
+                    # extracting the missing folder type from validation function name
+                    raise DataError(names, type=data_lvl_validator.__name__.replace('is_', ''))
+                except DataError as e:
+                    if verbose is True:
+                        print(e.strerror)
+                    out.append(e.strout)
+                    bool_error = 1
     if len(out) >= 1:
         return bool_error, out
     else:
-        return bool_error
+        return bool_error, None
 
 
 def is_experiment(names):
