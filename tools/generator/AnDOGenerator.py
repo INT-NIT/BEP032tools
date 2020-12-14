@@ -1,4 +1,5 @@
 import pandas as pd
+from pathlib import Path
 import datetime
 import warnings
 import argparse
@@ -8,11 +9,19 @@ import re
 import ando
 from ando.engine import check_Path, get_regular_expressions
 
-# columns required
-COLUMNS = ["experiments_name", "subjects_names",
-           "years", "months", "days",
-           "sessions_numbers", "comments"
-           ]
+# mapping of human readable labels to AnDO session parameters
+LABEL_TRANSLATOR = {'expName': ['experiment_name', 'experiment_names', 'experiments_name'],
+                    'guid': ['subName', 'subject_name', 'subject_names', 'subjects_names'],
+                    'date': ['date', 'dates'],
+                    'year': ['year', 'years'],
+                    'month': ['month', 'months'],
+                    'day': ['day', 'days'],
+                    'sesNumber': ['session_number', 'session_numbers', 'sessions_numbers'],
+                    'customSesField': ['customField', 'comment', 'comments']}
+
+ESSENTIAL_PARAMS = ['expName', 'guid', 'date', 'sesNumber']
+
+LABEL_MAPPING = {label: param for param, labels in LABEL_TRANSLATOR.items() for label in labels}
 
 
 class AnDOSesID:
@@ -40,7 +49,6 @@ class AnDOSesID:
                               f'sesNumber and customSesField')
         elif (date is None) or (sesNumber is None):
             raise ValueError('Incomplete information for generating a session ID.')
-
 
         if sesID is None:
             self.sesNumber = sesNumber
@@ -73,7 +81,8 @@ class AnDOSesID:
 
 class AnDOSession:
 
-    def __init__(self, expName, guid, sesID=None, date=None, sesNumber=None, customSesField=None):
+    def __init__(self, expName=None, guid=None, sesID=None, date=None, sesNumber=None,
+                 customSesField=None):
         """
         Representation of all AnDO Session, as specified by the AnDOChecker
 
@@ -118,89 +127,82 @@ class AnDOSession:
             paths.append(os.path.join(session, datafolder))
 
         # validate generated paths with AnDO
+        combined_paths = []
         for path in paths:
-            assert not check_Path(path.split(os.path.sep), verbose=False)[0], \
-                'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
-                'specifications'
+            for folder in path.split(os.path.sep):
+                if folder not in combined_paths:
+                    combined_paths.append(folder)
+        assert not check_Path(combined_paths, verbose=False)[0], \
+            'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
+            'specifications'
 
         return paths
 
+    def generate_folders(self, basedir, clean=False):
+        session_folders = self.get_all_folder_paths()
+
+        complete_paths = [os.path.join(basedir, path) for path in session_folders]
+
+        # remove existing folders if clean is True
+        for path in complete_paths:
+            if clean and os.path.exists(path):
+                warnings.warn(f'Replacing existing folder: {path}')
+                os.remove(path)
+
+        # create all folders
+        for path in complete_paths:
+            Path(path).mkdir(parents=True)
+
+
+def extract_structure_from_csv(csv_file):
+    df = pd.read_csv(csv_file)
+
+    # ensure all fields contain information
+    if df.isnull().values.any():
+        raise ValueError(f'Csv file contains empty cells.')
+
+    # standardizing column labels
+    df = df.rename(columns=LABEL_MAPPING)
+
+    # Formatting month, day and session_number
+    df["month"] = df.month.map("{:02}".format)
+    df["day"] = df.day.map("{:02}".format)
+    df["sesNumber"] = df.sesNumber.map("{:03}".format)
+
+    # unifying data representation in favour of datetime object
+    if "date" not in df.columns:
+        df["date"] = pd.to_datetime(df.loc[:, ["year", "month", "day"]])
+        df = df.drop(["year", "month", "day"], axis=1)
+    else:
+        df["date"] = pd.to_datetime(df.loc[:, "date"])
+
+    # Check is the header contains all required names
+    if not set(ESSENTIAL_PARAMS).issubset(df.columns):
+        raise ValueError(f'Csv file ({csv_file}) does not contain required information '
+                         f'({ESSENTIAL_PARAMS}). Accepted column names are {LABEL_MAPPING}')
+
+    return df
+
 
 def generate_Struct(csv_file, pathToDir):
-    """
-    Create structure with csvfile given in argument
-    This file must follows format where :
-
-    first row ==> experiments_name,subjects_names,years,mouths,days,sessions_numbers,comments
+    f"""
+    Create structure with csv file given in argument
+    This file must contain a header row specifying the provided data. Accepted titles are
+    
+    {LABEL_MAPPING}
+    Essential information of the following attributes needs to be present
+    {ESSENTIAL_PARAMS}
 
     Args:
         csv_file ([csv file ]): [Csv file that contains a list of directories to create ]
         pathToDir ([Path to directory]): [Path to directory where the directories will be created]
     """
 
-    dirnames = []
-    df = pd.read_csv(csv_file)
+    df = extract_structure_from_csv(csv_file)
 
-    # Formatting months and day, cannot format years
-    df["months"] = df.months.map("{:02}".format)
-    df["days"] = df.days.map("{:02}".format)
-
-    header = df.columns.values.tolist()
-    # Check is the header contains the right names
-    if header != COLUMNS:
-        print("Failed : Csv does not have the expected columns please " \
-              + " check the documentation at 'https://github.com/INT-NIT/AnDOChecker/tools/' ")
-        exit(1)
-    if df.isnull().values.any():
-        number_of_null_values = df.isnull().sum().sum()
-        print("There are " + str(number_of_null_values) + " null values in the cvs file")
-        exit(1)
-    list_of_information = list()
-
-    for index, row in df.iterrows():
-        my_list = [
-            row["experiments_name"], row["subjects_names"],
-            row["years"], row["months"], row["days"],
-            row["sessions_numbers"], row["comments"]
-        ]
-        list_of_information.append(my_list)
-
-    for _, information in enumerate(list_of_information):
-
-        # Check if digits or not and adapt the string
-        if information[5] < 10:
-            num_sessions = "_00" + str(information[5])
-        else:
-            num_sessions = "_0" + str(information[5])
-
-        # Check if years format is correct
-        if len(str(information[2])) < 4:
-            print("Error date format not valid at row " + str(_))
-            exit(1)
-
-        dirnames.append(
-            "exp-" + str(information[0]) + "/" + "sub-" + str(information[1]) + "/" + 'ses-' + str(
-                information[2]) + str(information[3]) + str(
-                information[4]) + num_sessions + "_" + str(information[6]) + "/derivatives")
-        dirnames.append(
-            "exp-" + str(information[0]) + "/" + "sub-" + str(information[1]) + "/" + 'ses-' + str(
-                information[2]) + str(information[3]) + str(
-                information[4]) + num_sessions + "_" + str(information[6]) + "/metadata")
-        dirnames.append(
-            "exp-" + str(information[0]) + "/" + "sub-" + str(information[1]) + "/" + 'ses-' + str(
-                information[2]) + str(information[3]) + str(
-                information[4]) + num_sessions + "_" + str(information[6]) + "/rawdata")
-
-    for directory in dirnames:
-
-        try:
-            # Create the directories is they do not exist
-            os.makedirs(pathToDir + '/' + str(directory))
-        except OSError:
-            # Error handling when directory already exists
-            print("Creation of the directory %s failed, already exist" % directory)
-        else:
-            print("Successfully created the directory %s " % directory)
+    for session_kwargs in df.to_dict('index').values():
+        session = AnDOSession(**session_kwargs)
+        session.generate_folders(pathToDir)
 
 
 def main():

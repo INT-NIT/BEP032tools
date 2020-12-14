@@ -1,6 +1,9 @@
 import unittest
+import shutil
+import tempfile
 from tools.generator.AnDOGenerator import *
 
+test_directory = os.path.join(tempfile.gettempdir(), 'ando_testfiles')
 
 class Test_AnDOSesID(unittest.TestCase):
 
@@ -43,6 +46,7 @@ class Test_AnDOSesID(unittest.TestCase):
 class Test_AnDOSession(unittest.TestCase):
 
     def setUp(self):
+        os.mkdir(test_directory)
         self.expName = 'exp23'
         self.guid = '1234'
         self.date = '20000101'
@@ -84,4 +88,71 @@ class Test_AnDOSession(unittest.TestCase):
         self.assertEqual(expected, ses.get_session_path())
 
         self.assertEqual(3, len(ses.get_all_folder_paths()))
+
+    def test_generate_folders(self):
+        ses = AnDOSession(self.expName, self.guid, self.sesID)
+
+        paths = ses.get_all_folder_paths()
+
+        # delete paths in case they already exist
+        for path in paths:
+            if os.path.exists(os.path.join(test_directory, path)):
+                os.remove(path)
+
+        ses.generate_folders(basedir=test_directory)
+
+        for path in paths:
+            self.assertTrue(os.path.exists(os.path.join(test_directory, path)))
+
+    def doCleanups(self):
+        shutil.rmtree(test_directory)
+
+
+class Test_ReadCsv(unittest.TestCase):
+
+    def setUp(self):
+        self.csv_file = 'example.csv'
+
+    def test_read_csv(self):
+        df = extract_structure_from_csv(self.csv_file)
+        expected_headers = ['expName', 'guid', 'sesNumber', 'customSesField', 'date']
+        self.assertListEqual(expected_headers, list(df))
+
+class Test_GenerateStruct(unittest.TestCase):
+
+    def setUp(self):
+        try:
+            os.mkdir(test_directory)
+        except FileExistsError:
+            self.doCleanups()
+            os.mkdir(test_directory)
+        self.csv_file = 'example.csv'
+
+    def test_generate_example_structure(self):
+        generate_Struct(self.csv_file, test_directory)
+
+        # extract all paths that exist in the test directory
+        existing_paths = [p[0] for p in os.walk(test_directory)]
+
+        # find path that is corresponding to each line of the csv file
+        with open(self.csv_file) as f:
+            header = f.readline()
+            # iterate through sessions
+            for line in f.readlines():
+                found_path = False
+                for existing_path in existing_paths:
+                    if all(key in existing_path for key in line.strip().split(',')):
+                        found_path = True
+                        break
+                if not found_path:
+                    print(line.strip().split(','))
+
+                self.assertTrue(found_path)
+
+    def doCleanups(self):
+        shutil.rmtree(test_directory)
+
+
+if __name__ == '__main__':
+    unittest.main()
 
