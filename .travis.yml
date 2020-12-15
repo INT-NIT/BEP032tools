@@ -3,12 +3,12 @@ jobs:
   include:
     - name: "Python 3.7.4 on Xenial Linux"
       python: 3.7          # this works for Linux but is ignored on macOS or Windows
-   
+
     - name: "Python 3.7.4 on macOS"
       os: osx
       osx_image: xcode11.2  # Python 3.7.4 running on macOS 10.14.4
       language: shell       # 'language: python' is an error on Travis CI macOS
-   
+
     - name: "Python 3.7.4 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell       # 'language: python' is an error on Travis CI Windows
@@ -19,24 +19,26 @@ jobs:
         - pip3 install -U pip
         - pip3 install -U pytest
         - pip3 install codecov
-      
-install: 
+
+install:
   - pip3 install --upgrade pip  # all three OSes agree about 'pip3'
 # 'python' points to Python 2.7 on macOS but points to Python 3.8 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
   - pip3 install -r requirements.txt
-  
+  - pip3 install .
+
 script:
         - ls
        # - cd resources/
        # - ls Tests/
-       # - python3 -m pytest -v || python -m pytest -v 
+       - python3 -m pytest -v || python -m pytest -v
        # - flake8 --max-complexity 12 .
 
 notifications:
   email:
     recipients:
-      - jeremygarcia937@gmail.com # a ajouter davic et dipankar
+      - jeremygarcia937@gmail.com
+      - julia.sprenger@univ-amu.fr # a ajouter davic et dipankar
     on_success: never # default: change
-    on_failure: never # default: always
+    on_failure: always # default: always
 
