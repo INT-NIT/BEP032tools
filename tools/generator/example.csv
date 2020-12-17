@@ -1,9 +1,0 @@
-experiments_name,subjects_names,years,months,days,sessions_numbers,comments
-neo,enya,2020,12,01,001,protocol-v1
-neo,enya,2020,12,01,002,protocol-v2
-neo,enya,2020,02,01,003,protocol-v1
-neo,zamba,2020,12,12,001,vsdi
-neo,zamba,2020,2,3,010,vsdi
-aerial,zimba,2020,12,06,001,ephys-acute
-aerial,zimba,2020,12,01,010,ephys-chronic
-
