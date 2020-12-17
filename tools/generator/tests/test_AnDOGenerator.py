@@ -1,9 +1,8 @@
 import unittest
 import shutil
-import tempfile
 from tools.generator.AnDOGenerator import *
 
-test_directory = os.path.join(tempfile.gettempdir(), 'ando_testfiles')
+from tools.generator.tests.utils import *
 
 class Test_AnDOSesID(unittest.TestCase):
 
@@ -46,7 +45,7 @@ class Test_AnDOSesID(unittest.TestCase):
 class Test_AnDOSession(unittest.TestCase):
 
     def setUp(self):
-        os.mkdir(test_directory)
+        initialize_test_directory(clean=True)
         self.expName = 'exp23'
         self.guid = '1234'
         self.date = '20000101'
@@ -105,13 +104,14 @@ class Test_AnDOSession(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(test_directory, path)))
 
     def doCleanups(self):
-        shutil.rmtree(test_directory)
+        initialize_test_directory(clean=True)
 
 
 class Test_ReadCsv(unittest.TestCase):
 
     def setUp(self):
-        self.csv_file = 'example.csv'
+        csv_filename = generate_simple_csv_file()
+        self.csv_file = csv_filename
 
     def test_read_csv(self):
         df = extract_structure_from_csv(self.csv_file)
@@ -121,12 +121,9 @@ class Test_ReadCsv(unittest.TestCase):
 class Test_GenerateStruct(unittest.TestCase):
 
     def setUp(self):
-        try:
-            os.mkdir(test_directory)
-        except FileExistsError:
-            self.doCleanups()
-            os.mkdir(test_directory)
-        self.csv_file = 'example.csv'
+        initialize_test_directory(clean=True)
+        csv_filename = generate_simple_csv_file()
+        self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
         generate_Struct(self.csv_file, test_directory)
@@ -150,7 +147,7 @@ class Test_GenerateStruct(unittest.TestCase):
                 self.assertTrue(found_path)
 
     def doCleanups(self):
-        shutil.rmtree(test_directory)
+        initialize_test_directory(clean=True)
 
 
 if __name__ == '__main__':
