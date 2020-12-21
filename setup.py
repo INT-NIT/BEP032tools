@@ -25,12 +25,15 @@ setup(
     name="AnDOChecker",
     version=verstr,
     packages=find_packages(),
+    package_data={
+            # If any package contains *.json files, include them:
+            "": ["*.json"],
+    },
     author="Jeremy Garcia, Sylvain Takerkart",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
     license='MIT',
-    install_requires=['flake8','pytest'],
-    include_package_data=True,
-    entry_points = {
+    install_requires=['flake8', 'pytest'],
+    entry_points={
         'console_scripts': ['AnDOChecker=ando.checker:main',
                             'AnDOGenerator=tools.generator.AnDOGenerator:main',
                             'AnDOViewer=tools.viewer.AnDOViewer:main',],
