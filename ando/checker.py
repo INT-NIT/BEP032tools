@@ -19,7 +19,7 @@ import os.path
 import sys
 from ando.engine import is_AnDO
 
-dir_rules = os.path.join(os.path.dirname(__file__)) + 'rules/'
+dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
 
 
 def main():
@@ -51,7 +51,7 @@ def main():
             directory = args.path
         except IndexError:
             directory = '.'
-      
+
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)

@@ -20,7 +20,7 @@ from ando.error import ExperimentError, \
     RawDataError
 
 
-dir_rules = os.path.join(os.path.dirname(__file__)) + '/rules/'
+dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
 
 
 def parse_all_path(nested_list_of_dir):
@@ -121,7 +121,7 @@ def create_nested_list_of_path(directory):
     to create a list of path as follow
     take the last element of the path and walks through to get every sub
     dir as follow:
-    /home/garciaj/AnDOChecker/checker/tests/ds001/Data/Landing/
+    /home/AnDOChecker/checker/tests/ds001/Data/Landing/
     to
     [['Landing', 'sub-enya', 'y180116-land-001', 'Sources']]
 
@@ -295,8 +295,7 @@ def is_experiment(names):
         [type]: [True or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules
-                                      + 'experiment_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules, 'experiment_rules.json'))
     conditions = []
     if type(names) == str:
 
@@ -321,8 +320,7 @@ def is_rawdata(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules
-                                      + 'rawdata_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules, 'rawdata_rules.json'))
     conditions = []
 
     if type(names) == str:
@@ -350,8 +348,7 @@ def is_metadata(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules
-                                      + 'metadata_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules, 'metadata_rules.json'))
     conditions = []
 
     if type(names) == str:
@@ -379,8 +376,7 @@ def is_derivatives(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules
-                                      + 'derivatives_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules,'derivatives_rules.json'))
     conditions = []
 
     if type(names) == str:
@@ -408,7 +404,7 @@ def is_session(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules + 'session_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules,'session_rules.json'))
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
@@ -434,7 +430,7 @@ def is_subject(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(dir_rules + 'subject_rules.json')
+    regexps = get_regular_expressions(os.path.join(dir_rules, 'subject_rules.json'))
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
