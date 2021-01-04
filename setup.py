@@ -40,7 +40,7 @@ setup(
                             'AnDOViewer=tools.viewer.AnDOViewer:main'],
     },
     python_requires='>=3.6',
-    extras={
+    extras_require={
         'tools': ['pandas'],
         'test': ['pytest']
     }
