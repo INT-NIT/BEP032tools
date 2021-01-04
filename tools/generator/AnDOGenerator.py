@@ -1,10 +1,15 @@
-import pandas as pd
 from pathlib import Path
 import datetime
 import warnings
 import argparse
 import os
 import re
+
+try:
+    import pandas as pd
+    HAVE_PANDAS = True
+except ImportError:
+    HAVE_PANDAS = False
 
 import ando
 from ando.engine import check_Path, get_regular_expressions
@@ -155,6 +160,10 @@ class AnDOSession:
 
 
 def extract_structure_from_csv(csv_file):
+
+    if not HAVE_PANDAS:
+        raise ImportError('Extraction of ando structure from csv requires pandas.')
+
     df = pd.read_csv(csv_file)
 
     # ensure all fields contain information
