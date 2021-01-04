@@ -236,7 +236,7 @@ def check_Path(names, verbose):
                 bool_error = 1
         if not is_derivatives(names):
             try:
-                raise DataError(names)
+                raise DataError(names, 'derivatives')
             except DataError as e:
                 if verbose is True:
                     print(e.strerror)
