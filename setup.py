@@ -26,8 +26,8 @@ setup(
     version=verstr,
     packages=find_packages(),
     package_data={
-            # If any package contains *.json files, include them:
-            "": ["*.json"],
+            # If any package contains *.json or *.csv files, include them:
+            "": ["*.json", '*.csv'],
     },
     author="Jeremy Garcia, Sylvain Takerkart",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
