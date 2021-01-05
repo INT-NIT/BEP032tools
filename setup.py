@@ -4,26 +4,14 @@
 from setuptools import setup, find_packages
 import os
 
-import re
-
-verstr = "unknown"
-try:
-    verstrline = open('_version.py', "rt").read()
-except EnvironmentError:
-    pass # Okay, there is no version file.
-else:
-    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-    mo = re.search(VSRE, verstrline, re.M)
-    if mo:
-        verstr = mo.group(1)
-    else:
-        raise RuntimeError("unable to find version in yourpackage/_version.py")
-
+# Extract central version information
+with open(os.path.join(os.path.dirname(__file__), "ando", "VERSION")) as version_file:
+    version = version_file.read().strip()
 
 
 setup(
-    name="AnDOChecker",
-    version=verstr,
+    name="AnDO",
+    version=version,
     packages=find_packages(),
     package_data={
             # If any package contains *.json or *.csv files, include them:
