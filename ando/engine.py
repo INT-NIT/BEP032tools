@@ -164,9 +164,9 @@ def is_AnDO(directory, verbose, webcall):
         validate = []
         names = create_nested_list_of_path(directory)
         for item in names:
-            validate.append(check_Path(item, verbose))
+            validate.append(check_Path(item, verbose)[0])
         return any(validate)
-    else :
+    else:
         found_err = check_Path(directory, True)
         if found_err == False :
             return 0,None;
