@@ -67,6 +67,7 @@ class AnDOSesID:
             if isinstance(date, datetime.datetime):
                 self.date = date.strftime('%Y%m%d')
             else:
+                # TODO: Check this has the right fomat
                 self.date = date
 
         # if only sesID is provided, we use the session regex to extract infos
