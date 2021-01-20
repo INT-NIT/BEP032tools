@@ -263,7 +263,7 @@ def is_experiment(names):
     return any(flatten(conditions))
 
 def is_ephys(names):
-    """[Check names follows rawdata rules]
+    """[Check names follows ephys rules]
 
     Args:
         names ([str]): [names founds in the path]
