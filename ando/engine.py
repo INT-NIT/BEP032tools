@@ -224,45 +224,14 @@ def check_Path(names, verbose):
             out.append(e.strout)
             bool_error = 1
 
-    if len(names) == 6:
-
-        if not is_rawdata(names):
-            try:
-                raise DataError(names, type='raw')
-            except DataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-        if not is_derivatives(names):
-            try:
-                raise DataError(names, 'derivatives')
-            except DataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-        if not is_metadata(names):
-            try:
-                raise DataError(names, type='metadata')
-            except DataError as e:
-                if verbose is True:
-                    print(e.strerror)
-                out.append(e.strout)
-                bool_error = 1
-
-    else:
-
-        for data_lvl_validator in [is_metadata, is_rawdata, is_derivatives]:
-            if not data_lvl_validator(names):
-                try:
-                    # extracting the missing folder type from validation function name
-                    raise DataError(names, type=data_lvl_validator.__name__.replace('is_', ''))
-                except DataError as e:
-                    if verbose is True:
-                        print(e.strerror)
-                    out.append(e.strout)
-                    bool_error = 1
+    if not is_ephys(names):
+        try:
+            raise SubjectError(names)
+        except SubjectError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
     if len(out) >= 1:
         return bool_error, out
     else:
@@ -292,6 +261,34 @@ def is_experiment(names):
                               for x in regexps])
 
     return any(flatten(conditions))
+
+def is_ephys(names):
+    """[Check names follows rawdata rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules, 'ephys_rules.json'))
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
 
 
 def is_rawdata(names):

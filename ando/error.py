@@ -92,6 +92,25 @@ class SessionError(Exception):
                 + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
                 + '<ul></div></div>'
 
+class SubjectError(Exception):
+    """Exception raised when the name does not follow the AnDO specification of subject level
+
+
+    Args:
+        Exception ([Exception]): [raised in engine.py]
+    """
+
+    def __init__(self, arg):
+        names = arg
+        self.strerror = 'Level 3 error [Ephys folder] at : ' + names[2] + '\n' \
+            + '  Ephys folder is missing or does not follow the AnDO specification rules:\n' \
+            + '    - Ephys \n'
+        self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
+                + '1 error found at subject folder level.  </div><div class="card-body"> ' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
+                + "[Subject folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
+                + '</b></i>It should follow the sub-ID format, where:  '\
+                + ' <ul><li> ID is a string designating the IDentifier of the animal</li><ul></div></div>'
 
 class DataError(Exception):
     """
