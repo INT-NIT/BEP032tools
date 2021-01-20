@@ -55,6 +55,9 @@ class Test_Rules(unittest.TestCase):
     def test_ephys_rules1(self):
         list = ["Ephys"]
         self.assertEqual(andoE.is_ephys(list), False)
+    def test_ephys_rules3(self):
+        list = ["NotEphysAtAll"]
+        self.assertEqual(andoE.is_ephys(list), False)
   
 
 

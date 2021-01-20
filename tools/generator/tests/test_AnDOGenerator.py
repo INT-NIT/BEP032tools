@@ -82,15 +82,14 @@ class Test_AnDOSession(unittest.TestCase):
 
 
     def test_paths(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID, self.ephys)
+        ses = AnDOSession(self.expName, self.guid, self.sesID)
 
         expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}',f'{self.ephys}')
         self.assertEqual(expected, ses.get_session_path())
         self.assertEqual(1, len(ses.get_all_folder_paths())) # There is now only one subfolder called ephys
 
     def test_generate_folders(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID,self.ephys)
-
+        ses = AnDOSession(self.expName, self.guid, self.sesID)
         paths = ses.get_all_folder_paths()
 
         # delete paths in case they already exist
