@@ -93,7 +93,7 @@ class SessionError(Exception):
                 + '<ul></div></div>'
 
 class EphysError(Exception):
-    """Exception raised when the name does not follow the AnDO specification of subject level
+    """Exception raised when the name does not follow the AnDO specification on the ephy level
 
 
     Args:
@@ -111,4 +111,3 @@ class EphysError(Exception):
                 + "[Subject ephys error] at : "+names[2]+" </strong></h4><br><b><i>" \
                 + '</b></i>Ephys folder is missing or does not follow the AnDO specification rules:  '\
                 + ' <ul><li> ephys</li><ul></div></div>'
-
