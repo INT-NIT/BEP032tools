@@ -123,14 +123,14 @@ class AnDOSession:
     def get_session_path(self):
         path = os.path.join(f'exp-{self.expName}',
                             f'sub-{self.guid}',
-                            f'ses-{self.sesID}')
+                            f'ses-{self.sesID}',
+                            f'ephys')
         return path
 
     def get_all_folder_paths(self):
         paths = []
         session = self.get_session_path()
-        for datafolder in ['rawdata', 'metadata', 'derivatives']:
-            paths.append(os.path.join(session, datafolder))
+        paths.append(session)
 
         # validate generated paths with AnDO
         combined_paths = []

@@ -52,6 +52,7 @@ class Test_AnDOSession(unittest.TestCase):
         self.sesNumber = '100'
         self.customSesField = 'test'
         self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
+        self.ephys = 'ephys'
 
 
     def test_insufficient_input(self):
@@ -81,15 +82,14 @@ class Test_AnDOSession(unittest.TestCase):
 
     # TODO: This check is still failing, review engine/check_Path for consistency
     def test_paths(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
+        ses = AnDOSession(self.expName, self.guid, self.sesID, self.ephys)
 
-        expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}')
+        expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}',f'{self.ephys}')
         self.assertEqual(expected, ses.get_session_path())
-
-        self.assertEqual(3, len(ses.get_all_folder_paths()))
+        self.assertEqual(1, len(ses.get_all_folder_paths())) # There is now only one subfolder called ephys
 
     def test_generate_folders(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
+        ses = AnDOSession(self.expName, self.guid, self.sesID,self.ephys)
 
         paths = ses.get_all_folder_paths()
 
