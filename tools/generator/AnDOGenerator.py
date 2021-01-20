@@ -124,7 +124,6 @@ class AnDOSession:
         path = os.path.join(f'exp-{self.expName}',
                             f'sub-{self.guid}',
                             f'ses-{self.sesID}',
-                            MANDATORY_SUBFOLDER
                             )
         return path
 
@@ -143,7 +142,6 @@ class AnDOSession:
         assert not check_Path(combined_paths, verbose=False)[0], \
             'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
             'specifications'
-        print(paths)
         return paths
 
     def generate_folders(self, basedir, clean=False):
