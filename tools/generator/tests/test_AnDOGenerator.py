@@ -80,7 +80,7 @@ class Test_AnDOSession(unittest.TestCase):
         self.assertEqual(self.guid, ses.guid)
         self.assertEqual(self.sesID, str(ses.sesID))
 
-    # TODO: This check is still failing, review engine/check_Path for consistency
+
     def test_paths(self):
         ses = AnDOSession(self.expName, self.guid, self.sesID, self.ephys)
 

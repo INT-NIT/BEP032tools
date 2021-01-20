@@ -15,7 +15,7 @@ import os
 import json
 import re
 import pathlib
-from ando.error import ExperimentError, SessionError, SubjectError, DataError
+from ando.error import ExperimentError, SessionError, SubjectError, EphysError
 
 
 dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
@@ -226,8 +226,8 @@ def check_Path(names, verbose):
 
     if not is_ephys(names):
         try:
-            raise SubjectError(names)
-        except SubjectError as e:
+            raise EphysError(names)
+        except EphysError as e:
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
