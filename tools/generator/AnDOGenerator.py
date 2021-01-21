@@ -28,7 +28,7 @@ ESSENTIAL_PARAMS = ['expName', 'guid', 'date', 'sesNumber']
 
 LABEL_MAPPING = {label: param for param, labels in LABEL_TRANSLATOR.items() for label in labels}
 
-
+MANDATORY_SUBFOLDER = "ephys"
 class AnDOSesID:
 
     def __init__(self, sesID=None, date=None, sesNumber=None, customSesField=None):
@@ -123,13 +123,14 @@ class AnDOSession:
     def get_session_path(self):
         path = os.path.join(f'exp-{self.expName}',
                             f'sub-{self.guid}',
-                            f'ses-{self.sesID}')
+                            f'ses-{self.sesID}',
+                            )
         return path
 
     def get_all_folder_paths(self):
         paths = []
         session = self.get_session_path()
-        for datafolder in ['rawdata', 'metadata', 'derivatives']:
+        for datafolder in [MANDATORY_SUBFOLDER]:
             paths.append(os.path.join(session, datafolder))
 
         # validate generated paths with AnDO
@@ -141,7 +142,6 @@ class AnDOSession:
         assert not check_Path(combined_paths, verbose=False)[0], \
             'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
             'specifications'
-
         return paths
 
     def generate_folders(self, basedir, clean=False):

@@ -1,5 +1,4 @@
 import unittest
-import shutil
 from tools.generator.AnDOGenerator import *
 
 from tools.generator.tests.utils import *
@@ -54,6 +53,7 @@ class Test_AnDOSession(unittest.TestCase):
         self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
 
 
+
     def test_insufficient_input(self):
         with self.assertRaises(ValueError):
             AnDOSession(None, self.guid)
@@ -79,18 +79,15 @@ class Test_AnDOSession(unittest.TestCase):
         self.assertEqual(self.guid, ses.guid)
         self.assertEqual(self.sesID, str(ses.sesID))
 
-    # TODO: This check is still failing, review engine/check_Path for consistency
+
     def test_paths(self):
         ses = AnDOSession(self.expName, self.guid, self.sesID)
-
         expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}')
         self.assertEqual(expected, ses.get_session_path())
-
-        self.assertEqual(3, len(ses.get_all_folder_paths()))
+        self.assertEqual(1, len(ses.get_all_folder_paths())) # There is now only one subfolder called ephys
 
     def test_generate_folders(self):
         ses = AnDOSession(self.expName, self.guid, self.sesID)
-
         paths = ses.get_all_folder_paths()
 
         # delete paths in case they already exist

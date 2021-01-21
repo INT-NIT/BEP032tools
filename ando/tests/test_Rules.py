@@ -48,6 +48,18 @@ class Test_Rules(unittest.TestCase):
         list = ["Sub_001"]
         self.assertEqual(andoE.is_subject(list), False)
 
+    '''testing ephys rules'''
+    def test_ephys_rules(self):
+        list = ["ephys"]
+        self.assertEqual(andoE.is_ephys(list), True)
+    def test_ephys_rules1(self):
+        list = ["Ephys"]
+        self.assertEqual(andoE.is_ephys(list), False)
+    def test_ephys_rules3(self):
+        list = ["NotEphysAtAll"]
+        self.assertEqual(andoE.is_ephys(list), False)
+  
+
 
 if __name__ == '__main__':
     unittest.main()

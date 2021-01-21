@@ -92,24 +92,22 @@ class SessionError(Exception):
                 + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
                 + '<ul></div></div>'
 
+class EphysError(Exception):
+    """Exception raised when the name does not follow the AnDO specification on the ephy level
 
-class DataError(Exception):
-    """
-    Exception raised when the name does not follow the AnDO specification at the data folder level
 
     Args:
         Exception ([Exception]): [raised in engine.py]
     """
 
-    def __init__(self, arg, type='rawdata/metadata/derivatives'):
-        if type not in ['rawdata/metadata/derivatives', 'derivatives', 'metadata', 'rawdata']:
-            raise ValueError(f'Invalid missing folder type on data level (Level 4): {type}')
+    def __init__(self, arg):
         names = arg
-        self.strerror = f'Level 4 error [data folder missing]\n' \
-                        f'A subfolder "{type}" is required in the session folder "{names[2]}"\n'
+        self.strerror = 'Level 3 error [Ephys folder] at : ' + names[2] + '\n' \
+            + '  Ephys folder is missing or does not follow the AnDO specification rules:\n' \
+            + '    - Ephys \n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                      '1 error found at data folder level.  </div><div class="card-body"> ' \
-                      '<h4 class="em-header clearfix"><strong class="em-header pull-left">' \
-                      f'Error at level 4 [data folder error] at : {names[2]} </strong>' \
-                      f'</h4><br> A subfolder <i><b>{type}</i></b> is required in the session ' \
-                      f'folder "{names[2]}".</div></div>'
+                + '1 error found at session folder level.  </div><div class="card-body"> ' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
+                + "[Subject ephys error] at : "+names[2]+" </strong></h4><br><b><i>" \
+                + '</b></i>Ephys folder is missing or does not follow the AnDO specification rules:  '\
+                + ' <ul><li> ephys</li><ul></div></div>'
