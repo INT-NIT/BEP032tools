@@ -51,7 +51,7 @@ class Test_AnDOSession(unittest.TestCase):
         self.sesNumber = '100'
         self.customSesField = 'test'
         self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
-        self.ephys = 'ephys'
+
 
 
     def test_insufficient_input(self):
