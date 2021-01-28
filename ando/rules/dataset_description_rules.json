@@ -1,0 +1,11 @@
+{
+  "dataset_description_files": {
+  "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\](dataset_description)(@@@_dataset_description_ext_@@@)$",
+  "tokens": {
+    "@@@_dataset_description_ext_@@@": [
+      "\\.tsv",
+      "\\.json"
+    ]
+  }
+}
+}

@@ -172,6 +172,36 @@ def is_AnDO(directory, verbose, webcall):
             return 0,None;
         else : return found_err
 
+def next_is_AnDO(path):
+    """
+
+    Check if file path adhere to AnDO.
+    Main method of the validator. uses other class methods for checking
+    different aspects of the directory path.
+
+
+    Args:
+        directory ([str]): [names of the directory to check]
+
+    Returns:
+        [bool]: [does the directory adhere to the ando specification]
+    """
+    paths=[]
+    conditions=[]
+    if type(path) == str:
+        for r, d, f in os.walk(path):
+            for file in f:
+                paths.append(os.path.join(r, file))
+    else:
+        paths = path
+    conditions.append(is_top_level(paths))
+    conditions.append(is_file_level(paths))
+    conditions.append(is_session(paths))
+    conditions.append(is_subject(paths))
+
+    return(any(conditions))
+
+
 
 def check_Path(names, verbose):
     """
@@ -262,119 +292,6 @@ def is_experiment(names):
 
     return any(flatten(conditions))
 
-def is_ephys(names):
-    """[Check names follows ephys rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules, 'ephys_rules.json'))
-    conditions = []
-
-    if type(names) == str:
-
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
-
-def is_rawdata(names):
-    """[Check names follows rawdata rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules, 'rawdata_rules.json'))
-    conditions = []
-
-    if type(names) == str:
-
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
-def is_metadata(names):
-    """[Check names follows metadata rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules, 'metadata_rules.json'))
-    conditions = []
-
-    if type(names) == str:
-
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
-def is_derivatives(names):
-    """[Check names follows derivatives rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules,'derivatives_rules.json'))
-    conditions = []
-
-    if type(names) == str:
-
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-
 def is_session(names):
     """[Check names follows session rules]
 
@@ -400,6 +317,56 @@ def is_session(names):
 
     return any(flatten(conditions))
 
+def is_file_level(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules,'file_level_data_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([(re.compile(x).search(word) is not None)
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+
+def is_top_level(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules,'top_level_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+             conditions.append([(re.compile(x).search(word) is not None)
+                              for x in regexps])
+    
+    return any(flatten(conditions))
+
 
 def is_subject(names):
     """[Check names follows subject rules]
@@ -421,7 +388,7 @@ def is_subject(names):
         for word in names:
             conditions.append([re.compile(x).search(word) is not None
                               for x in regexps])
-
+    print(conditions)
         #  print(flatten(conditions))
 
     return any(flatten(conditions))

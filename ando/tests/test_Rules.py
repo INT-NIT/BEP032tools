@@ -37,27 +37,39 @@ class Test_Rules(unittest.TestCase):
 
     '''testing subject rules'''
     def test_subject_rules(self):
-        list = ["sub-001"]
+        list = ["exp-test/sub-001/sub-001_sessions.tsv"]
+        self.assertEqual(andoE.is_subject(list), True)
+    def test_subject_rules_1(self):
+        list = ["exp-test/sub-001/sub-001_sessions.tsv"]
         self.assertEqual(andoE.is_subject(list), True)
 
-    def test_subject_rules_1(self):
-        list = ["sub_001"]
-        self.assertEqual(andoE.is_subject(list), False)
-
     def test_subject_rules_2(self):
-        list = ["Sub_001"]
+        list = ["exp-test/sub-001/sub-001_session.tsv"]
         self.assertEqual(andoE.is_subject(list), False)
 
-    '''testing ephys rules'''
-    def test_ephys_rules(self):
-        list = ["ephys"]
-        self.assertEqual(andoE.is_ephys(list), True)
-    def test_ephys_rules1(self):
-        list = ["Ephys"]
-        self.assertEqual(andoE.is_ephys(list), False)
-    def test_ephys_rules3(self):
-        list = ["NotEphysAtAll"]
-        self.assertEqual(andoE.is_ephys(list), False)
+    def test_subject_rules_3(self):
+        list = ["/sub-001/sub-001_sessions.tsv"]
+        self.assertEqual(andoE.is_subject(list), False)
+
+    '''top level rules'''
+    def test_top_level_rules(self):
+        list = ["exp-test/dataset_description.tsv"]
+        self.assertEqual(andoE.is_top_level(list), True)
+    def test_top_level_rules1(self):
+        list = ["exp-test/subject.tsv"]
+        self.assertEqual(andoE.is_top_level(list), True)
+    def test_top_level_rules3(self):
+        list = ["exp-test/subject.json"]
+        self.assertEqual(andoE.is_top_level(list), True)
+    def test_top_level_rules4(self):
+        list = ["exp-test/Not_dataset_description.tsv"]
+        self.assertEqual(andoE.is_top_level(list), False)
+    def test_top_level_rules5(self):
+        list = ["exp-test/not_subject.tsv"]
+        self.assertEqual(andoE.is_top_level(list), False)
+    def test_top_level_rules6(self):
+        list = ["exp-test/not_subject.json"]
+        self.assertEqual(andoE.is_top_level(list), False)
   
 
 

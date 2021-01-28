@@ -51,6 +51,13 @@ class Test_AnDOSession(unittest.TestCase):
         self.sesNumber = '100'
         self.customSesField = 'test'
         self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
+        self.dataSetDescriptionFileName = "dataset_description.json"
+        self.dataSetDescriptionFile = self.expName+"/"+self.dataSetDescriptionFileName
+        self.subjectFileName = "subject.json"
+        self.subjectFile = self.expName+"/"+self.subjectFileName
+        self.dataFileName = f'sub-{self.guid}'+f'-ses-{self.sesID}'+'_ephys.nii'
+        self.dataFile =(f'exp-{self.expName}'+"/"+f'sub-{self.guid}'+"/"+f'ses-{self.sesID}'+"/"+self.dataFileName)
+
 
 
 
@@ -73,7 +80,7 @@ class Test_AnDOSession(unittest.TestCase):
                           self.guid,
                           sesNumber=self.sesNumber,
                           date=self.date,
-                          customSesField=self.customSesField)
+                          customSesField=self.customSesField) 
 
         self.assertEqual(self.expName, ses.expName)
         self.assertEqual(self.guid, ses.guid)
@@ -81,13 +88,17 @@ class Test_AnDOSession(unittest.TestCase):
 
 
     def test_paths(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
-        expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}')
+        ses = AnDOSession(self.expName, self.guid, self.sesID, dataFile=self.dataFile,dataSetDescriptionFile=self.dataSetDescriptionFile, subjectFile=self.subjectFile)
+        expected=[]#list of file
+        expected.append(f'exp-{self.expName}'+"/"+f'sub-{self.guid}'+"/"+f'ses-{self.sesID}'+"/"+self.dataFile)
+        expected.append(f'exp-{self.expName}'+"/"+self.dataSetDescriptionFile)
+        expected.append(f'exp-{self.expName}'+"/"+self.subjectFile)
+
         self.assertEqual(expected, ses.get_session_path())
-        self.assertEqual(1, len(ses.get_all_folder_paths())) # There is now only one subfolder called ephys
 
     def test_generate_folders(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
+        ses = AnDOSession(self.expName, self.guid, self.sesID, dataFile=self.dataFile,dataSetDescriptionFile=self.dataSetDescriptionFile,subjectFile=self.subjectFile)
+
         paths = ses.get_all_folder_paths()
 
         # delete paths in case they already exist

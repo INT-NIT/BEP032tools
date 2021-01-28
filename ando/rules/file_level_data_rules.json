@@ -1,0 +1,20 @@
+{
+    "file_level_data": {
+      "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)[\\/\\\\]ses-(\\d{8})_(\\d{3})((_[0-9a-zA-Z-]+)??)[\\/\\\\]ephys[\\/\\\\](sub-[a-zA-Z0-9]+)_(ses-(\\d{8})_(\\d{3})((_[0-9a-zA-Z-]+)??))((task-[a-zA-Z0-9]+)??)((_runs-[a-zA-Z0-9]+)??)((_split-[a-zA-Z0-9]+)??)(@@@_ephys_name_@@@)(@@@_ephys_ext_@@@)$",
+      "tokens": {
+        "@@@_ephys_ext_@@@": [
+          "\\.nii",
+          "\\.nix",
+          "\\.nwb",
+          "\\.json",
+          "\\.tsv"
+        ] ,
+        "@@@_ephys_name_@@@": [
+            "_ephys",
+            "_channels",
+            "_electrodes",
+            "_probs"
+          ]
+      }
+    }
+  }

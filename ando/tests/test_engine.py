@@ -36,39 +36,6 @@ class test_AnDO(unittest.TestCase):
         validate = list()
         self.assertEqual(andoE.check_Path(names, False)[0], True)
 
-    def test_AnDO_Func_subject_level(self):
-        """
-        Check if the subject level follow the rules given in
-        rules/subject_rules.json
-        """
-        names = list()
-        names = ['exp-Landing', 'anye', 'sess-180116_001_m_anye_land-001',
-                 'source']
-        validate = list()
-        self.assertEqual(andoE.check_Path(names, False)[0], True)
-
-    def test_AnDO_Func_session_level(self):
-        """
-        Check if the session level follow the rules given in
-        rules/session_rules.json
-        """
-        names = list()
-        names = ['exp-Landing', 'sub-anye', '180116_001_m_anye_land-001',
-                 'source']
-        validate = list()
-        self.assertEqual(andoE.check_Path(names, False)[0], True)
-
-    def test_AnDO_Func_sources_level(self):
-        """
-        Check if the sources level follow the rules given in
-        rules/sources_rules.json
-        """
-        names = list()
-        names = ['exp-Landing', 'sub-anye', 'sess-180116_001_m_anye_land-001',
-                 'sources']
-        validate = list()
-        self.assertEqual(andoE.check_Path(names, False)[0], True)
-
 
 if __name__ == '__main__':
     unittest.main()

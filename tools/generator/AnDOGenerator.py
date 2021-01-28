@@ -12,7 +12,7 @@ except ImportError:
     HAVE_PANDAS = False
 
 import ando
-from ando.engine import check_Path, get_regular_expressions
+from ando.engine import next_is_AnDO, get_regular_expressions
 
 # mapping of human readable labels to AnDO session parameters
 LABEL_TRANSLATOR = {'expName': ['experiment_name', 'experiment_names', 'experiments_name'],
@@ -88,7 +88,7 @@ class AnDOSesID:
 class AnDOSession:
 
     def __init__(self, expName=None, guid=None, sesID=None, date=None, sesNumber=None,
-                 customSesField=None):
+                 customSesField=None, dataSetDescriptionFile=None, subjectFile=None, dataFile=None):
         """
         Representation of all AnDO Session, as specified by the AnDOChecker
 
@@ -119,12 +119,16 @@ class AnDOSession:
                                date=date,
                                sesNumber=sesNumber,
                                customSesField=customSesField)
+        self.dataSetDescriptionFile = dataSetDescriptionFile
+        self.subjectFile = subjectFile
+        self.dataFile = dataFile
 
     def get_session_path(self):
-        path = os.path.join(f'exp-{self.expName}',
-                            f'sub-{self.guid}',
-                            f'ses-{self.sesID}',
-                            )
+        path=[]
+        path.append(f'exp-{self.expName}'+"/"+f'sub-{self.guid}'+"/"+f'ses-{self.sesID}'+"/"+self.dataFile)
+        path.append(f'exp-{self.expName}'+"/"+self.dataSetDescriptionFile)
+        path.append(f'exp-{self.expName}'+"/"+self.subjectFile)
+
         return path
 
     def get_all_folder_paths(self):
@@ -139,7 +143,7 @@ class AnDOSession:
             for folder in path.split(os.path.sep):
                 if folder not in combined_paths:
                     combined_paths.append(folder)
-        assert not check_Path(combined_paths, verbose=False)[0], \
+        assert not next_is_AnDO(paths), \
             'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
             'specifications'
         return paths

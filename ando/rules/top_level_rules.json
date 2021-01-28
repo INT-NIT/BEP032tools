@@ -1,0 +1,13 @@
+
+{
+  "subject_top": {
+    "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\]?(@@@_root_files_@@@)$",
+    "tokens": {
+      "@@@_root_files_@@@": [
+        "subject\\.tsv",
+        "subject\\.json",
+        "dataset_description\\.tsv"
+      ]
+    }
+  }
+}

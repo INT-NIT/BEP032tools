@@ -1,5 +1,11 @@
 {
-    "subject_level": {
-        "regexp": "\\b(\\w*sub-\\w*)\\b"
+    "subjects_files": {
+      "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)(@@@_subject_level_ext_@@@)$",
+      "tokens": {
+        "@@@_subject_level_ext_@@@": [
+          "_sessions\\.tsv",
+          "_sessions\\.json"
+        ]
+      }
     }
-}  
+  }
