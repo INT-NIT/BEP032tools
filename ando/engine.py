@@ -18,10 +18,22 @@ import pathlib
 from ando.error import ExperimentError, SessionError, SubjectError, EphysError
 
 
-dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
+dir_rules_folders = os.path.join(os.path.dirname(__file__), 'rules/folders')
 
 
+dir_rules_files = os.path.join(os.path.dirname(__file__), 'rules/files')
+
+# ------------------------------ MAIN ENGINE ------------------------------ #
+
+def mainEngine(path,verbose):
+    if is_AnDO_Directory(path, verbose, False) == False:
+        if is_AnDO_File(path):
+            return True 
+        else: return False
+    else: return False
+# ------------------------------ TOOLS ------------------------------ #
 def parse_all_path(nested_list_of_dir):
+
     """
     Transforms this
     [
@@ -144,8 +156,76 @@ def create_nested_list_of_path(directory):
 
     return nested_list_of_dir_parsed
 
+def check_Path(names, verbose):
+    """
+    Check if file path adhere to AnDO.
+    Main method of the validator. uses other class methods for checking
+    different aspects of the directory path.
 
-def is_AnDO(directory, verbose, webcall):
+    Args:
+        names ([list]): [names to check]
+
+    Raises:
+        ExperimentError: raised if it does not  respect the experiment rules
+        SessionError: raised if it does not respect  the session rules
+        SubjectError: raised if it does not respect the subject rules
+        RawDataError: raised if it does not respect the rawdata rules
+        DerivativeDataError: raised if it does not respect the derivatives rules
+        MetaDataError: raised if it does not respect the metadata rules
+
+    Returns:
+        [bool]: true if error is found else false
+        [out]: feedback for the web page
+    """
+    bool_error = 0
+    out = list()
+    # only error that exit without checking other folder
+    if not is_experiment_folder(names[0]):
+        try:
+            raise ExperimentError(names)
+        except ExperimentError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+            return bool_error, out
+
+    if not is_session_folder(names):
+        try:
+            raise SessionError(names)
+        except SessionError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+    if not is_subject_folder(names):
+        try:
+            raise SubjectError(names)
+        except SubjectError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+
+    if not is_ephys_folder(names):
+        try:
+            raise EphysError(names)
+        except EphysError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+    if len(out) >= 1:
+        return bool_error, out
+    else:
+        return bool_error, None
+
+
+
+# ------------------------------ FOLDERS CHECKS ------------------------------ #
+
+
+def is_AnDO_Directory(directory, verbose, webcall):
     """
 
     Check if file path adhere to AnDO.
@@ -172,7 +252,113 @@ def is_AnDO(directory, verbose, webcall):
             return 0,None;
         else : return found_err
 
-def next_is_AnDO(path):
+
+
+def is_experiment_folder(names):
+    """[Check names follows experiment rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [type]: [True or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'experiment_folder_rules.json'))
+    conditions = []
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+    return any(flatten(conditions))
+
+
+def is_subject_folder(names):
+    """[Check names follows subject rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'subject_folder_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+    
+        #  print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+def is_session_folder(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_folders,'session_folder_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+
+def is_ephys_folder(names):
+    """[Check names follows ephys rules]
+    Args:
+        names ([str]): [names founds in the path]
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'ephys_folder_rules.json'))
+    conditions = []
+
+    if type(names) == str:
+
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
+
+
+# ------------------------------- FILES CHECKS ------------------------------- #
+
+def is_AnDO_File(path):
     """
 
     Check if file path adhere to AnDO.
@@ -188,111 +374,24 @@ def next_is_AnDO(path):
     """
     paths=[]
     conditions=[]
+    directories_deep = 2
+    
     if type(path) == str:
         for r, d, f in os.walk(path):
             for file in f:
                 paths.append(os.path.join(r, file))
+ 
     else:
         paths = path
-    conditions.append(is_top_level(paths))
-    conditions.append(is_file_level(paths))
-    conditions.append(is_session(paths))
-    conditions.append(is_subject(paths))
-
+    paths  = [os.path.sep.join(path.rsplit(os.path.sep, directories_deep)[-directories_deep:]) for path in paths ]
+    conditions.append(is_SubjectDescription_file(paths))
+    conditions.append(is_DataSetDescription_file(paths))
+    conditions.append(is_file_level_file(paths))
     return(any(conditions))
 
 
 
-def check_Path(names, verbose):
-    """
-    Check if file path adhere to AnDO.
-    Main method of the validator. uses other class methods for checking
-    different aspects of the directory path.
-
-    Args:
-        names ([list]): [names to check]
-
-    Raises:
-        ExperimentError: raised if it does not  respect the experiment rules
-        SessionError: raised if it does not respect  the session rules
-        SubjectError: raised if it does not respect the subject rules
-        RawDataError: raised if it does not respect the rawdata rules
-        DerivativeDataError: raised if it does not respect the derivatives rules
-        MetaDataError: raised if it does not respect the metadata rules
-
-    Returns:
-        [bool]: true if error is found else false
-        [out]: feedback for the web page
-    """
-    bool_error = 0
-    out = list()
-    # only error that exit without checking other folder
-    if not is_experiment(names[0]):
-        try:
-            raise ExperimentError(names)
-        except ExperimentError as e:
-            if verbose is True:
-                print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-            return bool_error, out
-
-    if not is_session(names):
-        try:
-            raise SessionError(names)
-        except SessionError as e:
-            if verbose is True:
-                print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-    if not is_subject(names):
-        try:
-            raise SubjectError(names)
-        except SubjectError as e:
-            if verbose is True:
-                print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-
-    if not is_ephys(names):
-        try:
-            raise EphysError(names)
-        except EphysError as e:
-            if verbose is True:
-                print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
-    if len(out) >= 1:
-        return bool_error, out
-    else:
-        return bool_error, None
-
-
-def is_experiment(names):
-    """[Check names follows experiment rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [type]: [True or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules, 'experiment_rules.json'))
-    conditions = []
-    if type(names) == str:
-
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-    return any(flatten(conditions))
-
-def is_session(names):
+def is_file_level_file(names):
     """[Check names follows session rules]
 
     Args:
@@ -302,32 +401,7 @@ def is_session(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(os.path.join(dir_rules,'session_rules.json'))
-    conditions = []
-    if type(names) == str:
-        conditions.append([re.compile(x).search(names) is not None
-                          for x in regexps])
-    elif type(names) == list:
-
-        for word in names:
-            conditions.append([re.compile(x).search(word) is not None
-                              for x in regexps])
-
-        # print(flatten(conditions))
-
-    return any(flatten(conditions))
-
-def is_file_level(names):
-    """[Check names follows session rules]
-
-    Args:
-        names ([str]): [names founds in the path]
-
-    Returns:
-        [bool]: [true or false ]
-    """
-
-    regexps = get_regular_expressions(os.path.join(dir_rules,'file_level_data_rules.json'))
+    regexps = get_regular_expressions(os.path.join(dir_rules_files,'file_level_data_rules.json'))
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
@@ -344,7 +418,7 @@ def is_file_level(names):
     return any(flatten(conditions))
 
 
-def is_top_level(names):
+def is_DataSetDescription_file(names):
     """[Check names follows session rules]
 
     Args:
@@ -354,7 +428,29 @@ def is_top_level(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(os.path.join(dir_rules,'top_level_rules.json'))
+    regexps = get_regular_expressions(os.path.join(dir_rules_files,'dataset_description_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+             conditions.append([(re.compile(x).search(word) is not None)
+                              for x in regexps])
+    
+    return any(flatten(conditions))
+def is_SubjectDescription_file(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_files,'top_level_rules.json'))
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
@@ -368,7 +464,7 @@ def is_top_level(names):
     return any(flatten(conditions))
 
 
-def is_subject(names):
+def is_subject_file(names):
     """[Check names follows subject rules]
 
     Args:
@@ -378,7 +474,7 @@ def is_subject(names):
         [bool]: [true or false ]
     """
 
-    regexps = get_regular_expressions(os.path.join(dir_rules, 'subject_rules.json'))
+    regexps = get_regular_expressions(os.path.join(dir_rules_files, 'subject_rules.json'))
     conditions = []
     if type(names) == str:
         conditions.append([re.compile(x).search(names) is not None
@@ -393,6 +489,31 @@ def is_subject(names):
 
     return any(flatten(conditions))
 
+
+def is_session_file(names):
+    """[Check names follows session rules]
+
+    Args:
+        names ([str]): [names founds in the path]
+
+    Returns:
+        [bool]: [true or false ]
+    """
+
+    regexps = get_regular_expressions(os.path.join(dir_rules_files,'session_folder_rules.json'))
+    conditions = []
+    if type(names) == str:
+        conditions.append([re.compile(x).search(names) is not None
+                          for x in regexps])
+    elif type(names) == list:
+
+        for word in names:
+            conditions.append([re.compile(x).search(word) is not None
+                              for x in regexps])
+
+        # print(flatten(conditions))
+
+    return any(flatten(conditions))
 
 def get_regular_expressions(fileName):
     '''

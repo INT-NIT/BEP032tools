@@ -1,0 +1,21 @@
+{
+
+  "sessions_files_ses_level": {
+    "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)[\\/\\\\]ses-([0-9a-zA-Z]+)[\\/\\\\]ses-([0-9a-zA-Z]+)(@@@_ses_level_ext_@@@)$",
+    "tokens": {
+      "@@@_ses_level_ext_@@@": [
+        "\\.tsv",
+        "\\.json"
+      ]
+    }
+  },
+  "task_files": {
+      "regexp": "(exp-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)[\\/\\\\]ses-([0-9a-zA-Z]+)[\\/\\\\](sub-[a-zA-Z09]+)_(ses-([0-9a-zA-Z]+))((_runs)??)(@@@_task_ext_@@@)$",
+      "tokens": {
+        "@@@_task_ext_@@@": [
+          "\\.tsv",
+          "\\.json"
+        ]
+      }
+    }
+}

@@ -1,0 +1,5 @@
+{"session_level": {
+    "regexp": "^ses-(?P<customSesField>[0-9a-zA-Z]*\\Z)"
+
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "subjects_files": {
+      "regexp": "^(exp-[a-zA-Z0-9]+)[\\/\\\\](subjects)(@@@_subject_level_ext_@@@)$",
+      "tokens": {
+        "@@@_subject_level_ext_@@@": [
+          "\\.tsv",
+          "\\.json"
+        ]
+      }
+    }
+  }

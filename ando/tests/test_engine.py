@@ -13,28 +13,36 @@ import unittest
 import ando.engine as andoE
 import os
 path = os.getcwd()
+currpath = os.path.dirname(os.path.abspath(__file__))
 
 
 class test_AnDO(unittest.TestCase):
-    """Overall check of the rules given in the rules directory
-
-    Args:
-        unittest ([unittest]): [check every level of a given list of path ]
-    """
-
     def setUp(self):
         pass
 
-    def test_AnDO_Func_experiment_level(self):
-        """
-        Check if the experiment level follow the rules given in
-        rules/experiment_rules.json
-        """
-        names = list()
-        names = ['Landing', 'sub-anye', '180116_001_m_anye_land-001',
-                 'source']
-        validate = list()
-        self.assertEqual(andoE.check_Path(names, False)[0], True)
+    def test_mainEngine1(self):
+        directory = os.path.join(currpath, "dataset001", "Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+    def test_mainEngine2(self):
+        directory = os.path.join(currpath, "dataset002", "exp-Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+    def test_mainEngine3(self):
+        directory = os.path.join(currpath, "dataset003", "exp-landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+    def test_mainEngine4(self):
+        directory = os.path.join(currpath, "dataset004", "exp-Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+    def test_mainEngine5(self):
+        directory = os.path.join(currpath, "dataset005", "exp-Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+    def test_mainEngine6(self):
+        directory = os.path.join(currpath, "dataset006", "exp-Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), False)
+
+    def test_mainEngine1(self):
+        directory = os.path.join(currpath, "dataset007", "exp-Landing")
+        self.assertEqual(andoE.mainEngine(directory,True), True)
+
 
 
 if __name__ == '__main__':

@@ -1,0 +1,4 @@
+{
+    "subject_level": {
+        "regexp": "\\b(\\w*sub-\\w*)\\b"}
+}
