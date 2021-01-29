@@ -26,7 +26,18 @@ dir_rules_files = os.path.join(os.path.dirname(__file__), 'rules/files')
 # ------------------------------ MAIN ENGINE ------------------------------ #
 
 def mainEngine(path,verbose):
-    if is_AnDO_Directory(path, verbose, False) == False:
+    """
+    Main fuction used by the checker
+
+    Args:
+        path (path): path to the directory 
+        verbose (bool): add verbose option
+
+    Returns:
+        [bool]: True ==> AnDo compatible
+                False ==> not compatible
+    """
+    if is_AnDO_Directory(path, verbose, False) == False: #Todo : Need to be change because it's confusing.eg : IF it's false it's AnDO compatible
         if is_AnDO_File(path):
             return True 
         else: return False
@@ -255,13 +266,14 @@ def is_AnDO_Directory(directory, verbose, webcall):
 
 
 def is_experiment_folder(names):
-    """[Check names follows experiment rules]
+    """
+    Check if the experiment folder's name is AnDO compatible
 
     Args:
-        names ([str]): [names founds in the path]
+        names (str): [names founds in the path]
 
     Returns:
-        [type]: [True or false ]
+        (bool): True or false
     """
 
     regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'experiment_folder_rules.json'))
@@ -280,13 +292,14 @@ def is_experiment_folder(names):
 
 
 def is_subject_folder(names):
-    """[Check names follows subject rules]
+    """
+    Check if the subject folder's name is AnDO compatible
 
     Args:
-        names ([str]): [names founds in the path]
+        names (str): Names founds in the path
 
     Returns:
-        [bool]: [true or false ]
+        (bool): true or false
     """
 
     regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'subject_folder_rules.json'))
@@ -305,10 +318,11 @@ def is_subject_folder(names):
     return any(flatten(conditions))
 
 def is_session_folder(names):
-    """[Check names follows session rules]
+    """
+    Check if the session folder's name is AnDO compatible
 
     Args:
-        names ([str]): [names founds in the path]
+        names (str): [names founds in the path]
 
     Returns:
         [bool]: [true or false ]
@@ -331,11 +345,12 @@ def is_session_folder(names):
 
 
 def is_ephys_folder(names):
-    """[Check names follows ephys rules]
+    """
+    Check names follows ephys rules
     Args:
-        names ([str]): [names founds in the path]
+        names (str): names founds in the path
     Returns:
-        [bool]: [true or false ]
+        [bool]: [true or false]
     """
 
     regexps = get_regular_expressions(os.path.join(dir_rules_folders, 'ephys_folder_rules.json'))
@@ -392,8 +407,8 @@ def is_AnDO_File(path):
 
 
 def is_file_level_file(names):
-    """[Check names follows session rules]
-
+    """
+    Check names follows file level rules
     Args:
         names ([str]): [names founds in the path]
 
@@ -419,8 +434,8 @@ def is_file_level_file(names):
 
 
 def is_DataSetDescription_file(names):
-    """[Check names follows session rules]
-
+    """
+    Check names follows dataset_description files rules
     Args:
         names ([str]): [names founds in the path]
 
@@ -441,7 +456,8 @@ def is_DataSetDescription_file(names):
     
     return any(flatten(conditions))
 def is_SubjectDescription_file(names):
-    """[Check names follows session rules]
+    """
+    Check names follows subject files rules
 
     Args:
         names ([str]): [names founds in the path]

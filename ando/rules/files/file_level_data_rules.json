@@ -12,7 +12,7 @@
         "@@@_ephys_name_@@@": [
             "_ephys",
             "_channels",
-            "_electrodes",
+            "_contacts",
             "_probs"
           ]
       }
