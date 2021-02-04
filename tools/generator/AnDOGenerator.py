@@ -12,7 +12,7 @@ except ImportError:
     HAVE_PANDAS = False
 
 import ando
-from ando.engine import next_is_AnDO, get_regular_expressions
+from ando.engine import is_AnDO, get_regular_expressions
 
 # mapping of human readable labels to AnDO session parameters
 LABEL_TRANSLATOR = {'expName': ['experiment_name', 'experiment_names', 'experiments_name'],

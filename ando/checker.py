@@ -17,7 +17,7 @@ import os
 import argparse
 import os.path
 import sys
-from ando.engine import mainEngine
+from ando.engine import is_AnDO
 
 dir_rules = os.path.join(os.path.dirname(__file__), 'rules')
 
@@ -55,7 +55,7 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        is_AnDO = mainEngine(directory, True )
+        is_AnDO = is_AnDO(directory, True)
         if is_AnDO :
             print("\n" +
                   directory +
@@ -72,7 +72,7 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        is_AnDO = mainEngine(directory, False)
+        is_AnDO = is_AnDO(directory, False)
         if is_AnDO:
             print("\n" +
                   directory +

@@ -22,26 +22,26 @@ class test_AnDO(unittest.TestCase):
 
     def test_mainEngine1(self):
         directory = os.path.join(currpath, "dataset001", "Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
     def test_mainEngine2(self):
         directory = os.path.join(currpath, "dataset002", "exp-Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
     def test_mainEngine3(self):
         directory = os.path.join(currpath, "dataset003", "exp-landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
     def test_mainEngine4(self):
         directory = os.path.join(currpath, "dataset004", "exp-Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
     def test_mainEngine5(self):
         directory = os.path.join(currpath, "dataset005", "exp-Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
     def test_mainEngine6(self):
         directory = os.path.join(currpath, "dataset006", "exp-Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), False)
+        self.assertEqual(andoE.is_AnDO(directory, True), False)
 
     def test_mainEngine1(self):
         directory = os.path.join(currpath, "dataset007", "exp-Landing")
-        self.assertEqual(andoE.mainEngine(directory,True), True)
+        self.assertEqual(andoE.is_AnDO(directory, True), True)
 
 
 

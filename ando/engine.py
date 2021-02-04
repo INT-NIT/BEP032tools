@@ -25,17 +25,19 @@ dir_rules_files = os.path.join(os.path.dirname(__file__), 'rules/files')
 
 # ------------------------------ MAIN ENGINE ------------------------------ #
 
-def mainEngine(path,verbose):
+def is_AnDO(path, verbose):
     """
-    Main fuction used by the checker
+    Main function of the AnDOChecker. The check is performed in two steps:
+    - first, checks the names of the directories in the hierarchy
+    - secondly, checks the existence and the names of the mandatory files
 
     Args:
         path (path): path to the directory 
         verbose (bool): add verbose option
 
     Returns:
-        [bool]: True ==> AnDo compatible
-                False ==> not compatible
+        [bool]: True ==> valid with respect to the AnDO specifications
+                False ==> invalid
     """
     if is_AnDO_Directory(path, verbose, False) == False: #Todo : Need to be change because it's confusing.eg : IF it's false it's AnDO compatible
         if is_AnDO_File(path):
