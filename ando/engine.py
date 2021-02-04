@@ -201,18 +201,19 @@ def check_Path(names, verbose):
             bool_error = 1
             return bool_error, out
 
-    if not is_session_folder(names):
-        try:
-            raise SessionError(names)
-        except SessionError as e:
-            if verbose is True:
-                print(e.strerror)
-            out.append(e.strout)
-            bool_error = 1
     if not is_subject_folder(names):
         try:
             raise SubjectError(names)
         except SubjectError as e:
+            if verbose is True:
+                print(e.strerror)
+            out.append(e.strout)
+            bool_error = 1
+
+    if not is_session_folder(names):
+        try:
+            raise SessionError(names)
+        except SessionError as e:
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
