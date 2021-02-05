@@ -42,8 +42,10 @@ def is_AnDO(path, verbose):
     if is_AnDO_Directory(path, verbose, False) == False: #Todo : Need to be change because it's confusing.eg : IF it's false it's AnDO compatible
         if is_AnDO_File(path):
             return True 
-        else: return False
-    else: return False
+        else:
+            return False
+    else:
+        return False
 # ------------------------------ TOOLS ------------------------------ #
 def parse_all_path(nested_list_of_dir):
 
@@ -180,17 +182,15 @@ def check_Path(names, verbose):
 
     Raises:
         ExperimentError: raised if it does not  respect the experiment rules
-        SessionError: raised if it does not respect  the session rules
         SubjectError: raised if it does not respect the subject rules
-        RawDataError: raised if it does not respect the rawdata rules
-        DerivativeDataError: raised if it does not respect the derivatives rules
-        MetaDataError: raised if it does not respect the metadata rules
+        SessionError: raised if it does not respect  the session rules
+        EphysError: raised if it does not respect the modality rules
 
     Returns:
-        [bool]: true if error is found else false
+        [bool_error]: true if error is found else false
         [out]: feedback for the web page
     """
-    bool_error = 0
+    bool_error = False
     out = list()
     # only error that exit without checking other folder
     if not is_experiment_folder(names[0]):
@@ -200,7 +200,7 @@ def check_Path(names, verbose):
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
-            bool_error = 1
+            bool_error = True
             return bool_error, out
 
     if not is_subject_folder(names):
@@ -210,7 +210,7 @@ def check_Path(names, verbose):
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
-            bool_error = 1
+            bool_error = True
 
     if not is_session_folder(names):
         try:
@@ -219,7 +219,7 @@ def check_Path(names, verbose):
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
-            bool_error = 1
+            bool_error = True
 
     if not is_ephys_folder(names):
         try:
@@ -228,7 +228,7 @@ def check_Path(names, verbose):
             if verbose is True:
                 print(e.strerror)
             out.append(e.strout)
-            bool_error = 1
+            bool_error = True
     if len(out) >= 1:
         return bool_error, out
     else:
@@ -263,8 +263,9 @@ def is_AnDO_Directory(directory, verbose, webcall):
     else:
         found_err = check_Path(directory, True)
         if found_err == False :
-            return 0,None;
-        else : return found_err
+            return 0, None
+        else:
+            return found_err
 
 
 
@@ -404,12 +405,12 @@ def is_AnDO_File(path):
     paths  = [os.path.sep.join(path.rsplit(os.path.sep, directories_deep)[-directories_deep:]) for path in paths ]
     conditions.append(is_SubjectDescription_file(paths))
     conditions.append(is_DataSetDescription_file(paths))
-    conditions.append(is_file_level_file(paths))
+    conditions.append(is_Data_file(paths))
     return(any(conditions))
 
 
 
-def is_file_level_file(names):
+def is_Data_file(names):
     """
     Check names follows file level rules
     Args:
@@ -458,6 +459,7 @@ def is_DataSetDescription_file(names):
                               for x in regexps])
     
     return any(flatten(conditions))
+
 def is_SubjectDescription_file(names):
     """
     Check names follows subject files rules

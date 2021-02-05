@@ -55,8 +55,8 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        is_AnDO = is_AnDO(directory, True)
-        if is_AnDO :
+        is_AnDO_result = is_AnDO(directory, True)
+        if is_AnDO_result :
             print("\n" +
                   directory +
                   ": Is  validated by AnDOChecker")
@@ -72,8 +72,8 @@ def main():
         if not os.path.isdir(args.path):
             print('Directory does not exist:', args.path)
             exit(1)
-        is_AnDO = is_AnDO(directory, False)
-        if is_AnDO:
+        is_AnDO_result = is_AnDO(directory, False)
+        if is_AnDO_result:
             print("\n" +
                   directory +
                   ": Is validated by AnDOChecker")

@@ -35,13 +35,15 @@ class ExperimentError(Exception):
         names = arg
         self.strerror = 'Level 1 error [experiment folder] at : ' + names[0] + '\n' \
             + '  It should follow the exp-NAME format, where:\n' \
-            + '    - NAME is a string designating the name of your experiment\n'
+            + '    - ‘exp-’ is an imposed prefix\n' \
+            + '    - NAME is an alphanumeric string designating the name of your experiment\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at experiment folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
+                + '1 error found at experiment folder level.  </div><div class="card-body">' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type' \
                 + "[Experiment folder error] at : "+names[0]+" </strong></h4><br><b><i>" \
-                + '</b></i>It should follow the exp-NAME format, where:  '\
-                + ' <ul><li> NAME is a string designating the name of your experiment</li><ul></div></div>'
+                + '</b></i>It should follow the exp-NAME format, where:'\
+                + ' <ul><li> NAME is an alphanumeric string designating '\
+                + 'the name of your experiment</li><ul></div></div>'
 
 class SubjectError(Exception):
     """Exception raised when the name does not follow the AnDO specification of subject level
@@ -54,14 +56,16 @@ class SubjectError(Exception):
     def __init__(self, arg):
         names = arg
         self.strerror = 'Level 2 error [subject folder] at : ' + names[1] + '\n' \
-            + '  It should follow the sub-ID format, where:\n' \
-            + '    - ID is a string designating the IDentifier of the animal\n'
+            + '  It should follow the sub-subID format, where:\n' \
+            + '    - ‘sub-’ is an imposed prefix\n' \
+            + '    - subID is an alphanumeric string designating the identifier of the animal\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at subject folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
+                + '1 error found at subject folder level.  </div><div class="card-body">' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type' \
                 + "[Subject folder error] at : "+names[0]+" </strong></h4><br><b><i>" \
-                + '</b></i>It should follow the sub-ID format, where:  '\
-                + ' <ul><li> ID is a string designating the IDentifier of the animal</li><ul></div></div>'
+                + '</b></i>It should follow the sub-ID format, where:'\
+                + ' <ul><li> subID is an alphanumeric string designating ' \
+                + 'the identifier of the animal</li><ul></div></div>'
 
 class SessionError(Exception):
     """Exception raised when the name does not follow the AnDO specification of session level
@@ -74,23 +78,16 @@ class SessionError(Exception):
     def __init__(self, arg):
         names = arg
         self.strerror = 'Level 3 error [session folder] at : ' + names[2] + '\n' \
-            + '  It should follow the ses-YYYYMMDD_XXX_BBBB format, where:\n' \
+            + '  It should follow the ses-sesID format, where:\n' \
             + '    - ‘ses-’ is an imposed prefix\n' \
-            + '    - ‘YYYYMMDD’ is the date of the session (8 digits, for instance 20180430 for April 30, 2018)\n' \
-            + '    - XXX is the number of the session acquired on that date (3 digits, for instance 001 for the first session)\n' \
-            + '    - BBBB is a string freely usable by the research group / user\n' \
-            + '      (is a string freely usable by the research group / user (for instance to add extra info on \n' \
-            + '      the version of the experimental protocol, on the type of preparation, on the user-friendly name of the animal etc.);\n' \
-            + '      this string cannot contain the underscore character.\n'
+            + '    - sesID is an alphanumeric string designating the session identifier (e.g the date).\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at Session folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
+                + '1 error found at Session folder level.  </div><div class="card-body">' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type' \
                 + "[session folder error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i>It should follow the ses-YYYYMMDD_XXX_BBBB format format, where:  '\
-                + ' <ul><li>"ses-" is an imposed prefix</li>'\
-                + '<li>"YYYYMMDD" is the date of the session (8 digits, for instance 20180430 for April 30, 2018)</li>'\
-                + '<li>"BBBB" is a string freely usable by the research group / user , this string cannot contain the underscore character.</li>'\
-                + '<ul></div></div>'
+                + '</b></i>It should follow the ses-YYYYMMDD_XXX_BBBB format format, where:'\
+                + ' <ul><li> sesID is an alphanumeric string designating ' \
+                + 'the session identifier (e.g the date)</li><ul></div></div>'
 
 class EphysError(Exception):
     """Exception raised when the name does not follow the AnDO specification on the ephy level
@@ -102,12 +99,11 @@ class EphysError(Exception):
 
     def __init__(self, arg):
         names = arg
-        self.strerror = 'Level 3 error [Ephys folder] at : ' + names[2] + '\n' \
-            + '  Ephys folder is missing or does not follow the AnDO specification rules:\n' \
-            + '    - Ephys \n'
+        self.strerror = 'Level 4 error [ephys folder] at : ' + names[3] + '\n' \
+            + '  Modality folder is missing or is not called ’ephys’\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
-                + '1 error found at session folder level.  </div><div class="card-body"> ' \
-                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type ' \
-                + "[Subject ephys error] at : "+names[2]+" </strong></h4><br><b><i>" \
-                + '</b></i>Ephys folder is missing or does not follow the AnDO specification rules:  '\
-                + ' <ul><li> ephys</li><ul></div></div>'
+                + '1 error found at modality folder level.  </div><div class="card-body">' \
+                + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type' \
+                + "[Subject ephys error] at : "+names[3]+" </strong></h4><br><b><i>" \
+                + '</b></i>Modality folder is missing or is not called ’ephys’'\
+                + '<ul></div></div>'
