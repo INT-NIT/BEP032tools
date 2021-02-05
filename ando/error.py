@@ -99,11 +99,11 @@ class EphysError(Exception):
 
     def __init__(self, arg):
         names = arg
-        self.strerror = 'Level 4 error [ephys folder] at : ' + names[3] + '\n' \
+        self.strerror = 'Level 4 error [ephys folder] within this session directory: ' + names[2] + '\n' \
             + '  Modality folder is missing or is not called ’ephys’\n'
         self.strout = '<div class="card"><div class="card-header bg-danger text-white">' \
                 + '1 error found at modality folder level.  </div><div class="card-body">' \
                 + '<h4 class="em-header clearfix"><strong class="em-header pull-left">Error 4 type' \
-                + "[Subject ephys error] at : "+names[3]+" </strong></h4><br><b><i>" \
+                + "[Subject ephys error] within this session directory: " + names[2] + " </strong></h4><br><b><i>" \
                 + '</b></i>Modality folder is missing or is not called ’ephys’'\
                 + '<ul></div></div>'
