@@ -40,7 +40,7 @@ def is_AnDO(path, verbose):
                 False ==> invalid
     """
     if is_AnDO_Directory(path, verbose, False) == False: #Todo : Need to be change because it's confusing.eg : IF it's false it's AnDO compatible
-        if is_AnDO_File(path):
+        if is_AnDO_File(path, verbose, False):
             return True 
         else:
             return False
@@ -171,6 +171,36 @@ def create_nested_list_of_path(directory):
 
     return nested_list_of_dir_parsed
 
+
+# ------------------------------ FOLDERS CHECKS ------------------------------ #
+def is_AnDO_Directory(directory, verbose, webcall):
+    """
+
+    Check if file path adhere to AnDO.
+    Main method of the validator. uses other class methods for checking
+    different aspects of the directory path.
+
+
+    Args:
+        directory ([str]): [names of the directory to check]
+
+    Returns:
+        [bool]: [does the directory adhere to the ando specification]
+    """
+    if webcall == False :
+
+        validate = []
+        names = create_nested_list_of_path(directory)
+        for item in names:
+            validate.append(check_Path(item, verbose)[0])
+        return any(validate)
+    else:
+        found_err = check_Path(directory, True)
+        if found_err == False :
+            return 0, None
+        else:
+            return found_err
+
 def check_Path(names, verbose):
     """
     Check if file path adhere to AnDO.
@@ -234,41 +264,6 @@ def check_Path(names, verbose):
     else:
         return bool_error, None
 
-
-
-# ------------------------------ FOLDERS CHECKS ------------------------------ #
-
-
-def is_AnDO_Directory(directory, verbose, webcall):
-    """
-
-    Check if file path adhere to AnDO.
-    Main method of the validator. uses other class methods for checking
-    different aspects of the directory path.
-
-
-    Args:
-        directory ([str]): [names of the directory to check]
-
-    Returns:
-        [bool]: [does the directory adhere to the ando specification]
-    """
-    if webcall == False :
-
-        validate = []
-        names = create_nested_list_of_path(directory)
-        for item in names:
-            validate.append(check_Path(item, verbose)[0])
-        return any(validate)
-    else:
-        found_err = check_Path(directory, True)
-        if found_err == False :
-            return 0, None
-        else:
-            return found_err
-
-
-
 def is_experiment_folder(names):
     """
     Check if the experiment folder's name is AnDO compatible
@@ -293,7 +288,6 @@ def is_experiment_folder(names):
                               for x in regexps])
 
     return any(flatten(conditions))
-
 
 def is_subject_folder(names):
     """
@@ -347,7 +341,6 @@ def is_session_folder(names):
 
     return any(flatten(conditions))
 
-
 def is_ephys_folder(names):
     """
     Check names follows ephys rules
@@ -376,8 +369,7 @@ def is_ephys_folder(names):
 
 
 # ------------------------------- FILES CHECKS ------------------------------- #
-
-def is_AnDO_File(path):
+def is_AnDO_File(path, verbose, webcall):
     """
 
     Check if file path adhere to AnDO.
@@ -394,21 +386,25 @@ def is_AnDO_File(path):
     paths=[]
     conditions=[]
     directories_deep = 2
-    
+
+    # construct the list of files that are to be tested
+    # each item in paths is the full path of a file
     if type(path) == str:
         for r, d, f in os.walk(path):
             for file in f:
                 paths.append(os.path.join(r, file))
- 
     else:
         paths = path
-    paths  = [os.path.sep.join(path.rsplit(os.path.sep, directories_deep)[-directories_deep:]) for path in paths ]
+
+    # converts paths for formatting purposes to call subsequent functions
+    paths = [os.path.sep.join(path.rsplit(os.path.sep, directories_deep)[-directories_deep:]) for path in paths ]
+
+    # performs the tests
     conditions.append(is_SubjectDescription_file(paths))
     conditions.append(is_DataSetDescription_file(paths))
     conditions.append(is_Data_file(paths))
+
     return(any(conditions))
-
-
 
 def is_Data_file(names):
     """
@@ -435,7 +431,6 @@ def is_Data_file(names):
         # print(flatten(conditions))
 
     return any(flatten(conditions))
-
 
 def is_DataSetDescription_file(names):
     """
@@ -484,7 +479,6 @@ def is_SubjectDescription_file(names):
     
     return any(flatten(conditions))
 
-
 def is_subject_file(names):
     """[Check names follows subject rules]
 
@@ -509,7 +503,6 @@ def is_subject_file(names):
         #  print(flatten(conditions))
 
     return any(flatten(conditions))
-
 
 def is_session_file(names):
     """[Check names follows session rules]
@@ -536,6 +529,7 @@ def is_session_file(names):
 
     return any(flatten(conditions))
 
+# ------------------------------- UTILS ------------------------------- #
 def get_regular_expressions(fileName):
     '''
     https://github.com/bids-standard/bids-validator/tree/master/bids-validator/
@@ -563,7 +557,6 @@ def get_regular_expressions(fileName):
         regexps.append(regexp)
 
     return regexps
-
 
 def flatten(seq):
     """
