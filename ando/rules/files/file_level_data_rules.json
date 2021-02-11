@@ -3,7 +3,6 @@
       "regexp": "^^(exp-[a-zA-Z0-9]+)[\\/\\\\](sub-[a-zA-Z0-9]+)[\\/\\\\]ses-([0-9a-zA-Z]+)[\\/\\\\]ephys[\\/\\\\](sub-[a-zA-Z0-9]+)_(ses-([0-9a-zA-Z]+))((_task-[a-zA-Z0-9]+)??)((_runs-[a-zA-Z0-9]+)??)((_split-[a-zA-Z0-9]+)??)(@@@_ephys_name_@@@)(@@@_ephys_ext_@@@i)$$",
       "tokens": {
         "@@@_ephys_ext_@@@": [
-          "\\.nii",
           "\\.nix",
           "\\.nwb",
           "\\.json",
