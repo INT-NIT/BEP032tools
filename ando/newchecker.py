@@ -171,12 +171,12 @@ def main():
     args = parser.parse_args()
 
     try:
-        directory = args.path
+        directory = args.directory
     except IndexError:
         directory = '.'
 
-    if not os.path.isdir(args.path):
-        print('Directory does not exist:', args.path)
+    if not directory:
+        print('Directory does not exist:', directory)
         exit(1)
     dataset_validity, error_list = newchecker(directory)
     if dataset_validity :
