@@ -6,7 +6,7 @@ from tools.generator.tests.utils import *
 class Test_AnDOData(unittest.TestCase):
 
     def setUp(self):
-        test_dir = initialize_test_directory(clean=True)
+        test_dir = Path(initialize_test_directory(clean=True))
 
         self.sub_id = 'sub5'
         self.ses_id = 'ses1'
@@ -19,6 +19,14 @@ class Test_AnDOData(unittest.TestCase):
 
         self.ando_data = d
 
+        self.test_data_files = [test_dir / 'test.nix',
+                                test_dir / 'test.nwb']
+        self.test_mdata_files = [test_dir / 'dataset_descriptor.json',
+                                 test_dir / 'probes.tsv',
+                                 test_dir / 'contacts.json']
+
+        for f in self.test_mdata_files + self.test_data_files:
+            f.touch()
 
     def test_get_data_folder(self):
         df = self.ando_data.get_data_folder()
@@ -30,17 +38,27 @@ class Test_AnDOData(unittest.TestCase):
         self.assertTrue(df_local)
         self.assertTrue(str(df_abs).endswith(str(df_local)))
 
-
     def test_generate_structure(self):
         self.ando_data.generate_structure()
         df = self.ando_data.get_data_folder()
         self.assertTrue(df.exists())
 
     def test_data_files(self):
+        self.ando_data.generate_structure()
+        self.ando_data.register_data_files(*self.test_data_files)
         self.ando_data.generate_data_files()
 
+        for f in self.test_data_files:
+            self.assertTrue((self.ando_data.basedir / f).exists())
+
     def test_metadata_files(self):
+        self.ando_data.generate_structure()
+        self.ando_data.register_metadata_files(*self.test_mdata_files)
         self.ando_data.generate_metadata_files()
+
+        for f in ['probes.tsv', 'contacts.json']:
+            self.assertTrue((self.ando_data.get_data_folder() / f).exists())
+        self.assertTrue((self.basedir / 'dataset_descriptor.json').exists())
 
     def tearDown(self):
         initialize_test_directory(clean=True)

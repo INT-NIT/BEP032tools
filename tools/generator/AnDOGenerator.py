@@ -11,20 +11,15 @@ try:
 except ImportError:
     HAVE_PANDAS = False
 
-import ando
-from ando.engine import check_Path, get_regular_expressions
-
-DATA_EXTENSIONS = ['nix', 'nwb']
-METADATA_EXTENSIONS = ['tsv', 'json']
+from ando.rules import DATA_EXTENSIONS, METADATA_EXTENSIONS, rules_set
 
 MANDATORY_SUBFOLDER = "ephys"
 
-METADATA_LEVELS = {0: ['tasks', 'participants', 'dataset_description'],
-                   1: ['sessions'],
-                   2: ['ephys', 'channels', 'contacts', 'probes', 'runs']}
-
+METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(rules_set)}
 METADATA_LEVEL_BY_NAME = {v: k for k, values in METADATA_LEVELS.items() for v in values}
 
+# TODO: These can be extracted from the AnDOData init definition. Check out the
+# function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
 OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
@@ -46,30 +41,12 @@ class AnDOData:
                 identifiers as corresponding values
         """
 
-        # # replacing immutable defaults by more practical values
-        # if tasks is None:
-        #     tasks = ['']
-        # if isinstance(tasks, str):
-        #     tasks = [tasks]
-        #
-        # if runs is None:
-        #     runs = []
-        # elif not hasattr(runs, '__iter__') or isinstance(runs, str):
-        #     runs = [runs]
-
         if modality != 'ephys':
             raise NotImplementedError('AnDO only supports the ephys modality')
 
-        # # unwrapping runs if only a single list is provided for all tasks
-        # if isinstance(runs, list):
-        #     runs_original = runs.copy()
-        #     for task in tasks:
-        #         runs = {task: runs_original}
-
         # check for invalid arguments
-        # flattened_runs = [run for d in runs.values() for run in d]
-        for arg in [sub_id, ses_id]:     # + tasks + flattened_runs:
-            invalid_characters = '\/_'
+        for arg in [sub_id, ses_id]:
+            invalid_characters = '\/_'  # TODO: Should this be part of the AnDO core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
@@ -99,7 +76,7 @@ class AnDOData:
 
         files = [Path(f) for f in files]
         for file in files:
-            if file.suffix not in DATA_EXTENSIONS:
+            if file.suffix[1:] not in DATA_EXTENSIONS:
                 raise ValueError(f'Wrong file format of data {file.suffix}. '
                                  f'Valid formats are {DATA_EXTENSIONS}')
 
@@ -117,11 +94,11 @@ class AnDOData:
     def register_metadata_files(self, *files):
         files = [Path(f) for f in files]
         for file in files:
-            if file.suffix not in METADATA_EXTENSIONS:
+            if file.suffix[1:] not in METADATA_EXTENSIONS:
                 raise ValueError(f'Wrong file format of data {file.suffix}. '
                                  f'Valid formats are {METADATA_EXTENSIONS}')
 
-        self.metadata = files
+        self.mdata = files
 
     # def __str__(self):
     #     return f'{self.date}_{self.sesNumber}_{self.customSesField}'
@@ -221,10 +198,12 @@ class AnDOData:
 
         data_folder = self.get_data_folder(mode='absolute')
 
+        parents = (data_folder / '_').parents
+
         for mfile in self.mdata:
             for postfix, level in METADATA_LEVEL_BY_NAME.items():
                 if mfile.stem.endswith(postfix):
-                    create_file(mfile, data_folder - (2-level) / mfile.name,
+                    create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
 
     def validate(self):
