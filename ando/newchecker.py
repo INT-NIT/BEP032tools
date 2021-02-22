@@ -1,69 +1,30 @@
 import os
 import os.path as op
 import re
-import json
 import argparse
-
-#test_dir = "/home/takerkart/work/python/AnDO/ando/tests/dataset008/exp-missingsubjectfile"
-
-def get_regular_expressions(fileName):
-    '''
-    https://github.com/bids-standard/bids-validator/tree/master/bids-validator/
-
-    using function to read regex in rule files
-
-    '''
-
-    regexps = []
-
-    with open(fileName, 'r') as f:
-        rules = json.load(f)
-
-    for key in list(rules.keys()):
-        rule = rules[key]
-
-        regexp = rule['regexp']
-
-        if 'tokens' in rule:
-            tokens = rule['tokens']
-
-            for token in list(tokens):
-                regexp = regexp.replace(token, '|'.join(tokens[token]))
-
-        regexps.append(regexp)
-
-    return regexps
 
 # construct the set of rules to be applied, level by level
 rules_set = []
 # level 0
 currentdepth_rules={}
-#currentdepth_rules['folders'] = get_regular_expressions(op.join(rules_dir, 'folders', 'experiment_folder_rules.json'))
-#currentdepth_rules['files'] = get_regular_expressions(op.join(rules_dir, 'files', 'top_level_rules.json'))
 currentdepth_rules['authorized_folders'] = ['exp-([a-zA-Z0-9]+)']
 currentdepth_rules['authorized_files'] = ['subject\\.tsv','dataset_description\\.tsv', 'bouh.tsv']
 currentdepth_rules['mandatory_files'] = ['subject\\.tsv','dataset_description\\.tsv']
 rules_set.append(currentdepth_rules)
 # level 1
 currentdepth_rules={}
-#currentdepth_rules['folders'] = get_regular_expressions(op.join(rules_dir, 'folders', 'subject_folder_rules.json'))
-#currentdepth_rules['files'] = []
 currentdepth_rules['authorized_folders'] = ['sub-([a-zA-Z0-9]+)']
 currentdepth_rules['authorized_files'] = []
 currentdepth_rules['mandatory_files'] = []
 rules_set.append(currentdepth_rules)
 # level 2
 currentdepth_rules={}
-#currentdepth_rules['folders'] = get_regular_expressions(op.join(rules_dir, 'folders', 'session_folder_rules.json'))
-#currentdepth_rules['files'] = []
 currentdepth_rules['authorized_folders'] = ['ses-([a-zA-Z0-9]+)']
 currentdepth_rules['authorized_files'] = []
 currentdepth_rules['mandatory_files'] = []
 rules_set.append(currentdepth_rules)
 # level 3
 currentdepth_rules={}
-#currentdepth_rules['folders'] = get_regular_expressions(op.join(rules_dir, 'folders', 'ephys_folder_rules.json'))
-#currentdepth_rules['files'] = get_regular_expressions(op.join(rules_dir, 'files', 'file_level_data_rules.json'))
 currentdepth_rules['authorized_folders'] = ['ephys']
 currentdepth_rules['authorized_files'] = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys\\.nix',
                                'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys\\.nxi',
@@ -134,6 +95,7 @@ def newchecker(input_directory):
         if len(currentdepth_rules['mandatory_files']) > 0:
             # loop over rules, each rule corresponding to one mandatory file
             for current_mandatoryfile_rule in currentdepth_rules['mandatory_files']:
+                #### TO BE DONE: check whether we need a negation here.... "None" or "not None"???
                 file_res = [re.compile(current_mandatoryfile_rule).search(f) is None for f in files]
                 # if this mandatory file is missing, raise an error
                 if all(file_res):
