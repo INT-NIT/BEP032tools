@@ -3,34 +3,7 @@ import os.path as op
 import re
 import argparse
 
-# construct the set of rules to be applied, level by level
-rules_set = []
-# level 0
-currentdepth_rules={}
-currentdepth_rules['authorized_folders'] = ['exp-([a-zA-Z0-9]+)']
-currentdepth_rules['authorized_files'] = ['subject\\.tsv','dataset_description\\.tsv', 'bouh.tsv']
-currentdepth_rules['mandatory_files'] = ['subject\\.tsv','dataset_description\\.tsv']
-rules_set.append(currentdepth_rules)
-# level 1
-currentdepth_rules={}
-currentdepth_rules['authorized_folders'] = ['sub-([a-zA-Z0-9]+)']
-currentdepth_rules['authorized_files'] = []
-currentdepth_rules['mandatory_files'] = []
-rules_set.append(currentdepth_rules)
-# level 2
-currentdepth_rules={}
-currentdepth_rules['authorized_folders'] = ['ses-([a-zA-Z0-9]+)']
-currentdepth_rules['authorized_files'] = []
-currentdepth_rules['mandatory_files'] = []
-rules_set.append(currentdepth_rules)
-# level 3
-currentdepth_rules={}
-currentdepth_rules['authorized_folders'] = ['ephys']
-currentdepth_rules['authorized_files'] = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys\\.nix',
-                               'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys\\.nxi',
-                               'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys\\.nwb']
-currentdepth_rules['mandatory_files'] = []
-rules_set.append(currentdepth_rules)
+import .rules
 
 
 
@@ -85,6 +58,7 @@ def newchecker(input_directory):
         # 2. check whether rules are followed for files within the folder at this level ("authorized files")
         ###
         for current_file in files:
+            #### ADD generation of regular expressions based on base names and extensions
             file_res = [re.compile(x).search(current_file) is None for x in currentdepth_rules['authorized_files']]
             # if none of the authorized rules is respected, raise an error
             if all(file_res):
@@ -93,6 +67,7 @@ def newchecker(input_directory):
         # 3. check whether the "mandatory files" are actually present at this level!
         ###
         if len(currentdepth_rules['mandatory_files']) > 0:
+            #### ADD generation of regular expressions based on base names and extensions
             # loop over rules, each rule corresponding to one mandatory file
             for current_mandatoryfile_rule in currentdepth_rules['mandatory_files']:
                 #### TO BE DONE: check whether we need a negation here.... "None" or "not None"???
