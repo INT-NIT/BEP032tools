@@ -25,9 +25,13 @@ METADATA_LEVELS = {0: ['tasks', 'participants', 'dataset_description'],
 
 METADATA_LEVEL_BY_NAME = {v: k for k, values in METADATA_LEVELS.items() for v in values}
 
+ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
+
+
 class AnDOData:
 
-    def __init__(self, sub_id, ses_id, tasks=None, runs=None, modality='ephys'):
+    def __init__(self, sub_id, ses_id, modality='ephys'):
         """
         Representation of an AnDO session, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
 
@@ -42,23 +46,29 @@ class AnDOData:
                 identifiers as corresponding values
         """
 
-        # replacing immutable defaults by more practical values
-        if tasks is None:
-            tasks = ['']
-        if runs is None:
-            runs = []
+        # # replacing immutable defaults by more practical values
+        # if tasks is None:
+        #     tasks = ['']
+        # if isinstance(tasks, str):
+        #     tasks = [tasks]
+        #
+        # if runs is None:
+        #     runs = []
+        # elif not hasattr(runs, '__iter__') or isinstance(runs, str):
+        #     runs = [runs]
 
         if modality != 'ephys':
             raise NotImplementedError('AnDO only supports the ephys modality')
 
-        # unwrapping runs if only a single list is provided for all tasks
-        if isinstance(runs, list):
-            for task in tasks:
-                runs = {task: runs}
+        # # unwrapping runs if only a single list is provided for all tasks
+        # if isinstance(runs, list):
+        #     runs_original = runs.copy()
+        #     for task in tasks:
+        #         runs = {task: runs_original}
 
         # check for invalid arguments
-        flattened_runs = [run for d in runs.values() for run in d]
-        for arg in [sub_id, ses_id] + tasks + flattened_runs:
+        # flattened_runs = [run for d in runs.values() for run in d]
+        for arg in [sub_id, ses_id]:     # + tasks + flattened_runs:
             invalid_characters = '\/_'
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
@@ -244,31 +254,19 @@ def extract_structure_from_csv(csv_file):
     if not HAVE_PANDAS:
         raise ImportError('Extraction of ando structure from csv requires pandas.')
 
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, dtype=str)
 
     # ensure all fields contain information
     if df.isnull().values.any():
         raise ValueError(f'Csv file contains empty cells.')
 
     # standardizing column labels
-    df = df.rename(columns=LABEL_MAPPING)
-
-    # Formatting month, day and session_number
-    df["month"] = df.month.map("{:02}".format)
-    df["day"] = df.day.map("{:02}".format)
-    df["sesNumber"] = df.sesNumber.map("{:03}".format)
-
-    # unifying data representation in favour of datetime object
-    if "date" not in df.columns:
-        df["date"] = pd.to_datetime(df.loc[:, ["year", "month", "day"]])
-        df = df.drop(["year", "month", "day"], axis=1)
-    else:
-        df["date"] = pd.to_datetime(df.loc[:, "date"])
+    # df = df.rename(columns=LABEL_MAPPING)
 
     # Check is the header contains all required names
-    if not set(ESSENTIAL_PARAMS).issubset(df.columns):
+    if not set(ESSENTIAL_CSV_COLUMNS).issubset(df.columns):
         raise ValueError(f'Csv file ({csv_file}) does not contain required information '
-                         f'({ESSENTIAL_PARAMS}). Accepted column names are {LABEL_MAPPING}')
+                         f'({ESSENTIAL_CSV_COLUMNS}). Accepted column names are specified in the BEP.')
 
     return df
 
@@ -277,21 +275,23 @@ def generate_Struct(csv_file, pathToDir):
     f"""
     Create structure with csv file given in argument
     This file must contain a header row specifying the provided data. Accepted titles are
-    
-    {LABEL_MAPPING}
+    defined in the BEP.
     Essential information of the following attributes needs to be present
-    {ESSENTIAL_PARAMS}
+    {ESSENTIAL_CSV_COLUMNS}
 
     Args:
-        csv_file ([csv file ]): [Csv file that contains a list of directories to create ]
+        csv_file ([csv file ]): [Csv file that contains a list of directories to create]
         pathToDir ([Path to directory]): [Path to directory where the directories will be created]
     """
 
     df = extract_structure_from_csv(csv_file)
 
+    df = df[ESSENTIAL_CSV_COLUMNS]
+
     for session_kwargs in df.to_dict('index').values():
-        session = AnDOSession(**session_kwargs)
-        session.generate_folders(pathToDir)
+        session = AnDOData(**session_kwargs)
+        session.basedir = pathToDir
+        session.generate_structure()
 
 
 def main():

@@ -40,14 +40,14 @@ def generate_simple_csv_file():
     file_path = os.path.join(test_directory, 'example.csv')
     with open(file_path, 'w+') as f:
         csv_lines = \
-            "experiments_name,subjects_names,years,months,days,sessions_numbers,comments\n" \
-            "neo,enya,2020,12,01,001,protocol-v1\n" \
-            "neo,enya,2020,12,01,002,protocol-v2\n" \
-            "neo,enya,2020,02,01,003,protocol-v1\n" \
-            "neo,zamba,2020,12,12,001,vsdi\n" \
-            "neo,zamba,2020,2,3,010,vsdi\n" \
-            "aerial,zimba,2020,12,06,001,ephys-acute\n" \
-            "aerial,zimba,2020,12,01,010,ephys-chronic"
+            "sub_id,ses_id\n" \
+            "enya,20200101\n" \
+            "enya,20200101\n" \
+            "enya,20200101\n" \
+            "zamba,20200102\n" \
+            "zamba,20200102\n" \
+            "zimba,20200103\n" \
+            "zimba,20200104"
         f.writelines(csv_lines)
 
     return file_path
