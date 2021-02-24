@@ -27,9 +27,15 @@ rules_set.append(currentdepth_rules)
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['ephys']
 currentdepth_rules['authorized_data_files'] = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys']
-currentdepth_rules['authorized_metadata_files'] = ['ephys', 'channels', 'contacts', 'probes', 'runs']
+currentdepth_rules['authorized_metadata_files'] = [
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys',['json']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_channels',['tsv']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_contacts',['tsv']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_probes',['tsv']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_runs',['tsv']]
+    ]
 currentdepth_rules['mandatory_files'] = [
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)', ['nwb', 'nix']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys', ['nwb', 'nix']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_ephys',['json']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_channels',['tsv']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\w\\-]*)_contacts',['tsv']],

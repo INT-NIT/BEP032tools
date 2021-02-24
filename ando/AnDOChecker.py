@@ -3,7 +3,7 @@ import os.path as op
 import re
 import argparse
 
-import .rules
+from rulesStructured import *
 
 
 
@@ -70,7 +70,6 @@ def newchecker(input_directory):
             #### ADD generation of regular expressions based on base names and extensions
             # loop over rules, each rule corresponding to one mandatory file
             for current_mandatoryfile_rule in currentdepth_rules['mandatory_files']:
-                #### TO BE DONE: check whether we need a negation here.... "None" or "not None"???
                 file_res = [re.compile(current_mandatoryfile_rule).search(f) is None for f in files]
                 # if this mandatory file is missing, raise an error
                 if all(file_res):
