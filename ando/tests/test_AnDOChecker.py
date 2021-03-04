@@ -9,14 +9,16 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 class Test(TestCase):
 
     ##
-    # THE VALID ONE
+    # THE VALID ONES
     ##
     def test_expValid(self):
         path = Path(dir_path) / "dataset" / "exp-valid"
         self.assertEqual(CHK.is_valid(path)[0], True)
+
     def test_expValidMultipleSession(self):
         path = Path(dir_path) / "dataset" / "exp-validMultipleSession"
         self.assertEqual(CHK.is_valid(path)[0], True)
+
     ##
     # level 1
     ##
@@ -62,4 +64,10 @@ class Test(TestCase):
         path = Path(dir_path) / "dataset" / "exp-nonAuthorizedDataFilesError"
         self.assertEqual(CHK.is_valid(path)[0], False)
 
-
+    ##
+    # MULTIPLE ERRORS
+    ##
+    def test_multipleError(self):
+        path = Path(dir_path) / "dataset" / "exp-MultipleError"
+        self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]), 3)  # check if there is 3 error reported
