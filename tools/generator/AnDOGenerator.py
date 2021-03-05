@@ -10,8 +10,10 @@ try:
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
-
-from ando.rules import DATA_EXTENSIONS, METADATA_EXTENSIONS, rules_set
+    
+from ando.rulesStructured import rules_set
+from ando.rulesStructured import AUTHORIZED_DATA_EXTENSIONS as DATA_EXTS
+from ando.rulesStructured import AUTHORIZED_METADATA_EXTENSIONS as METADATA_EXTS
 
 MANDATORY_SUBFOLDER = "ephys"
 
