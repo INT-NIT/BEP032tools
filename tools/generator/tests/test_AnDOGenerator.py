@@ -12,18 +12,23 @@ class Test_AnDOData(unittest.TestCase):
         self.ses_id = 'ses1'
         self.tasks = None
         self.runs = None
-        self.basedir = test_dir
+        
+        sources = test_dir / 'sources'
+        sources.mkdir()
+        project = test_dir / 'project-A'
+        project.mkdir()
+        self.basedir = project
 
         d = AnDOData(self.sub_id, self.ses_id)
-        d.basedir = self.basedir
+        d.basedir = project
 
         self.ando_data = d
-
-        self.test_data_files = [test_dir / 'test.nix',
-                                test_dir / 'test.nwb']
-        self.test_mdata_files = [test_dir / 'dataset_descriptor.json',
-                                 test_dir / 'probes.tsv',
-                                 test_dir / 'contacts.json']
+        prefix = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        self.test_data_files = [sources / (prefix + '_ephy.nix'),
+                                sources / (prefix + '_ephy.nwb')]
+        self.test_mdata_files = [sources / 'dataset_description.json',
+                                 sources / (prefix + '_probes.tsv'),
+                                 sources / (prefix + '_contacts.json')]
 
         for f in self.test_mdata_files + self.test_data_files:
             f.touch()
@@ -56,9 +61,10 @@ class Test_AnDOData(unittest.TestCase):
         self.ando_data.register_metadata_files(*self.test_mdata_files)
         self.ando_data.generate_metadata_files()
 
-        for f in ['probes.tsv', 'contacts.json']:
+        prefix = 'sub-sub5_ses-ses1'
+        for f in [prefix + '_probes.tsv', prefix + '_contacts.json']:
             self.assertTrue((self.ando_data.get_data_folder() / f).exists())
-        self.assertTrue((self.basedir / 'dataset_descriptor.json').exists())
+        self.assertTrue((self.basedir / 'dataset_description.json').exists())
 
     def tearDown(self):
         initialize_test_directory(clean=True)

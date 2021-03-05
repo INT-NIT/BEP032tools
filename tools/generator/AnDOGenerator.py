@@ -3,6 +3,7 @@ import shutil
 import warnings
 import argparse
 import os
+import re
 
 
 try:
@@ -10,15 +11,15 @@ try:
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
-    
+from ando.AnDOChecker import build_rule_regexp
 from ando.rulesStructured import rules_set
-from ando.rulesStructured import AUTHORIZED_DATA_EXTENSIONS as DATA_EXTS
-from ando.rulesStructured import AUTHORIZED_METADATA_EXTENSIONS as METADATA_EXTS
+from ando.rulesStructured import DATA_EXTENSIONS
+from ando.rulesStructured import METADATA_EXTENSIONS
 
 MANDATORY_SUBFOLDER = "ephys"
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(rules_set)}
-METADATA_LEVEL_BY_NAME = {v: k for k, values in METADATA_LEVELS.items() for v in values}
+METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
 
 # TODO: These can be extracted from the AnDOData init definition. Check out the
 # function inspection options
@@ -78,7 +79,7 @@ class AnDOData:
 
         files = [Path(f) for f in files]
         for file in files:
-            if file.suffix[1:] not in DATA_EXTENSIONS:
+            if file.suffix not in DATA_EXTENSIONS:
                 raise ValueError(f'Wrong file format of data {file.suffix}. '
                                  f'Valid formats are {DATA_EXTENSIONS}')
 
@@ -96,7 +97,7 @@ class AnDOData:
     def register_metadata_files(self, *files):
         files = [Path(f) for f in files]
         for file in files:
-            if file.suffix[1:] not in METADATA_EXTENSIONS:
+            if file.suffix not in METADATA_EXTENSIONS:
                 raise ValueError(f'Wrong file format of data {file.suffix}. '
                                  f'Valid formats are {METADATA_EXTENSIONS}')
 
@@ -203,8 +204,8 @@ class AnDOData:
         parents = (data_folder / '_').parents
 
         for mfile in self.mdata:
-            for postfix, level in METADATA_LEVEL_BY_NAME.items():
-                if mfile.stem.endswith(postfix):
+            for regex, level in METADATA_LEVEL_BY_NAME.items():
+                if re.compile(regex).match(mfile.name):
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
 
