@@ -1,5 +1,0 @@
-{
-    "ephys_level": {
-        "regexp": "(?:^|\\W)ephys(?:$|\\W)"
-    }
-}  

@@ -1,6 +1,0 @@
-{
-  "session_level": {
-    "regexp": "^ses-(?P<date>\\d{8})_(?P<sesNumber>\\d{3})_(?P<customSesField>[0-9a-zA-Z-]*\\Z)"
-
-  }
-}
