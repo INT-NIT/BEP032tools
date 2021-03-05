@@ -1,16 +1,16 @@
 # construct the set of rules to be applied, level by level
 rules_set = []
-AUTHORIZED_DATA_EXTENSIONS = ['.nix', '.nwb']
-AUTHORIZED_METADATA_EXTENSIONS = ['.tsv', '.json']
+AUTHORIZED_DATA_EXTENSIONS = [f'({"|".join([".nix",".nwb"])})']
+AUTHORIZED_METADATA_EXTENSIONS = [f'({"|".join([".tsv",".json"])})']
 # level 0
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['exp-([a-zA-Z0-9]+)']
 currentdepth_rules['mandatory_folders'] = [['sub-([a-zA-Z0-9]+)']]
 currentdepth_rules['authorized_data_files'] = []
 currentdepth_rules['authorized_metadata_files'] = [
-    ['participants'],
-    ['dataset_descriptions'],
-    ['tasks'] # To be discussed with respect to BEP
+    ['participants',AUTHORIZED_METADATA_EXTENSIONS],
+    ['dataset_descriptions',AUTHORIZED_METADATA_EXTENSIONS],
+    ['tasks',AUTHORIZED_METADATA_EXTENSIONS] # To be discussed with respect to BEP
     ]
 currentdepth_rules['mandatory_files'] = [
     ['participants', ['.tsv']],
@@ -37,16 +37,16 @@ rules_set.append(currentdepth_rules)
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['ephys']
 currentdepth_rules['mandatory_folders'] = []
-currentdepth_rules['authorized_data_files'] = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']]
+currentdepth_rules['authorized_data_files'] = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys',AUTHORIZED_DATA_EXTENSIONS]]
 currentdepth_rules['authorized_metadata_files'] = [
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys'],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels'],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts'],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes'],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs']
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys',AUTHORIZED_METADATA_EXTENSIONS],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels',AUTHORIZED_METADATA_EXTENSIONS],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts',AUTHORIZED_METADATA_EXTENSIONS],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes',AUTHORIZED_METADATA_EXTENSIONS],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs',AUTHORIZED_METADATA_EXTENSIONS]
     ]
 currentdepth_rules['mandatory_files'] = [
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', [f'({AUTHORIZED_DATA_EXTENSIONS[0]}|{AUTHORIZED_DATA_EXTENSIONS[1]})']],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', AUTHORIZED_METADATA_EXTENSIONS],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys',['.json']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels',['.tsv']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts',['.tsv']],
