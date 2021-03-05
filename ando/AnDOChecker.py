@@ -136,9 +136,7 @@ def build_rule_regexp(rules):
 
         set_of_names_regexp: list
             list of filenames
-        set_of_ext_regexp: list
-            list of extensions
-
+            
     Returns
     -------
         list_of_rules : list
@@ -160,7 +158,7 @@ def build_rule_regexp(rules):
         list_of_rules = rules
     else:
         for filename in rules[:-1]:
-            for extension in rules[1]:
+            for extension in rules[-1]:
                 list_of_rules.append(filename + str(extension))
 
     return list_of_rules
