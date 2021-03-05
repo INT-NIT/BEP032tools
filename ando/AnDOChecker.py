@@ -2,7 +2,7 @@ import os
 import os.path as op
 import re
 import argparse
-
+import pathlib
 from AnDO.ando import rulesStructured as Rs
 
 
@@ -34,12 +34,12 @@ def is_valid(input_directory):
         # compute depth of the directory given as input
         if ind == 0:
             # remove ending / or \ if the input directory was given with it at the end
-            if root.endswith(os.path.sep):
-                root = root[:-1]
+            root = pathlib.Path(root)
             # count the number of / or \ in the directory name to estimate its "depth"
-            initial_depth = root.count(os.path.sep)
-        # estimate at which level we are
-        depth = root.count(os.path.sep) - initial_depth
+            initial_depth = len(root.resolve().parents)
+
+            # estimate at which level we are
+        depth = len(pathlib.Path(root).resolve().parents) - initial_depth
         # print(depth,root,dirs,files)
         ###
         # extract rules for this level!
@@ -49,57 +49,77 @@ def is_valid(input_directory):
         # 1.check whether the "mandatory Folders" are present at this level
         #
         ###
-        if len(currentdepth_rules['mandatory_folders']) > 0:
+        if currentdepth_rules['mandatory_folders']:
             # loop over rules, each rule corresponding to one mandatory folder
-            for current_mandatoryfolder_rule in (currentdepth_rules['mandatory_folders']):
+            for current_mandatoryfolder_rule in (
+                    currentdepth_rules['mandatory_folders']):
                 # create the list of regexp
                 list_of_mandatory_folders = (
-                    get_list_of_rules_with(current_mandatoryfolder_rule))
-                for each_file in list_of_mandatory_folders:
-                    dir_res = [re.compile(each_file).search(d) is None for d in dirs]
+                    build_rule_regexp(current_mandatoryfolder_rule))
+                for each_dir in list_of_mandatory_folders:
+                    dir_res = [
+                        re.compile(each_dir).search(d) is None for d in dirs
+                    ]
                     if all(dir_res):
                         error_list.append(
-                            "Mandatory folder not found for this rule : {}".format(current_mandatoryfolder_rule))
+                            "Mandatory folder not found for this rule : {}".
+                                format(current_mandatoryfolder_rule))
         ###
         # 2. check whether the rules are followed for the folder at this level ("authorized folders")
         #
         ###
         folder = op.split(root)[1]
-        folder_res = [re.compile(x).search(folder) is None
-                      for x in get_list_of_rules_with(currentdepth_rules['authorized_folders'])]
+        folder_res = [
+            re.compile(x).search(folder) is None for x in
+            build_rule_regexp(currentdepth_rules['authorized_folders'])
+        ]
 
         # if none of the authorized rules is respected, raise an error
         if all(folder_res):
-            error_list.append("Naming rule not respected for this directory : {}".format(root))
+            error_list.append(
+                "Naming rule not respected for this directory : {}".format(
+                    root))
         ###
         # 3. check whether rules are followed for files within the folder at this level ("authorized files")
         ###
         for current_file in files:
             file_res = list()
             for rules in currentdepth_rules['authorized_metadata_files']:
-                file_res.extend(([re.compile(x).search(current_file) is None for x in
-                                  get_list_of_rules_with(rules, Rs.AUTHORIZED_METADATA_EXTENSIONS)]))
+                file_res.extend(([
+                    re.compile(x).search(current_file) is None
+                    for x in build_rule_regexp(
+                        rules)
+                ]))
 
             for rules in currentdepth_rules['authorized_data_files']:
-                file_res.extend([re.compile(x).search(current_file) is None for x in
-                                 get_list_of_rules_with(rules, Rs.AUTHORIZED_DATA_EXTENSIONS)])
+                file_res.extend([
+                    re.compile(x).search(current_file) is None
+                    for x in build_rule_regexp(
+                        rules)
+                ])
                 # if none of the authorized rules is respected, raise an error
 
             if all(file_res):
-                error_list.append("Naming rule not respected for this file : {}".format(current_file))
+                error_list.append(
+                    "Naming rule not respected for this file : {}".format(
+                        current_file))
         ###
         # 4. check whether the "mandatory files" are actually present at this level!
         ###
         if len(currentdepth_rules['mandatory_files']) > 0:
             # loop over rules, each rule corresponding to one mandatory file
-            for current_mandatoryfolder_rule in (currentdepth_rules['mandatory_files']):
-                list_of_mandatory_folders = (get_list_of_rules_with
-                                             (current_mandatoryfolder_rule, current_mandatoryfolder_rule[1]))
+            for current_mandatoryfolder_rule in (
+                    currentdepth_rules['mandatory_files']):
+                list_of_mandatory_folders = (build_rule_regexp(
+                    current_mandatoryfolder_rule))
                 for each_file in list_of_mandatory_folders:
-                    file_res = [re.compile(each_file).search(f) is None for f in files]
+                    file_res = [
+                        re.compile(each_file).search(f) is None for f in files
+                    ]
                     if all(file_res):
-                        error_list.append("Mandatory file not found for this rule : {}".
-                                          format(current_mandatoryfolder_rule))
+                        error_list.append(
+                            "Mandatory file not found for this rule : {}".
+                                format(current_mandatoryfolder_rule))
 
     # if there are no errors, the data set is valid!
     valid = len(error_list) == 0
@@ -107,16 +127,16 @@ def is_valid(input_directory):
     return valid, error_list
 
 
-def get_list_of_rules_with(file_name_regexp, file_ext_regexp=None):
+def build_rule_regexp(rules):
     """
     Function that create rules base on the regexp in rulesStructured.py
 
     Parameters
     ----------
 
-        file_name_regexp: list
+        set_of_names_regexp: list
             list of filenames
-        file_ext_regexp: list
+        set_of_ext_regexp: list
             list of extensions
 
     Returns
@@ -129,32 +149,19 @@ def get_list_of_rules_with(file_name_regexp, file_ext_regexp=None):
     if :
     file_name_regexp = [
         ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys'],
-        ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels'],
         ]
-
-    and :
-    file_ext_regexp = ['.tsv', '.json']
-
-    then :
+    then ,
     list_of_rules = [
-        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv',
-        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.json',
-        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels.tsv',
-        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels.json',
+        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv'
         ]
     """
     list_of_rules = list()
-    if file_ext_regexp is None:
-        list_of_rules = file_name_regexp
+    if len(rules) == 1:
+        list_of_rules = rules
     else:
-        if len(file_name_regexp) == 2:
-            for filename in file_name_regexp[:-1]:
-                for extension in file_ext_regexp:
-                    list_of_rules.append(filename + str(extension))
-        else:
-            for filename in file_name_regexp:
-                for extension in file_ext_regexp:
-                    list_of_rules.append(filename + str(extension))
+        for filename in rules[:-1]:
+            for extension in rules[1]:
+                list_of_rules.append(filename + str(extension))
 
     return list_of_rules
 
@@ -177,9 +184,12 @@ def main():
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--verbose', action='store_true',
+    parser.add_argument('-v',
+                        '--verbose',
+                        action='store_true',
                         help='increase output verbosity')
-    parser.add_argument('directory', help='Name of the directory to be checked')
+    parser.add_argument('directory',
+                        help='Name of the directory to be checked')
     args = parser.parse_args()
 
     try:
@@ -192,12 +202,10 @@ def main():
         exit(1)
     dataset_validity, error_list = is_valid(directory)
     if dataset_validity:
-        print("Congratulations!\n" +
-              directory +
+        print("Congratulations!\n" + directory +
               " respects the ephys-BIDS specifications")
     else:
-        print("Attention!\n" +
-              directory +
+        print("Attention!\n" + directory +
               " does not respect the ephys-BIDS specifications")
         if args.verbose:
             print("\nHere are the errors that have been identified:")
