@@ -11,11 +11,11 @@ class Test(TestCase):
     ##
     # THE VALID ONES
     ##
-    def test_expValid(self):
+    def test_valid(self):
         path = Path(dir_path) / "dataset" / "exp-valid"
         self.assertEqual(CHK.is_valid(path)[0], True)
 
-    def test_expValidMultipleSession(self):
+    def test_validMultipleSession(self):
         path = Path(dir_path) / "dataset" / "exp-validMultipleSession"
         self.assertEqual(CHK.is_valid(path)[0], True)
 
@@ -32,6 +32,10 @@ class Test(TestCase):
 
     def test_participantMissingError(self):
         path = Path(dir_path) / "dataset" / "exp-participantsMissingError"
+        self.assertEqual(CHK.is_valid(path)[0], False)
+
+    def test_noSubjectsFolder(self):
+        path = Path(dir_path) / "dataset" / "exp-noSubjects"
         self.assertEqual(CHK.is_valid(path)[0], False)
 
     ##
