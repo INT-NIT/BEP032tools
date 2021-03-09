@@ -3,13 +3,14 @@ import os.path as op
 import re
 import argparse
 import pathlib
-import rulesStructured as Rs
+from rulesStructured import RULES_SET
 
 
 def is_valid(input_directory):
-    """Checks the ephys-BIDS validity of a data set.
+    """Checks the validity of a data set with respect to the BIDS-animal-ephys specifications.
 
     The specifications that define what is checked by this function is available in the following document:
+    https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
 
 
     Parameters
@@ -42,7 +43,7 @@ def is_valid(input_directory):
         ###
         # extract rules for this level!
         ###
-        currentdepth_rules = Rs.rules_set[depth]
+        currentdepth_rules = RULES_SET[depth]
 
         ###
         # 1.check whether the "mandatory Folders" are present at this level
@@ -53,8 +54,7 @@ def is_valid(input_directory):
             for current_mandatoryfolder_rule in currentdepth_rules[
                     "mandatory_folders"]:
                 # create the list of regexp
-                list_of_mandatory_folders = build_rule_regexp(
-                    current_mandatoryfolder_rule)
+                list_of_mandatory_folders = build_rule_regexp(current_mandatoryfolder_rule)
                 for mandatory_folders in list_of_mandatory_folders:
                     dir_res = [search(mandatory_folders, d) is None for d in dirs]
                     if all(dir_res):
@@ -121,6 +121,7 @@ def is_valid(input_directory):
 def search(rules, where):
     return re.compile(rules).search(where)
 
+
 def build_rule_regexp(rules):
     """
     Function that create rules base on the regexp in rulesStructured.py
@@ -128,7 +129,7 @@ def build_rule_regexp(rules):
     Parameters
     ----------
 
-        set_of_names_regexp: list
+        rules: list
             list of filenames
             
     Returns

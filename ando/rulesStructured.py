@@ -1,5 +1,5 @@
 # construct the set of rules to be applied, level by level
-rules_set = []
+RULES_SET = []
 DATA_EXTENSIONS = [".nix", ".nwb"]
 METADATA_EXTENSIONS = [".tsv", ".json"]
 ANY_DATA_EXT = [f'({"|".join(DATA_EXTENSIONS)})']
@@ -19,7 +19,7 @@ currentdepth_rules['mandatory_files'] = [
     ['participants', ['.tsv']],
     ['dataset_description', ['.json']]
     ]
-rules_set.append(currentdepth_rules)
+RULES_SET.append(currentdepth_rules)
 # level 1
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['sub-([a-zA-Z0-9]+)']
@@ -27,7 +27,7 @@ currentdepth_rules['mandatory_folders'] = [['ses-([a-zA-Z0-9]+)']]
 currentdepth_rules['authorized_data_files'] = [['^$']]
 currentdepth_rules['authorized_metadata_files'] = [['sessions', ANY_METADATA_EXT]]
 currentdepth_rules['mandatory_files'] = []
-rules_set.append(currentdepth_rules)
+RULES_SET.append(currentdepth_rules)
 # level 2
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['ses-([a-zA-Z0-9]+)']
@@ -35,7 +35,7 @@ currentdepth_rules['mandatory_folders'] = [['ephys']]
 currentdepth_rules['authorized_data_files'] = [['^$']]
 currentdepth_rules['authorized_metadata_files'] = [['^$']]
 currentdepth_rules['mandatory_files'] = []
-rules_set.append(currentdepth_rules)
+RULES_SET.append(currentdepth_rules)
 # level 3
 currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['ephys']
@@ -56,4 +56,4 @@ currentdepth_rules['mandatory_files'] = [
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes',['.tsv']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs',['.tsv']]
     ]
-rules_set.append(currentdepth_rules)
+RULES_SET.append(currentdepth_rules)
