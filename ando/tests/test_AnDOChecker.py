@@ -1,6 +1,6 @@
 from unittest import TestCase
 from pathlib import Path
-from .. import AnDOChecker as CHK
+from ando import AnDOChecker as CHK
 import os
 
 dir_path = os.path.dirname(os.path.realpath(__file__))

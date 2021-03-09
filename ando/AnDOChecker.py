@@ -3,7 +3,7 @@ import os.path as op
 import re
 import argparse
 import pathlib
-from rulesStructured import RULES_SET
+from ando.rulesStructured import RULES_SET
 
 
 def is_valid(input_directory):
