@@ -3,7 +3,7 @@ import os.path as op
 import re
 import argparse
 import pathlib
-from AnDO.ando import rulesStructured as Rs
+import rulesStructured as Rs
 
 
 def is_valid(input_directory):
@@ -27,26 +27,23 @@ def is_valid(input_directory):
 
     """
 
+    # remove ending / or \ if the input directory was given with it at the end
+    input_directory = pathlib.Path(input_directory)
+    # count the number of / or \ in the directory name to estimate its "depth"
+    initial_depth = len(input_directory.resolve().parents)
+
     error_list = []
 
     # walk through the directory tree using the os.walk function
     for ind, (root, dirs, files) in enumerate(os.walk(input_directory)):
-        # compute depth of the directory given as input
-        if ind == 0:
-            # remove ending / or \ if the input directory was given with it at
-            # the end
-            root = pathlib.Path(root)
-            # count the number of / or \ in the directory name to estimate its
-            # "depth"
-            initial_depth = len(root.resolve().parents)
-
-            # estimate at which level we are
+        # estimate at which level we are
         depth = len(pathlib.Path(root).resolve().parents) - initial_depth
-        # print(depth,root,dirs,files)
+
         ###
         # extract rules for this level!
         ###
         currentdepth_rules = Rs.rules_set[depth]
+
         ###
         # 1.check whether the "mandatory Folders" are present at this level
         #
@@ -59,13 +56,12 @@ def is_valid(input_directory):
                 list_of_mandatory_folders = build_rule_regexp(
                     current_mandatoryfolder_rule)
                 for mandatory_folders in list_of_mandatory_folders:
-                    dir_res = [
-                        search(mandatory_folders, d) is None for d in dirs
-                    ]
+                    dir_res = [search(mandatory_folders, d) is None for d in dirs]
                     if all(dir_res):
                         error_list.append(
                             "Mandatory folder not found for this rule : {}".
                             format(current_mandatoryfolder_rule))
+
         ###
         # 2. check whether the rules are followed for the folder at this level ("authorized folders")
         #
@@ -78,20 +74,19 @@ def is_valid(input_directory):
         ]
         # if none of the authorized rules is respected, raise an error
         if all(folders_err):
-            error_list.append(
-                "Naming rule not respected for this directory : {}".format(
-                    root))
+            error_list.append("Naming rule not respected for this directory : {}".format(root))
+
         ###
-        # 3. check whether rules are followed for files within the folder at this level ("authorized files")
+        # 3. check whether rules are followed for files within the folder at this level ("authorized data and
+        #    metadata files")
         ###
         for current_file in files:
             file_res = list()
             for rules in currentdepth_rules["authorized_metadata_files"]:
-                file_res.extend(([
+                file_res.extend([
                     search(authorized_metadata_file_rule, current_file) is None
-                    for authorized_metadata_file_rule in build_rule_regexp(
-                        rules)
-                ]))
+                    for authorized_metadata_file_rule in build_rule_regexp(rules)
+                ])
 
             for rules in currentdepth_rules["authorized_data_files"]:
                 file_res.extend([
@@ -101,22 +96,17 @@ def is_valid(input_directory):
                 # if none of the authorized rules is respected, raise an error
 
             if all(file_res):
-                error_list.append(
-                    "Naming rule not respected for this file : {}".format(
-                        current_file))
+                error_list.append("Naming rule not respected for this file : {}".format(current_file))
+
         ###
         # 4. check whether the "mandatory files" are actually present at this level!
         ###
         if len(currentdepth_rules["mandatory_files"]) > 0:
             # loop over rules, each rule corresponding to one mandatory file
-            for current_mandatoryfolder_rule in currentdepth_rules[
-                    "mandatory_files"]:
-                list_of_mandatory_folders = build_rule_regexp(
-                    current_mandatoryfolder_rule)
+            for current_mandatoryfolder_rule in currentdepth_rules["mandatory_files"]:
+                list_of_mandatory_folders = build_rule_regexp(current_mandatoryfolder_rule)
                 for mandatory_files in list_of_mandatory_folders:
-                    file_res = [
-                        search(mandatory_files, file) is None for file in files
-                    ]
+                    file_res = [search(mandatory_files, file) is None for file in files]
                     if all(file_res):
                         error_list.append(
                             "Mandatory file not found for this rule : {}".
@@ -130,7 +120,6 @@ def is_valid(input_directory):
 
 def search(rules, where):
     return re.compile(rules).search(where)
-
 
 def build_rule_regexp(rules):
     """
@@ -158,6 +147,7 @@ def build_rule_regexp(rules):
         'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv'
         ]
     """
+
     list_of_rules = list()
     if len(rules) == 1:
         list_of_rules = rules
@@ -171,19 +161,16 @@ def build_rule_regexp(rules):
 
 def main():
     """
-    Main file of the validator. uses other class methods for checking
-    different aspects of the directory path.
+    Main file of the AnDOChecker.
 
-    usage: checker.py [-h] [-v] path
+    usage: AnDOChecker.py [-h] [-v] path
 
             positional arguments:
-            directory           Name of the directory that contains the data set to be checked
+            directory      Name of the directory that contains the data set to be checked
 
             optional arguments:
             -h, --help     show this help message and exit
             -v, --verbose  increase output verbosity
-
-
     """
 
     parser = argparse.ArgumentParser()
@@ -206,10 +193,10 @@ def main():
     dataset_validity, error_list = is_valid(directory)
     if dataset_validity:
         print("Congratulations!\n"
-              f"{directory} respects the ephys-BIDS specifications")
+              f"{directory} respects the BIDS-animal-ephys specifications")
     else:
         print("Attention!\n" 
-              f"{directory} does not respect the ephys-BIDS specifications")
+              f"{directory} does not respect the BIDS-animal-ephys specifications")
         if args.verbose:
             print("\nHere are the errors that have been identified:")
             for error_message in error_list:
