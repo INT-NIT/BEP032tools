@@ -63,18 +63,19 @@ def is_valid(input_directory):
                             format(current_mandatoryfolder_rule))
 
         ###
-        # 2. check whether the rules are followed for the folder at this level ("authorized folders")
+        # 2. check whether the rules are followed for the folders at this level ("authorized folders")
         #
         ###
-        folder = op.split(root)[1]
-        folders_err = [
-            search(authorized_folders_rule, folder) is None
-            for authorized_folders_rule in build_rule_regexp(
-                currentdepth_rules["authorized_folders"])
-        ]
-        # if none of the authorized rules is respected, raise an error
-        if all(folders_err):
-            error_list.append("Naming rule not respected for this directory : {}".format(root))
+        for folder in dirs:
+            folder_errs = [
+                search(authorized_folders_rule, folder) is None
+                for authorized_folders_rule in build_rule_regexp(
+                    currentdepth_rules["authorized_folders"])
+            ]
+            # if none of the authorized rules is respected, raise an error
+            if all(folder_errs):
+                error_list.append("Naming rule not respected for this directory : {}"
+                                  "".format(op.join(root, folder)))
 
         ###
         # 3. check whether rules are followed for files within the folder at this level ("authorized data and
