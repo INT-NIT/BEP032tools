@@ -53,7 +53,6 @@ currentdepth_rules['mandatory_files'] = [
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys',['.json']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels',['.tsv']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts',['.tsv']],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes',['.tsv']],
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs',['.tsv']]
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes',['.tsv']]
     ]
 RULES_SET.append(currentdepth_rules)
