@@ -23,6 +23,7 @@ setup(
     install_requires=[],
     include_package_data=True,
     entry_points={
+
         'console_scripts': ['AnDOChecker=ando.checker:main',
                             'AnDOGenerator=ando.tools.generator.AnDOGenerator:main',
                             'AnDOViewer=ando.tools.viewer.AnDOViewer:main'],
