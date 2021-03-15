@@ -1,15 +1,18 @@
 import os
+import subprocess as sp
 import unittest
 from unittest import TestCase
 from pathlib import Path
 from ando import AnDOChecker as CHK
 
-if os.system('AnDOChecker'):
+try:
+    sp.run(['AnDOChecker', '-h'], stdout=sp.PIPE)
     HASANDO = True
-else:
+except:
     HASANDO = False
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 class Test(TestCase):
 
@@ -101,23 +104,25 @@ class TestCLI(TestCase):
     def setUp(self):
         self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
 
-    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
     # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
     def test_simple_api(self):
-        res = os.system(f'AnDOChecker -v {self.valid_dir}')
-        self.assertEqual(res, 0)
+        res = sp.run(['AnDOChecker', '-v', self.valid_dir], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
-    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
     # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
     def test_current_dir(self):
         self.switch_dir(self.valid_dir)
-        res = os.system(f'AnDOChecker -v .')
-        self.assertEqual(res, 0)
+        res = sp.run(['AnDOChecker', '-v', '.'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
-    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
     # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
     def test_high_level_dir(self):
         self.switch_dir(self.valid_dir / "sub-enya")
-        res = os.system(f'AnDOChecker -v ..')
-        self.assertEqual(res, 0)
-
+        res = sp.run(['AnDOChecker', '-v', '..'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
