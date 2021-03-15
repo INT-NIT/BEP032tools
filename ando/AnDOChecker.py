@@ -28,10 +28,10 @@ def is_valid(input_directory):
 
     """
 
-    input_directory = pathlib.Path(input_directory)
+    input_directory = pathlib.Path(input_directory).resolve()
 
     # count the number of / or \ in the directory name to estimate its "depth"
-    initial_depth = len(input_directory.resolve().parents)
+    initial_depth = len(input_directory.parents)
 
     error_list = []
 

@@ -93,7 +93,27 @@ class Test(TestCase):
     def test_multipleError(self):
         path = Path(dir_path) / "dataset" / "exp-MultipleError"
         self.assertEqual(CHK.is_valid(path)[0], False)
-        self.assertEqual(len(CHK.is_valid(path)[1]), 3)  # check if there is 3 error reported
+        self.assertEqual(len(CHK.is_valid(path)[1]),
+                         3)  # check if there is 3 error reported
+
+
+class TestInputLevels(TestCase):
+    @classmethod
+    def switch_dir(self, directory):
+        os.chdir(directory)
+
+    def setUp(self):
+        self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
+
+    def test_current_dir_input(self):
+        self.switch_dir(self.valid_dir)
+        path = Path('.')
+        self.assertEqual(CHK.is_valid(path)[0], True)
+
+    def test_lower_input_dir(self):
+        self.switch_dir(self.valid_dir / "sub-enya")
+        path = Path('..')
+        self.assertEqual(CHK.is_valid(path)[0], True)
 
 
 class TestCLI(TestCase):
