@@ -30,7 +30,7 @@ jobs:
       run: python -c "import sys; print(sys.version)"
 
     - name: Install package
-      run: python setup.py install easy_install ando[tools,test]
+      run: pip install .[tools,test]
 
 #    - name: Run tests
 #      run: pytest
