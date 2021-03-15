@@ -24,6 +24,13 @@ class Test(TestCase):
         self.assertEqual(CHK.is_valid(path)[0], True)
 
     ##
+    # level 0
+    ##
+    def test_invalid_folder(self):
+        path = Path(dir_path) / "datasets" / "non-existent-folder"
+        self.assertEqual(CHK.is_valid(path)[0], False)
+
+    ##
     # level 1
     ##
     def test_experimentError(self):

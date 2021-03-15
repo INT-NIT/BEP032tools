@@ -28,12 +28,15 @@ def is_valid(input_directory):
 
     """
 
-    # remove ending / or \ if the input directory was given with it at the end
     input_directory = pathlib.Path(input_directory)
+
     # count the number of / or \ in the directory name to estimate its "depth"
     initial_depth = len(input_directory.resolve().parents)
 
     error_list = []
+
+    if not input_directory.exists():
+        error_list.append(f"Input folder does not exist: {input_directory}")
 
     # walk through the directory tree using the os.walk function
     for ind, (root, dirs, files) in enumerate(os.walk(input_directory)):
