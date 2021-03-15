@@ -1,10 +1,15 @@
+import os
+import unittest
 from unittest import TestCase
 from pathlib import Path
 from ando import AnDOChecker as CHK
-import os
+
+if os.system('AnDOChecker'):
+    HASANDO = True
+else:
+    HASANDO = False
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-
 
 class Test(TestCase):
 
@@ -86,3 +91,33 @@ class Test(TestCase):
         path = Path(dir_path) / "dataset" / "exp-MultipleError"
         self.assertEqual(CHK.is_valid(path)[0], False)
         self.assertEqual(len(CHK.is_valid(path)[1]), 3)  # check if there is 3 error reported
+
+
+class TestCLI(TestCase):
+    @classmethod
+    def switch_dir(self, directory):
+        os.chdir(directory)
+
+    def setUp(self):
+        self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
+
+    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_simple_api(self):
+        res = os.system(f'AnDOChecker -v {self.valid_dir}')
+        self.assertEqual(res, 0)
+
+    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_current_dir(self):
+        self.switch_dir(self.valid_dir)
+        res = os.system(f'AnDOChecker -v .')
+        self.assertEqual(res, 0)
+
+    @unittest.skipIf(HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_high_level_dir(self):
+        self.switch_dir(self.valid_dir / "sub-enya")
+        res = os.system(f'AnDOChecker -v ..')
+        self.assertEqual(res, 0)
+
