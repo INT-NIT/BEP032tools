@@ -12,13 +12,13 @@ try:
 except ImportError:
     HAVE_PANDAS = False
 from ando.AnDOChecker import build_rule_regexp
-from ando.rulesStructured import rules_set
+from ando.rulesStructured import RULES_SET
 from ando.rulesStructured import DATA_EXTENSIONS
 from ando.rulesStructured import METADATA_EXTENSIONS
 
 MANDATORY_SUBFOLDER = "ephys"
 
-METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(rules_set)}
+METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
 
 # TODO: These can be extracted from the AnDOData init definition. Check out the
