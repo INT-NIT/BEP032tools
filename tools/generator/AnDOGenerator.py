@@ -33,7 +33,7 @@ class AnDOData:
 
         The AnDOData object can track multiple realizations of
         `split`, `run`, `task` but only a single realization of `session` and
-        `subject`, i.e. to rerpesent multiple `session` folders, multiple
+        `subject`, i.e. to represent multiple `session` folders, multiple
         AnDOData objects are required.
 
         Args:
