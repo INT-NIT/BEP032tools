@@ -10,7 +10,9 @@ This project is composed of three main scrip :
 
 Futher information on Specs : https://int-nit.github.io/AnDOChecker/
 
-[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/Slowblitz/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+[![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/INT-NIT/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+
+[![gh actions tests](https://github.com/INT-NIT/AnDO/workflows/run-tests/badge.svg?branch=master)](https://github.com/INT-NIT/AnDO/actions)[![Test coverage](https://coveralls.io/repos/github/INT-NIT/AnDO/badge.svg?branch=master)](https://coveralls.io/github/INT-NIT/AnDO?branch=master)
 
 ## Installation
 
