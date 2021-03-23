@@ -1,163 +1,237 @@
 from pathlib import Path
-import datetime
+import shutil
 import warnings
 import argparse
 import os
 import re
+
 
 try:
     import pandas as pd
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
+from ando.AnDOChecker import build_rule_regexp
+from ando.rulesStructured import RULES_SET
+from ando.rulesStructured import DATA_EXTENSIONS
+from ando.rulesStructured import METADATA_EXTENSIONS
 
-import ando
-from ando.engine import check_Path, get_regular_expressions
+METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
+METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
 
-# mapping of human readable labels to AnDO session parameters
-LABEL_TRANSLATOR = {'expName': ['experiment_name', 'experiment_names', 'experiments_name'],
-                    'guid': ['subName', 'subject_name', 'subject_names', 'subjects_names'],
-                    'date': ['date', 'dates'],
-                    'year': ['year', 'years'],
-                    'month': ['month', 'months'],
-                    'day': ['day', 'days'],
-                    'sesNumber': ['session_number', 'session_numbers', 'sessions_numbers'],
-                    'customSesField': ['customField', 'comment', 'comments']}
+# TODO: These can be extracted from the AnDOData init definition. Check out the
+# function inspection options
+ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
-ESSENTIAL_PARAMS = ['expName', 'guid', 'date', 'sesNumber']
 
-LABEL_MAPPING = {label: param for param, labels in LABEL_TRANSLATOR.items() for label in labels}
+class AnDOData:
 
-MANDATORY_SUBFOLDER = "ephys"
-class AnDOSesID:
-
-    def __init__(self, sesID=None, date=None, sesNumber=None, customSesField=None):
+    def __init__(self, sub_id, ses_id, modality='ephys'):
         """
-        Representation of an AnDO session ID, as defined in `ando/rules/session_rules.json`
+        Representation of a AnDO Data, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
 
-        Parameters
-        ----------
-        sesID: (str)
-            complete session identifier, e.g. `20000101_001_test`
-        date: (str or datetime)
-            date subinfo of session ID, e.g. `20000101`
-        sesNumber: (str)
-            session number subinfo of session ID, e.g. `001`
-        customSesField: (str)
-            custom session field subinfo of session ID
+        The AnDOData object can track multiple realizations of
+        `split`, `run`, `task` but only a single realization of `session` and
+        `subject`, i.e. to represent multiple `session` folders, multiple
+        AnDOData objects are required.
+
+        Args:
+            sub_id (str): subject identifier, e.g. '0012' or 'j.s.smith'
+            ses_id (str): session identifier, e.g. '2021-01-01' or '007'
+            tasks (list): list of strings, the task identifiers used in the 
+                session
+            runs (list or dict): list of integers, the run identifiers used in
+                the session. In case of more than one task a dictionary needs
+                to be provided with the task as keys and the list of run
+                identifiers as corresponding values
         """
 
-        # Inform user if insufficient or duplicate information is provided
-        if sesID is not None:
-            if (date is None) or (sesNumber is None) or (customSesField is None):
-                warnings.warn(f'Using sesID ({sesID}) in favour alternative parameters date, '
-                              f'sesNumber and customSesField')
-        elif (date is None) or (sesNumber is None):
-            raise ValueError('Incomplete information for generating a session ID.')
+        if modality != 'ephys':
+            raise NotImplementedError('AnDO only supports the ephys modality')
 
-        if sesID is None:
-            self.sesNumber = sesNumber
+        # check for invalid arguments
+        for arg in [sub_id, ses_id]:
+            invalid_characters = '\/_'  # TODO: Should this be part of the AnDO core?
+            if any(elem in arg for elem in invalid_characters):
+                raise ValueError(f"Invalid character present in argument ({arg})."
+                                 f"The following characters are not permitted: {invalid_characters}")
 
-            # Define default value for custom session field
-            if customSesField is None:
-                self.customSesField = ''
-            else:
-                self.customSesField = customSesField
+        self.sub_id = sub_id
+        self.ses_id = ses_id
+        # self.tasks = tasks
+        # self.runs = runs
+        self.modality = modality
 
-            if isinstance(date, datetime.datetime):
-                self.date = date.strftime('%Y%m%d')
-            else:
-                # TODO: Check this has the right fomat
-                self.date = date
+        # initialize data and metadata structures
+        self.data = {}
+        self.mdata= {}
 
-        # if only sesID is provided, we use the session regex to extract infos
+        self._basedir = None
+
+    def register_data_files(self, *files, task=None, run=None):
+        """
+        Register data with the AnDO data structure.
+
+        Args:
+            *files: path to files to be added as data files. If multiple files
+                are provided they are treated as a single data files split into
+                multiple chunks and will be enumerated according to the order
+                they are provided in.
+        """
+
+        files = [Path(f) for f in files]
+        for file in files:
+            if file.suffix not in DATA_EXTENSIONS:
+                raise ValueError(f'Wrong file format of data {file.suffix}. '
+                                 f'Valid formats are {DATA_EXTENSIONS}')
+
+        key = ''
+        if task is not None:
+            key += f'task_{task}'
+        if run is not None:
+            key += f'run-{run}'
+
+        if key not in self.data:
+            self.data[key] = files
         else:
-            rules_dir = os.path.join(os.path.dirname(ando.__file__), 'rules')
-            regexps = get_regular_expressions(os.path.join(rules_dir, 'session_rules.json'))
-            for regexp in regexps:
-                match = re.match(regexp, f'ses-{sesID}')
-                if match:
-                    self.date = match.groupdict()['date']
-                    self.sesNumber = match.groupdict()['sesNumber']
-                    self.customSesField = match.groupdict()['customSesField']
+            self.data['key'].extend(files)
 
-    def __str__(self):
-        return f'{self.date}_{self.sesNumber}_{self.customSesField}'
+    def register_metadata_files(self, *files):
+        files = [Path(f) for f in files]
+        for file in files:
+            if file.suffix not in METADATA_EXTENSIONS:
+                raise ValueError(f'Wrong file format of data {file.suffix}. '
+                                 f'Valid formats are {METADATA_EXTENSIONS}')
 
+        self.mdata = files
 
-class AnDOSession:
+    # def __str__(self):
+    #     return f'{self.date}_{self.sesNumber}_{self.customSesField}'
 
-    def __init__(self, expName=None, guid=None, sesID=None, date=None, sesNumber=None,
-                 customSesField=None):
+    @property
+    def basedir(self):
+        return self._basedir
+
+    @basedir.setter
+    def basedir(self, basedir):
         """
-        Representation of all AnDO Session, as specified by the AnDOChecker
+        Args:
+            basedir (str,path): path to the projects base folder (project root)
+        """
+        if not Path(basedir).exists():
+            raise ValueError('Base directory does not exist')
+        self._basedir = basedir
 
-        Parameters
-        ----------
-        expName: (str)
-            The name of the experiment
-        guid: (str)
-            Global unique identifier of the subject
-        sesID: (str)
-            complete session identifier, e.g. `20000101_001_test`
-        date: (str or datetime)
-            date subinfo of session ID, e.g. `20000101`
-        sesNumber: (str)
-            session number subinfo of session ID, e.g. `001`
-        customSesField: (str)
-            custom session field subinfo of session ID
+    def get_data_folder(self, mode='absolute'):
+        """
+        Generate the relative path to the folder of the data files
+
+        Args:
+            mode (str): Return the absolute or local path to the data folder.
+                Accepted values: 'absolute', 'local'
+
+        Returns:
+            path: pathlib.Path of the data folder
         """
 
-        if expName is None:
-            raise ValueError('The experiment name (expName) can not be `None`.')
-        if guid is None:
-            raise ValueError('The global unique identifier (guid) can not be `None`.')
+        path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
 
-        self.expName = expName
-        self.guid = guid
-        self.sesID = AnDOSesID(sesID=sesID,
-                               date=date,
-                               sesNumber=sesNumber,
-                               customSesField=customSesField)
+        if mode == 'absolute':
+            if self.basedir is None:
+                raise ValueError('No base directory set.')
+            path = self.basedir / path
 
-    def get_session_path(self):
-        path = os.path.join(f'exp-{self.expName}',
-                            f'sub-{self.guid}',
-                            f'ses-{self.sesID}',
-                            )
         return path
 
-    def get_all_folder_paths(self):
-        paths = []
-        session = self.get_session_path()
-        for datafolder in [MANDATORY_SUBFOLDER]:
-            paths.append(os.path.join(session, datafolder))
+    def generate_structure(self):
+        """
+        Generate the required folders for storing the dataset
 
-        # validate generated paths with AnDO
-        combined_paths = []
-        for path in paths:
-            for folder in path.split(os.path.sep):
-                if folder not in combined_paths:
-                    combined_paths.append(folder)
-        assert not check_Path(combined_paths, verbose=False)[0], \
-            'Error in AnDO path generation. Generated paths are not consistent with AnDO ' \
-            'specifications'
-        return paths
+        Returns:
+            (path): Path of created data folder
+        """
 
-    def generate_folders(self, basedir, clean=False):
-        session_folders = self.get_all_folder_paths()
+        if self.basedir is None:
+            raise ValueError('No base directory set.')
 
-        complete_paths = [os.path.join(basedir, path) for path in session_folders]
+        data_folder = Path(self.basedir).joinpath(self.get_data_folder())
+        data_folder.mkdir(parents=True, exist_ok=True)
 
-        # remove existing folders if clean is True
-        for path in complete_paths:
-            if clean and os.path.exists(path):
-                warnings.warn(f'Replacing existing folder: {path}')
-                os.remove(path)
+        return data_folder
 
-        # create all folders
-        for path in complete_paths:
-            Path(path).mkdir(parents=True)
+    def generate_data_files(self, mode='link'):
+        """
+        Add datafiles to AnDO structure
+        
+        Args:
+            mode (str): Can be either 'link' 'copy' or 'move'.
+        """
+
+        if self.basedir is None:
+            raise ValueError('No base directory set.')
+
+        data_folder = self.get_data_folder(mode='absolute')
+
+        # compose BIDS data filenames
+        filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+
+        for key, files in self.data.items():
+            # add '_' prefix for filename concatenation
+            if key:
+                key = '_' + key
+            for i, file in enumerate(files):
+                # preserve the suffix
+                suffix = file.suffix
+                # append split postfix if required
+                split = ''
+                if len(files) > 1:
+                    split = f'_split-{i}'
+
+                new_filename = filename_stem + key + split + suffix
+                destination = data_folder / new_filename
+                create_file(file, destination, mode)
+
+
+    def generate_metadata_files(self):
+        """
+        Copy registered metadata files into BIDS structure
+
+        This method currently only takes the file postfix into account
+        to determine the target folder.
+
+        """
+
+        data_folder = self.get_data_folder(mode='absolute')
+
+        parents = (data_folder / '_').parents
+
+        for mfile in self.mdata:
+            for regex, level in METADATA_LEVEL_BY_NAME.items():
+                if re.compile(regex).match(mfile.name):
+                    create_file(mfile, parents[(3-level)] / mfile.name,
+                                mode='copy')
+
+    def validate(self):
+        """
+        Validate the generated structure using the AnDO validator
+
+        Returns:
+            (bool): True if validation was successful. False if it failed.
+        """
+
+        raise NotImplementedError('Ando validation is not implemented yet.')
+
+
+def create_file(source, destination, mode):
+    if mode == 'copy':
+        shutil.copy(source, destination)
+    elif mode == 'link':
+        os.link(source, destination)
+    elif mode == 'move':
+        shutil.move(source, destination)
+    else:
+        raise ValueError(f'Invalid file creation mode "{mode}"')
 
 
 def extract_structure_from_csv(csv_file):
@@ -165,31 +239,19 @@ def extract_structure_from_csv(csv_file):
     if not HAVE_PANDAS:
         raise ImportError('Extraction of ando structure from csv requires pandas.')
 
-    df = pd.read_csv(csv_file)
+    df = pd.read_csv(csv_file, dtype=str)
 
     # ensure all fields contain information
     if df.isnull().values.any():
         raise ValueError(f'Csv file contains empty cells.')
 
     # standardizing column labels
-    df = df.rename(columns=LABEL_MAPPING)
-
-    # Formatting month, day and session_number
-    df["month"] = df.month.map("{:02}".format)
-    df["day"] = df.day.map("{:02}".format)
-    df["sesNumber"] = df.sesNumber.map("{:03}".format)
-
-    # unifying data representation in favour of datetime object
-    if "date" not in df.columns:
-        df["date"] = pd.to_datetime(df.loc[:, ["year", "month", "day"]])
-        df = df.drop(["year", "month", "day"], axis=1)
-    else:
-        df["date"] = pd.to_datetime(df.loc[:, "date"])
+    # df = df.rename(columns=LABEL_MAPPING)
 
     # Check is the header contains all required names
-    if not set(ESSENTIAL_PARAMS).issubset(df.columns):
+    if not set(ESSENTIAL_CSV_COLUMNS).issubset(df.columns):
         raise ValueError(f'Csv file ({csv_file}) does not contain required information '
-                         f'({ESSENTIAL_PARAMS}). Accepted column names are {LABEL_MAPPING}')
+                         f'({ESSENTIAL_CSV_COLUMNS}). Accepted column names are specified in the BEP.')
 
     return df
 
@@ -198,21 +260,23 @@ def generate_Struct(csv_file, pathToDir):
     f"""
     Create structure with csv file given in argument
     This file must contain a header row specifying the provided data. Accepted titles are
-    
-    {LABEL_MAPPING}
+    defined in the BEP.
     Essential information of the following attributes needs to be present
-    {ESSENTIAL_PARAMS}
+    {ESSENTIAL_CSV_COLUMNS}
 
     Args:
-        csv_file ([csv file ]): [Csv file that contains a list of directories to create ]
+        csv_file ([csv file ]): [Csv file that contains a list of directories to create]
         pathToDir ([Path to directory]): [Path to directory where the directories will be created]
     """
 
     df = extract_structure_from_csv(csv_file)
 
+    df = df[ESSENTIAL_CSV_COLUMNS]
+
     for session_kwargs in df.to_dict('index').values():
-        session = AnDOSession(**session_kwargs)
-        session.generate_folders(pathToDir)
+        session = AnDOData(**session_kwargs)
+        session.basedir = pathToDir
+        session.generate_structure()
 
 
 def main():

@@ -1,105 +1,72 @@
 import unittest
-from ando.tools.generator.AnDOGenerator import *
-from ando.tools.generator.tests.utils import initialize_test_directory, generate_simple_csv_file, test_directory
+from tools.generator.AnDOGenerator import *
 
-class Test_AnDOSesID(unittest.TestCase):
+from tools.generator.tests.utils import *
 
-    def setUp(self):
-        self.date = '20000101'
-        self.sesNumber = '100'
-        self.customSesField = 'test'
-        self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
-
-    def test_user_input_warning(self):
-        with self.assertWarns(Warning):
-            AnDOSesID(sesID=self.sesID, date=self.date, sesNumber=self.sesNumber)
-
-    def test_insufficient_input_error(self):
-        with self.assertRaises(ValueError):
-            AnDOSesID()
-
-    def test_datetime(self):
-        date_obj = datetime.datetime.strptime(self.date, '%Y%m%d')
-        sesID = AnDOSesID(date=date_obj, sesNumber=self.sesNumber)
-        self.assertEqual(self.date, sesID.date)
-
-    def test_only_sesID(self):
-        sesID = AnDOSesID(sesID=self.sesID)
-
-        self.assertEqual(self.sesID, str(sesID))
-        self.assertEqual(self.date, sesID.date)
-        self.assertEqual(self.sesNumber, sesID.sesNumber)
-        self.assertEqual(self.customSesField, sesID.customSesField)
-
-    def test_no_sesID(self):
-        sesID = AnDOSesID(date=self.date, sesNumber=self.sesNumber, customSesField=self.customSesField)
-
-        self.assertEqual(self.sesID, str(sesID))
-        self.assertEqual(self.date, sesID.date)
-        self.assertEqual(self.sesNumber, sesID.sesNumber)
-        self.assertEqual(self.customSesField, sesID.customSesField)
-
-
-class Test_AnDOSession(unittest.TestCase):
+class Test_AnDOData(unittest.TestCase):
 
     def setUp(self):
-        initialize_test_directory(clean=True)
-        self.expName = 'exp23'
-        self.guid = '1234'
-        self.date = '20000101'
-        self.sesNumber = '100'
-        self.customSesField = 'test'
-        self.sesID = f'{self.date}_{self.sesNumber}_{self.customSesField}'
+        test_dir = Path(initialize_test_directory(clean=True))
 
+        self.sub_id = 'sub5'
+        self.ses_id = 'ses1'
+        self.tasks = None
+        self.runs = None
+        
+        sources = test_dir / 'sources'
+        sources.mkdir()
+        project = test_dir / 'project-A'
+        project.mkdir()
+        self.basedir = project
 
+        d = AnDOData(self.sub_id, self.ses_id)
+        d.basedir = project
 
-    def test_insufficient_input(self):
-        with self.assertRaises(ValueError):
-            AnDOSession(None, self.guid)
+        self.ando_data = d
+        prefix = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        self.test_data_files = [sources / (prefix + '_ephy.nix'),
+                                sources / (prefix + '_ephy.nwb')]
+        self.test_mdata_files = [sources / 'dataset_description.json',
+                                 sources / (prefix + '_probes.tsv'),
+                                 sources / (prefix + '_contacts.json')]
 
-        with self.assertRaises(ValueError):
-            AnDOSession(self.expName, None)
+        for f in self.test_mdata_files + self.test_data_files:
+            f.touch()
 
-    def test_simple_parameters(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
+    def test_get_data_folder(self):
+        df = self.ando_data.get_data_folder()
+        self.assertTrue(df)
 
-        self.assertEqual(self.expName, ses.expName)
-        self.assertEqual(self.guid, ses.guid)
-        self.assertEqual(self.sesID, str(ses.sesID))
+        df_abs = self.ando_data.get_data_folder('absolute')
+        df_local = self.ando_data.get_data_folder('local')
 
-    def test_complex_parameters(self):
-        ses = AnDOSession(self.expName,
-                          self.guid,
-                          sesNumber=self.sesNumber,
-                          date=self.date,
-                          customSesField=self.customSesField)
+        self.assertTrue(df_local)
+        self.assertTrue(str(df_abs).endswith(str(df_local)))
 
-        self.assertEqual(self.expName, ses.expName)
-        self.assertEqual(self.guid, ses.guid)
-        self.assertEqual(self.sesID, str(ses.sesID))
+    def test_generate_structure(self):
+        self.ando_data.generate_structure()
+        df = self.ando_data.get_data_folder()
+        self.assertTrue(df.exists())
 
+    def test_data_files(self):
+        self.ando_data.generate_structure()
+        self.ando_data.register_data_files(*self.test_data_files)
+        self.ando_data.generate_data_files()
 
-    def test_paths(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
-        expected = os.path.join(f'exp-{self.expName}', f'sub-{self.guid}', f'ses-{self.sesID}')
-        self.assertEqual(expected, ses.get_session_path())
-        self.assertEqual(1, len(ses.get_all_folder_paths())) # There is now only one subfolder called ephys
+        for f in self.test_data_files:
+            self.assertTrue((self.ando_data.basedir / f).exists())
 
-    def test_generate_folders(self):
-        ses = AnDOSession(self.expName, self.guid, self.sesID)
-        paths = ses.get_all_folder_paths()
+    def test_metadata_files(self):
+        self.ando_data.generate_structure()
+        self.ando_data.register_metadata_files(*self.test_mdata_files)
+        self.ando_data.generate_metadata_files()
 
-        # delete paths in case they already exist
-        for path in paths:
-            if os.path.exists(os.path.join(test_directory, path)):
-                os.remove(path)
+        prefix = 'sub-sub5_ses-ses1'
+        for f in [prefix + '_probes.tsv', prefix + '_contacts.json']:
+            self.assertTrue((self.ando_data.get_data_folder() / f).exists())
+        self.assertTrue((self.basedir / 'dataset_description.json').exists())
 
-        ses.generate_folders(basedir=test_directory)
-
-        for path in paths:
-            self.assertTrue(os.path.exists(os.path.join(test_directory, path)))
-
-    def doCleanups(self):
+    def tearDown(self):
         initialize_test_directory(clean=True)
 
 
@@ -111,7 +78,7 @@ class Test_ReadCsv(unittest.TestCase):
 
     def test_read_csv(self):
         df = extract_structure_from_csv(self.csv_file)
-        expected_headers = ['expName', 'guid', 'sesNumber', 'customSesField', 'date']
+        expected_headers = ['sub_id', 'ses_id']
         self.assertListEqual(expected_headers, list(df))
 
 class Test_GenerateStruct(unittest.TestCase):
