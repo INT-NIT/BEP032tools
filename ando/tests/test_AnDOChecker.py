@@ -127,7 +127,7 @@ class TestCLI(TestCase):
     @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
     # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
     def test_simple_api(self):
-        res = sp.run(['AnDOChecker', '-v', self.valid_dir], stdout=sp.PIPE)
+        res = sp.run(['AnDOChecker', '-v', str(self.valid_dir)], stdout=sp.PIPE)
         self.assertEqual(res.returncode, 0)
         self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
