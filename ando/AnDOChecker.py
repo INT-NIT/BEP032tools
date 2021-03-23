@@ -46,6 +46,9 @@ def is_valid(input_directory):
         ###
         # extract rules for this level!
         ###
+        if depth not in range(len(RULES_SET)):
+            error_list.append(f"Unexpected folder level : {root}")
+            continue
         currentdepth_rules = RULES_SET[depth]
 
         ###
