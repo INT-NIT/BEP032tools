@@ -8,7 +8,7 @@ Ando_web/
 dist/*
 build/*
 
-tools/generator/dist/*
-tools/generator/build/*
-tools/viewer/build/*
-tools/viewer/dist/*
+ando/tools/generator/dist/*
+ando/tools/generator/build/*
+ando/tools/viewer/build/*
+ando/tools/viewer/dist/*

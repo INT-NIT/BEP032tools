@@ -1,7 +1,7 @@
 import unittest
-from tools.generator.AnDOGenerator import *
+from ando.tools.generator.AnDOGenerator import *
 
-from tools.generator.tests.utils import *
+from ando.tools.generator.tests.utils import *
 
 class Test_AnDOData(unittest.TestCase):
 
