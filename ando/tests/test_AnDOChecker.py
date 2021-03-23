@@ -141,6 +141,14 @@ class TestCLI(TestCase):
 
     @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
     # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_current_dir_slash(self):
+        self.switch_dir(self.valid_dir)
+        res = sp.run(['AnDOChecker', '-v', './'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
+
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
     def test_high_level_dir(self):
         self.switch_dir(self.valid_dir / "sub-enya")
         res = sp.run(['AnDOChecker', '-v', '..'], stdout=sp.PIPE)
