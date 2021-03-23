@@ -17,14 +17,14 @@ setup(
             # If any package contains *.json or *.csv files, include them:
             "": ["*.json", '*.csv'],
     },
-    author="Jeremy Garcia, Sylvain Takerkart",
+    author="Jeremy Garcia, Sylvain Takerkart , Julia Sprenger",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
     license='MIT',
     install_requires=[],
     include_package_data=True,
     entry_points={
 
-        'console_scripts': ['AnDOChecker=ando.checker:main',
+        'console_scripts': ['AnDOChecker=ando.AnDOChecker:main',
                             'AnDOGenerator=ando.tools.generator.AnDOGenerator:main',
                             'AnDOViewer=ando.tools.viewer.AnDOViewer:main'],
     },
