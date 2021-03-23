@@ -115,6 +115,10 @@ class TestInputLevels(TestCase):
         path = Path('..')
         self.assertEqual(CHK.is_valid(path)[0], True)
 
+    def test_wrong_dir_trailing_slash(self):
+        path = Path('./')
+        self.assertEqual(CHK.is_valid(path)[0], False)
+
 
 class TestCLI(TestCase):
     @classmethod
