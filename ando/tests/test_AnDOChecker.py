@@ -38,6 +38,10 @@ class Test(TestCase):
         path = Path(dir_path) / "datasets" / "non-existent-folder"
         self.assertEqual(CHK.is_valid(path)[0], False)
 
+    def test_invalid_character(self):
+        path = Path(dir_path) / "dataset" / "exp-invalid_character"
+        self.assertEqual(CHK.is_valid(path)[0], False)
+
     ##
     # level 1
     ##
