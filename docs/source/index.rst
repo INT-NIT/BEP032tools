@@ -19,7 +19,7 @@ We describe below the set of specifications themselves, as well as an applicatio
 -----------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 10
    :caption: Contents:
 
 
