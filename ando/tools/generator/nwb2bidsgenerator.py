@@ -1,13 +1,16 @@
 import json
 from collections import defaultdict
 from pathlib import Path
-from ando.AnDOChecker import is_valid
+
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 
+from ando.AnDOChecker import is_valid
 
-def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, validate=True, **kwargs):
+
+def bep_organize(dataset_path, output_path=None, move_nwb=False,
+                 re_write=True, validate=True, **kwargs):
     """
     organize data according to teh BIDS extension proposal
     Parameters
@@ -41,9 +44,18 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
     sub_ses_dict = defaultdict(list)
     for nwb_file in dataset_path.glob('**/*.nwb'):
         file_count += 1
-        channels_df = pd.DataFrame(columns=['channel_id', 'Contact_id', 'type', 'units', 'sampling_frequency',
-                                            'unit_conversion_multiplier'])
-        contacts_df = pd.DataFrame(columns=['x', 'y', 'z', 'impedance', 'contact_id', 'probe_id', 'Location'])
+        channels_df = pd.DataFrame(
+            columns=['channel_id', 'Contact_id', 'type', 'units', 'sampling_frequency',
+                     'unit_conversion_multiplier'])
+        contacts_df = pd.DataFrame(
+            columns=[
+                'x',
+                'y',
+                'z',
+                'impedance',
+                'contact_id',
+                'probe_id',
+                'Location'])
         probes_df = pd.DataFrame(columns=['probeID', 'type'])
 
         with NWBHDF5IO(str(nwb_file), 'r') as io:
@@ -56,29 +68,33 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
                     subject_label = f'sub-{sb.subject_id}'
                 else:
                     subject_label = f'sub-{sb.date_of_birth.strftime("%Y%m%dT%H%M")}'
-                if not participants_df['ParticipantID'].str.contains(subject_label).any():
+                if not participants_df['ParticipantID'].str.contains(
+                        subject_label).any():
                     participants_df.loc[len(participants_df.index)] = \
                         [sb.species, subject_label, sb.sex[0] if sb.sex is not None else None,
                          sb.date_of_birth, sb.age, sb.genotype, sb.weight]
             else:
                 subject_label = 'sub-none'
-                if not participants_df['ParticipantID'].str.contains(subject_label).any():
+                if not participants_df['ParticipantID'].str.contains(
+                        subject_label).any():
                     participants_df.loc[len(participants_df.index)] = \
                         [None, subject_label, None, None, None, None, None]
 
             # dataset info:
             if dataset_desc_json is None:
-                dataset_desc_json = dict(InstitutionName=nwbfile.institution, InstitutionalDepartmentName=nwbfile.lab,
-                                         Name='Electrophysiology', BIDSVersion='1.0.X',
-                                         Licence='CC BY 4.0',
-                                         Authors=[
-                                             list(nwbfile.experimenter) if nwbfile.experimenter is not None else None])
+                dataset_desc_json = dict(
+                    InstitutionName=nwbfile.institution, InstitutionalDepartmentName=nwbfile.lab,
+                    Name='Electrophysiology', BIDSVersion='1.0.X',
+                    Licence='CC BY 4.0',
+                    Authors=[
+                        list(nwbfile.experimenter) if nwbfile.experimenter is not None else None])
             # sessions info:
             subject_path = output_path/subject_label
             bep_sessions_path = subject_path/f'{subject_label}_sessions.tsv'
             if not bep_sessions_path.exists():
                 print(f'writing for subject: {subject_label}')
-                sessions_df = pd.DataFrame(columns=['session_id', '#_trials', 'comment'])
+                sessions_df = pd.DataFrame(
+                    columns=['session_id', '#_trials', 'comment'])
             else:
                 sessions_df = pd.read_csv(bep_sessions_path, sep='\t')
             if nwbfile.session_id is not None:
@@ -88,14 +104,17 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
                 # if label_count>0:
             else:
                 session_label = f'ses-{nwbfile.session_start_time.strftime("%Y%m%dT%H%M")}'
-            trials_len = len(nwbfile.trials) if nwbfile.trials is not None else None
+            trials_len = len(
+                nwbfile.trials) if nwbfile.trials is not None else None
             if not sessions_df['session_id'].str.contains(session_label).any():
                 sessions_count += 1
                 sessions_df.loc[len(sessions_df.index)] = \
                     [session_label, trials_len, nwbfile.session_description]
 
             # channels_info:
-            es = [i for i in nwbfile.children if isinstance(i, ElectricalSeries)]
+            es = [
+                i for i in nwbfile.children if isinstance(
+                    i, ElectricalSeries)]
             if len(es) > 0:
                 es = es[0]
                 no_channels = es.data.shape[1]
@@ -121,7 +140,8 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
                                                                e_table.group[contact_no].device.name,
                                                                e_table.location[contact_no]]
             for probe_id in contacts_df['probe_id'].unique():
-                probes_df.loc[len(probes_df.index)] = [probe_id, kwargs.get('probe_type', 'acute')]
+                probes_df.loc[len(probes_df.index)] = [
+                    probe_id, kwargs.get('probe_type', 'acute')]
 
         # construct the folders:
         generic_ephys_name = f'{subject_label}_{session_label}_'
@@ -173,15 +193,21 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
 
     # create participants.tsv:
     participants_df.dropna(axis='columns', how='all', inplace=True)
-    participants_df.to_csv(output_path/'participants.tsv', sep='\t', index=False)
+    participants_df.to_csv(
+        output_path/
+        'participants.tsv',
+        sep='\t',
+        index=False)
 
     # create dataset_desrciption.json
     with open(output_path/'dataset_description.json', 'w') as j:
         if all([True for au in dataset_desc_json['Authors'] if au is None]):
             _ = dataset_desc_json.pop('Authors')
-        dataset_desc_tosave = {k: v for k, v in dataset_desc_json.items() if v is not None}
+        dataset_desc_tosave = {k: v for k,
+                                        v in dataset_desc_json.items() if v is not None}
         json.dump(dataset_desc_tosave, j)
-    print(f'total nwbfiles orgainzed {file_count}, sessions count {sessions_count}')
+    print(
+        f'total nwbfiles orgainzed {file_count}, sessions count {sessions_count}')
     # validate:
     if validate:
         is_valid(output_path)
