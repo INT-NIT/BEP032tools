@@ -7,9 +7,9 @@ from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 
 
-def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, **kwargs):
+def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, validate=True, **kwargs):
     """
-    organize data according to teh BIDS extention proposal
+    organize data according to teh BIDS extension proposal
     Parameters
     ----------
     re_write: bool
@@ -21,6 +21,8 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
         parent path to the BIDS folder structure
     dataset_path : [str, Path]
         path to the folder containing all the nwb datasets that need organization.
+    validate: bool
+        to validate the dataset using the ANdoChecker
     kwargs:
         probe_type: acute/chronic
     """
@@ -180,4 +182,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False, re_write=True, 
         dataset_desc_tosave = {k: v for k, v in dataset_desc_json.items() if v is not None}
         json.dump(dataset_desc_tosave, j)
     print(f'total nwbfiles orgainzed {file_count}, sessions count {sessions_count}')
+    # validate:
+    if validate:
+        is_valid(output_path)
     return sub_ses_dict
