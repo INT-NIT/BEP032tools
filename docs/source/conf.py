@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.abspath('../ando/'))
 sys.path.insert(0, os.path.abspath('../ando/tools'))
 
 
-
 # -- Project information -----------------------------------------------------
 
 project = 'AnDO'
