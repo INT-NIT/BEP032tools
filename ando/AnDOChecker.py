@@ -28,12 +28,15 @@ def is_valid(input_directory):
 
     """
 
-    # remove ending / or \ if the input directory was given with it at the end
-    input_directory = pathlib.Path(input_directory)
+    input_directory = pathlib.Path(input_directory).resolve()
+
     # count the number of / or \ in the directory name to estimate its "depth"
-    initial_depth = len(input_directory.resolve().parents)
+    initial_depth = len(input_directory.parents)
 
     error_list = []
+
+    if not input_directory.exists():
+        error_list.append(f"Input folder does not exist: {input_directory}")
 
     # walk through the directory tree using the os.walk function
     for ind, (root, dirs, files) in enumerate(os.walk(input_directory)):
@@ -43,6 +46,9 @@ def is_valid(input_directory):
         ###
         # extract rules for this level!
         ###
+        if depth not in range(len(RULES_SET)):
+            error_list.append(f"Unexpected folder level : {root}")
+            continue
         currentdepth_rules = RULES_SET[depth]
 
         ###

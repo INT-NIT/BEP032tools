@@ -1,7 +1,15 @@
+import os
+import subprocess as sp
+import unittest
 from unittest import TestCase
 from pathlib import Path
 from ando import AnDOChecker as CHK
-import os
+
+try:
+    sp.run(['AnDOChecker', '-h'], stdout=sp.PIPE)
+    HASANDO = True
+except:
+    HASANDO = False
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -22,6 +30,13 @@ class Test(TestCase):
     def test_valid_full_metadata(self):
         path = Path(dir_path) / "dataset" / "exp-valid_full_metadata"
         self.assertEqual(CHK.is_valid(path)[0], True)
+
+    ##
+    # level 0
+    ##
+    def test_invalid_folder(self):
+        path = Path(dir_path) / "datasets" / "non-existent-folder"
+        self.assertEqual(CHK.is_valid(path)[0], False)
 
     ##
     # level 1
@@ -78,4 +93,68 @@ class Test(TestCase):
     def test_multipleError(self):
         path = Path(dir_path) / "dataset" / "exp-MultipleError"
         self.assertEqual(CHK.is_valid(path)[0], False)
-        self.assertEqual(len(CHK.is_valid(path)[1]), 3)  # check if there is 3 error reported
+        self.assertEqual(len(CHK.is_valid(path)[1]),
+                         3)  # check if there is 3 error reported
+
+
+class TestInputLevels(TestCase):
+    @classmethod
+    def switch_dir(self, directory):
+        os.chdir(directory)
+
+    def setUp(self):
+        self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
+
+    def test_current_dir_input(self):
+        self.switch_dir(self.valid_dir)
+        path = Path('.')
+        self.assertEqual(CHK.is_valid(path)[0], True)
+
+    def test_lower_input_dir(self):
+        self.switch_dir(self.valid_dir / "sub-enya")
+        path = Path('..')
+        self.assertEqual(CHK.is_valid(path)[0], True)
+
+    def test_wrong_dir_trailing_slash(self):
+        path = Path('./')
+        self.assertEqual(CHK.is_valid(path)[0], False)
+
+
+class TestCLI(TestCase):
+    @classmethod
+    def switch_dir(self, directory):
+        os.chdir(directory)
+
+    def setUp(self):
+        self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
+
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_simple_api(self):
+        res = sp.run(['AnDOChecker', '-v', str(self.valid_dir)], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
+
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_current_dir(self):
+        self.switch_dir(self.valid_dir)
+        res = sp.run(['AnDOChecker', '-v', '.'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
+
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_current_dir_slash(self):
+        self.switch_dir(self.valid_dir)
+        res = sp.run(['AnDOChecker', '-v', './'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
+
+    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
+    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    def test_high_level_dir(self):
+        self.switch_dir(self.valid_dir / "sub-enya")
+        res = sp.run(['AnDOChecker', '-v', '..'], stdout=sp.PIPE)
+        self.assertEqual(res.returncode, 0)
+        self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
