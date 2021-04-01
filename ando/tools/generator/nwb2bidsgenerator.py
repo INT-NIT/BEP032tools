@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 from pathlib import Path
-
+import re
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
@@ -65,7 +65,8 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
             if nwbfile.subject is not None:
                 sb = nwbfile.subject
                 if sb.subject_id is not None:
-                    subject_label = f'sub-{sb.subject_id}'
+                    sub_id = re.sub(r'[\W_]+', '', sb.subject_id)
+                    subject_label = f'sub-{sub_id}'
                 else:
                     subject_label = f'sub-{sb.date_of_birth.strftime("%Y%m%dT%H%M")}'
                 if not participants_df['ParticipantID'].str.contains(
@@ -98,7 +99,8 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
             else:
                 sessions_df = pd.read_csv(bep_sessions_path, sep='\t')
             if nwbfile.session_id is not None:
-                session_label = f'ses-{nwbfile.session_id}'
+                ses_id = re.sub(r'[\W_]+', '', nwbfile.session_id)
+                session_label = f'ses-{ses_id}'
                 # label_count = sessions_df['session_id'].str.contains(session_label).sum()
                 # run_label = f'_run-{label_count}'
                 # if label_count>0:
