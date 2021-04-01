@@ -76,7 +76,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
                         [sb.species, subject_label, sb.sex[0] if sb.sex is not None else None,
                          sb.date_of_birth, sb.age, sb.genotype, sb.weight]
             else:
-                subject_label = 'sub-none'
+                subject_label = f'sub-noname{file_count}'
                 if not participants_df['ParticipantID'].str.contains(
                         subject_label).any():
                     participants_df.loc[len(participants_df.index)] = \
