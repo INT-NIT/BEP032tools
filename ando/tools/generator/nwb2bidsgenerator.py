@@ -89,7 +89,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
                     Name='Electrophysiology', BIDSVersion='1.0.X',
                     Licence='CC BY 4.0',
                     Authors=[
-                        list(nwbfile.experimenter) if nwbfile.experimenter is not None else None])
+                        list(nwbfile.experimenter) if nwbfile.experimenter is not None else None][0])
             # sessions info:
             subject_path = output_path/subject_label
             bep_sessions_path = subject_path/f'{subject_label}_sessions.tsv'
