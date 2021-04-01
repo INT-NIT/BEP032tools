@@ -20,7 +20,7 @@ setup(
     author="Jeremy Garcia, Sylvain Takerkart",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
     license='MIT',
-    install_requires=['pynwb'],
+    install_requires=['h5py', 'pynwb'],
     include_package_data=True,
     entry_points={
 
