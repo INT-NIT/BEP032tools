@@ -32,7 +32,7 @@ jobs:
     - name: Install package
       run: |
         pip install wheel
-        pip install h5py!=3.2.1
+        pip install h5py==3.1.0
         pip install .[tools,test]
 
     - name: Test with pytest
