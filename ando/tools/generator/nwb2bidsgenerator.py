@@ -10,7 +10,8 @@ from ando.AnDOChecker import is_valid
 
 
 def bep_organize(dataset_path, output_path=None, move_nwb=False,
-                 re_write=True, validate=True, **kwargs):
+                 re_write=True, validate=True, powerline_frequency=60.0,
+                 **kwargs):
     """
     organize data according to teh BIDS extension proposal
     Parameters
@@ -129,7 +130,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
                                                                sampling_frequency, conversion]
 
             # update ephys json:
-            ephys_desc_json = dict(PowerLineFrequency=60.0)
+            ephys_desc_json = dict(PowerLineFrequency=powerline_frequency)
             # contacts/probes info:
             e_table = nwbfile.electrodes
             if e_table is not None:
