@@ -32,7 +32,6 @@ jobs:
     - name: Install package
       run: |
         pip install .[tools,test]
-        pip install datalad
 
     - name: Test with pytest
       run: |
