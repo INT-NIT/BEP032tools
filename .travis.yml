@@ -25,6 +25,7 @@ install:
 # 'python' points to Python 2.7 on macOS but points to Python 3.8 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
   - pip3 install .[test,tools]
+  - pip3 install datalad
   
 script: pytest
        # - ls
