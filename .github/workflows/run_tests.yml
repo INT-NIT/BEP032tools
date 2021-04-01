@@ -31,7 +31,7 @@ jobs:
 
     - name: Install package
       run: |
-        pip install h5py
+        pip install wheel
         pip install .[tools,test]
 
     - name: Test with pytest
