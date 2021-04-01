@@ -1,7 +1,8 @@
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
-import re
+
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
@@ -16,6 +17,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
     organize data according to teh BIDS extension proposal
     Parameters
     ----------
+    powerline_frequency: float
     re_write: bool
         if true, will rewrite an already existing output path
     move_nwb: bool
@@ -214,4 +216,4 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
     # validate:
     if validate:
         is_valid(output_path)
-    return sub_ses_dict
+    return output_path
