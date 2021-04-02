@@ -18,6 +18,13 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.6]
 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
   run-conda-test:
     needs: [build]
     name: Running tests using miniconda
