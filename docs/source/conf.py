@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../ando/tools'))
 
 project = 'AnDO'
 copyright = '2021, Jeremy Garcia, Julia Sprenger, Sylvain Takerkart ',
-author = 'Jeremy Garcia, Julia Sprenger, Sylvain Takerkart '
+author = 'Jeremy Garcia, Julia Sprenger, Sylvain Takerkart'
 
 # The full version, including alpha/beta/rc tags
 release = '.'
