@@ -2,7 +2,7 @@ import json
 import re
 from collections import defaultdict
 from pathlib import Path
-
+import shutil
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
@@ -35,8 +35,10 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
     dataset_path = Path(dataset_path)
     if output_path is None:
         output_path = dataset_path.parent/'BIDSExt'/dataset_path.name
+    else:
+        output_path = Path(output_path)
     if re_write and output_path.exists():
-        output_path.unlink()
+        shutil.rmtree(output_path)
     participants_df = pd.DataFrame(
         columns=['Species', 'ParticipantID', 'Sex', 'Birthdate', 'Age', 'Genotype', 'Weight'])
     dataset_desc_json = None
