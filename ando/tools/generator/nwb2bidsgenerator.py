@@ -39,6 +39,8 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
         output_path = Path(output_path)
     if re_write and output_path.exists():
         shutil.rmtree(output_path)
+        # create empty folder again
+        output_path.mkdir()
     participants_df = pd.DataFrame(
         columns=['Species', 'ParticipantID', 'Sex', 'Birthdate', 'Age', 'Genotype', 'Weight'])
     dataset_desc_json = None
