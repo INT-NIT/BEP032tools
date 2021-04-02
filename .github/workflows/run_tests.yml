@@ -29,6 +29,8 @@ jobs:
       run: |
         #conda env update --file environment.yml --name base
         conda install -c conda-forge datalad
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
         conda install -c conda-forge ruamel.yaml
         conda install pip
         pip install -e .
