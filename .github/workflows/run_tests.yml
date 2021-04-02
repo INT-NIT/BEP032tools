@@ -9,7 +9,6 @@ on:
   pull_request:
     branches: [ master ]
 
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -19,20 +18,38 @@ jobs:
         os: [ubuntu-latest]
         python-version: [3.6]
 
+  run-conda-test:
+    needs: [build]
+    name: Running tests using miniconda
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      max-parallel: 4
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Run install
-      run: |
-        pip install datalad-installer
-        datalad-installer git-annex -m datalad/packages
-        pip install datalad
-        pip install .
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        # pytest will skip cross-compatibility tests since NIX isn't installed
-        pytest
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: deptest-${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
+      - name: Show conda details
+        run: |
+          conda info
+          conda list
+          which python
+          conda --version
+      - name: Install Python dependencies
+        run: |
+          conda install -c conda-forge git-annex
+          pip install datalad
+          pip install .
+          python setup.py install
+          pip install pytest
+      - name: Run tests
+        run: |
+          pytest
