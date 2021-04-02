@@ -16,12 +16,35 @@ The Animal Data Organization (AnDO) is a project initiated at the Institut de Ne
 
 At this moment, this repository provides several tools, amongst which a validator (the AnDOChecker) which complies to the latest specifications described in the BEP32 document. We are committed to 
 
+
+
+
+Example of an AnDO Repository
+--------------------------
+
+.. image:: _static/examples.png
+  :width: 400
+  :align: center
+  :alt: Alternative text
+
+
+Tools
+===========================
+AnDOChecker :
+   - Further information here  :ref:`to_checker`.
+
+   - Checks the validity of a data set with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
+
+AnDOGenerator :
+   - Further information here  :ref:`to_generator`.
+
+   - Generate a BIDS-animal-ephys folder structure that follows the BEP specifcations with a overveiw CSV files and optional metadata files as input.
+
 -----------
 
 .. toctree::
    :maxdepth: 10
    :caption: Contents:
-
 
 
 Indices and tables

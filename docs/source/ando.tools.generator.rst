@@ -1,3 +1,5 @@
+.. _to_generator:
+
 ando.tools.generator package
 ============================
 

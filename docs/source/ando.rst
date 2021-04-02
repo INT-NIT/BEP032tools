@@ -1,3 +1,4 @@
+
 AnDO package
 ============
 Packages
@@ -9,6 +10,7 @@ Packages
 
    ando.tools
 
+.. _to_checker:
 
 ando.AnDOChecker module
 -----------------------
