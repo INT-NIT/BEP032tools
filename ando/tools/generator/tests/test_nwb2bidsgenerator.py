@@ -1,4 +1,5 @@
 import tempfile
+import unittest
 from pathlib import Path
 
 from datalad.api import install, Dataset
@@ -6,7 +7,8 @@ from datalad.api import install, Dataset
 from ando.tools.generator.nwb2bidsgenerator import bep_organize, is_valid
 
 
-class TestNwbBIDSGenerator:
+class TestNwbBIDSGenerator(unittest.TestCase):
+
     def setUp(self):
         pt = Path.cwd()/"BEP032-examples"
         if pt.exists():
@@ -18,8 +20,8 @@ class TestNwbBIDSGenerator:
                 source="https://gin.g-node.org/NeuralEnsemble/BEP032-examples",
                 get_data=True,
             )
-        self.datadir = pt
-        self.savedir = Path(tempfile.mkdtemp())
+        self.datadir = str(pt)
+        self.savedir = tempfile.mkdtemp()
 
     def test_nwb_to_bids(self):
         bep_organize(self.datadir, output_path=self.savedir, move_nwb=True, validate=False)
