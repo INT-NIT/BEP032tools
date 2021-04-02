@@ -31,15 +31,12 @@ For more examples of datasets see the BEP032 repository: https://gin.g-node.org/
 
 Tools
 ===========================
-AnDOChecker :
-   - Further information here  :ref:`to_checker`.
-
+:ref:`AnDOChecker <to_checker>`:
    - Checks the validity of a data set with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
 
-AnDOGenerator :
-   - Further information here  :ref:`to_generator`.
 
-   - Generate a BIDS-animal-ephys folder structure that follows the BEP specifcations with a overveiw CSV files and optional metadata files as input.
+:ref:`AnDOGenerator <to_generator>`:
+   - Generate a BIDS-animal-ephys folder structure that follows the BEP specifications with a overview CSV files and optional metadata files as input.
 
 -----------
 
