@@ -206,7 +206,7 @@ def bep_organize(dataset_path, output_path=None, move_nwb=False,
         sep='\t',
         index=False)
 
-    # create dataset_desrciption.json
+    # create dataset_description.json
     with open(output_path/'dataset_description.json', 'w') as j:
         if all([True for au in dataset_desc_json['Authors'] if au is None]):
             _ = dataset_desc_json.pop('Authors')
