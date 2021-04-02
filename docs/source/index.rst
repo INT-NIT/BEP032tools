@@ -12,9 +12,9 @@ The Animal Data Organization (AnDO) is a project initiated at the Institut de Ne
 
  - first, we have opened our desire for standardization to the community through the launch of a Working Group endorsed by the INCF; please feel free to join the group to participate in this effort: https://www.incf.org/sig/incf-working-group-standardized-data ; we are meeting approximately every two months and we are making progress in subgroups on well defined issues between each meeting;
 
- - second, after discussions within the group, we have initiated a specific standardization effort for electrophysiology, as a BIDS Extension Proposal (BEP32: https://bids.neuroimaging.io/get_involved.html ); we are actively looking for feedback from the community on this proposal, so feel free to directly comment in the document that details the data and metadata organization: http://bit.ly/BIDS-animal-ephys.
+ - second, after discussions within the group, we have initiated a specific standardization effort for electrophysiology, as a BIDS Extension Proposal (BEP032: https://bids.neuroimaging.io/get_involved.html ); we are actively looking for feedback from the community on this proposal, so feel free to directly comment in the document that details the data and metadata organization: http://bit.ly/BIDS-animal-ephys.
 
-At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP32 document. We are committed to
+At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP032 document. We are committed to
 
 
 
@@ -27,7 +27,7 @@ Example of an AnDO Repository
   :align: center
   :alt: Alternative text
 
-for more examples of dataset see the BEP32 repository : https://gin.g-node.org/NeuralEnsemble/BEP032-examples
+For more examples of datasets see the BEP032 repository: https://gin.g-node.org/NeuralEnsemble/BEP032-examples
 
 Tools
 ===========================
