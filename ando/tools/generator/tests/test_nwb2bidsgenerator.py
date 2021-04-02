@@ -6,7 +6,6 @@ from datalad.api import install, Dataset
 
 from ando.tools.generator.nwb2bidsgenerator import bep_organize, is_valid
 
-
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):
