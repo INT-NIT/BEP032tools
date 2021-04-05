@@ -3,7 +3,7 @@ import re
 import shutil
 from collections import defaultdict
 from pathlib import Path
-
+from ando.AnDOChecker import is_valid
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
@@ -17,6 +17,7 @@ class NwbToBIDS:
         self.nwbfiles_list = list(self.dataset_path.glob('**/*.nwb'))
         assert len(self.nwbfiles_list) > 0, 'no nwb files found'
         self._kwargs = kwargs
+        self._extract_metadata()
 
     def _extract_metadata(self):
         self._participants_dict = dict(name=Path('participants.tsv'),
@@ -169,7 +170,7 @@ class NwbToBIDS:
         return contacts_df, probes_df
 
     def organize(self, output_path=None, move_nwb=False,
-                 re_write=True):
+                 re_write=True, validate=True):
         if output_path is None:
             output_path = self.dataset_path.parent/'BIDSExt'/self.dataset_path.name
         else:
@@ -233,6 +234,9 @@ class NwbToBIDS:
                 else:
                     if not loc.exists():
                         loc.symlink_to(data)
+
+        if validate:
+            is_valid(output_path)
 
     def _parse_data_dict(self, data_dict, output_path):
         return data_dict['data'], output_path/data_dict['name']
