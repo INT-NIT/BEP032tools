@@ -3,20 +3,22 @@ import re
 import shutil
 from collections import defaultdict
 from pathlib import Path
-from ando.AnDOChecker import is_valid
+
 import pandas as pd
 from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 from tqdm import tqdm
 
+from ando.AnDOChecker import is_valid
+from .bidsconverter import BidsConverter
 
-class NwbToBIDS:
+
+class NwbToBIDS(BidsConverter):
 
     def __init__(self, dataset_path, **kwargs):
-        self.dataset_path = Path(dataset_path)
-        self.nwbfiles_list = list(self.dataset_path.glob('**/*.nwb'))
-        assert len(self.nwbfiles_list) > 0, 'no nwb files found'
-        self._kwargs = kwargs
+        super().__init__(dataset_path, **kwargs)
+        self.datafiles_list = list(self.dataset_path.glob('**/*.nwb'))
+        assert len(self.datafiles_list) > 0, 'no nwb files found'
         self._extract_metadata()
 
     def _extract_metadata(self):
@@ -32,7 +34,7 @@ class NwbToBIDS:
         self._ephys_dict = defaultdict(dict)
         self._probes_dict = defaultdict(dict)
         self._nwbfile_name_dict = defaultdict(dict)
-        for file_no, nwb_file in enumerate(tqdm(self.nwbfiles_list)):
+        for file_no, nwb_file in enumerate(tqdm(self.datafiles_list)):
             with NWBHDF5IO(str(nwb_file), 'r') as io:
                 nwbfile = io.read()
 
@@ -245,50 +247,3 @@ class NwbToBIDS:
         if not loc.exists():
             data.dropna(axis='columns', how='all', inplace=True)
             data.to_csv(loc, sep='\t', index=False)
-
-    def get_subject_names(self):
-        return list(self._participants_dict['data']['ParticipantID'])
-
-    def get_session_names(self, subject_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        return list(self._sessions_dict[subject_name]['data']['session_id'])
-
-    def get_channels_info(self, subject_name=None, session_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        if session_name is None:
-            session_name = self.get_session_names()[0]
-        return self._channels_dict[subject_name][session_name]['data'].to_dict()
-
-    def get_contacts_info(self, subject_name=None, session_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        if session_name is None:
-            session_name = self.get_session_names()[0]
-        return self._contacts_dict[subject_name][session_name]['data'].to_dict()
-
-    def get_ephys_info(self, subject_name=None, session_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        if session_name is None:
-            session_name = self.get_session_names()[0]
-        return self._ephys_dict[subject_name][session_name]['data']
-
-    def get_probes_info(self, subject_name=None, session_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        if session_name is None:
-            session_name = self.get_session_names()[0]
-        return self._probes_dict[subject_name][session_name]['data'].to_dict()
-
-    def get_participants_info(self):
-        return self._participants_dict['data'].to_dict()
-
-    def get_dataset_description(self):
-        return self._dataset_desc_json['data']
-
-    def get_session_info(self, subject_name=None):
-        if subject_name is None:
-            subject_name = self.get_subject_names()[0]
-        return self._sessions_dict[subject_name]['data'].to_dict()
