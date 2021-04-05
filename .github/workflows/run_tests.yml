@@ -10,65 +10,38 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
-    runs-on: ${{ matrix.os }}
+  build-linux:
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        # Tests on Windows elicit errors so keeping only ubuntu/macos for now
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.6, 3.9]
+      max-parallel: 5
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: OS dependend installation
+        python-version: 3.8
+    - name: Add conda to system path
       run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
-             sudo apt install pkg-config libhdf5-103 libhdf5-dev
-        fi
-      shell: bash
-
-
-    - name: Display Python version
-      run: python -c "import sys; print(sys.version)"
-
-    - name: Install package
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
       run: |
-        pip install wheel
-        pip install h5py==3.1.0
-        pip install .[tools,test]
-
-    - name: Test with pytest
+        #conda env update --file environment.yml --name base
+        conda install -c conda-forge datalad
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        conda install -c conda-forge ruamel.yaml
+        conda install pip
+        pip install -e .
+    - name: Lint with flake8
       run: |
+        conda install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest and build coverage report
+      run: |
+        conda install pytest
         pytest
-
-  run-coverall:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-
-      - name: Install package
-        run: pip install .[test]
-
-      - name: Install Python test dependencies
-        run: pip install coveralls
-
-      - name: Create coverage
-        run: coverage run --source=ando -m pytest ando/tests/
-
-      - name: Submit to coveralls
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github
