@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from datalad.api import install, Dataset
 
-from ando.tools.generator.nwb2bidsgenerator import bep_organize, is_valid
+from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 
 
 class TestNwbBIDSGenerator(unittest.TestCase):
@@ -24,13 +24,15 @@ class TestNwbBIDSGenerator(unittest.TestCase):
         self.savedir = tempfile.mkdtemp()
 
     def test_nwb_to_bids(self):
-        bep_organize(self.datadir, output_path=self.savedir, move_nwb=True, validate=False)
+        n2b = NwbToBIDS(self.datadir)
+        n2b.organize(output_path=self.savedir, move_nwb=False, validate=False)
         validation_output = is_valid(self.savedir)
         if not validation_output[0]:
             raise Exception(','.join(validation_output[1]))
 
     def test_validation(self):
-        bep_organize(self.datadir, output_path=self.savedir, move_nwb=True, validate=False)
+        n2b = NwbToBIDS(self.datadir)
+        n2b.organize(output_path=self.savedir, move_nwb=False, validate=False)
         svpt = Path(self.savedir)
         for sub_files in svpt.iterdir():
             if sub_files.suffix=='.json':
