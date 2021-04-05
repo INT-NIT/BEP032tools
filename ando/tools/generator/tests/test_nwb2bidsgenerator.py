@@ -39,7 +39,7 @@ class TestNwbBIDSGenerator(unittest.TestCase):
                 json_file = sub_files
                 break
         nwbfile = list(svpt.glob('**/*.nwb'))[0]
-        nwbfile.unlink()
+        nwbfile.replace(nwbfile.with_name('newname.nwb'))
         json_file.unlink()
         validation_output = is_valid(self.savedir)
         assert validation_output[0]==False, 'validating incorrectly'
