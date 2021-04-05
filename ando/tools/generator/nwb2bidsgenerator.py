@@ -50,7 +50,7 @@ class NwbToBIDS(BidsConverter):
 
                 # 2) SUBJECT SPECIFIC:
                 # session info:
-                base_location_1 = Path(f'{subject_label}\\')
+                base_location_1 = Path(f'{subject_label}')
                 session_default_dict = dict(name=base_location_1/f'{subject_label}_sessions.tsv',
                                             data=pd.DataFrame(
                                                 columns=['session_id', '#_trials', 'comment']))
@@ -63,7 +63,7 @@ class NwbToBIDS(BidsConverter):
                 self._sessions_dict[subject_label] = session_default_dict
 
                 # 3) SUBJECT>SESSION SPECIFIC:
-                base_location_2 = Path(f'{subject_label}\\{sessions_label}\\ephys\\')
+                base_location_2 = Path(subject_label)/Path(sessions_label)/Path('ephys')
                 # channels_info:
                 channel_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_channels.tsv',
                                             data=self._get_channels_info(nwbfile))
