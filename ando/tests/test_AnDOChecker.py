@@ -90,7 +90,7 @@ class Test(TestCase):
     def test_nonAuthorizedDataFilesError(self):
         path = Path(dir_path) / "dataset" / "exp-nonAuthorizedDataFilesError"
         self.assertEqual(CHK.is_valid(path)[0], False)
-        
+
     def test_missingDataFile(self):
         path = Path(dir_path) / "dataset" / "exp-missingDataFile"
         self.assertEqual(CHK.is_valid(path)[0], False)
