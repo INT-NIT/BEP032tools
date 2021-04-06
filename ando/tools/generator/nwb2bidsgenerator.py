@@ -22,18 +22,9 @@ class NwbToBIDS(BidsConverter):
         self._extract_metadata()
 
     def _extract_metadata(self):
-        self._participants_dict = dict(name=Path('participants.tsv'),
-                                       data=pd.DataFrame(
+        self._participants_dict.update(data=pd.DataFrame(
                                            columns=['Species', 'ParticipantID', 'Sex', 'Birthdate', 'Age', 'Genotype',
                                                     'Weight']))
-        self._dataset_desc_json = dict(name=Path('dataset_description.json'),
-                                       data=None)
-        self._sessions_dict = defaultdict(dict)
-        self._channels_dict = defaultdict(dict)
-        self._contacts_dict = defaultdict(dict)
-        self._ephys_dict = defaultdict(dict)
-        self._probes_dict = defaultdict(dict)
-        self._nwbfile_name_dict = defaultdict(dict)
         for file_no, nwb_file in enumerate(tqdm(self.datafiles_list)):
             with NWBHDF5IO(str(nwb_file), 'r') as io:
                 nwbfile = io.read()

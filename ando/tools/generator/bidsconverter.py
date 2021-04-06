@@ -8,8 +8,10 @@ class BidsConverter(ABC):
     def __init__(self, dataset_path, **kwargs):
         self.dataset_path = Path(dataset_path)
         self._kwargs = kwargs
-        self._participants_dict = dict()
-        self._dataset_desc_json = dict()
+        self._participants_dict = dict(name=Path('participants.tsv'),
+                                       data=None)
+        self._dataset_desc_json = dict(name=Path('dataset_description.json'),
+                                       data=None)
         self._sessions_dict = defaultdict(dict)
         self._channels_dict = defaultdict(dict)
         self._contacts_dict = defaultdict(dict)
