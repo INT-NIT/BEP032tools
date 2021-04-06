@@ -6,7 +6,10 @@
 Welcome to the AnDO project
 ===========================
 
-March 2021
+A repository for tools related to the BIDS-animal-ephys Extension Proposal (BEP032)
+-----------------------------------------------------------------------------------
+
+April 2021
 
 The Animal Data Organization (AnDO) is a project initiated at the Institut de Neurosciences de la Timone, in Marseille, France, in order to set up a standardization of the experimental data recorded in animal models. Since its launch in early 2020, its aims have significantly evolved following these axes:
 
@@ -14,29 +17,27 @@ The Animal Data Organization (AnDO) is a project initiated at the Institut de Ne
 
  - second, after discussions within the group, we have initiated a specific standardization effort for electrophysiology, as a BIDS Extension Proposal (BEP032: https://bids.neuroimaging.io/get_involved.html ); we are actively looking for feedback from the community on this proposal, so feel free to directly comment in the document that details the data and metadata organization: http://bit.ly/BIDS-animal-ephys.
 
-At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP032 document. We are committed to
+At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP032 document (note that this validator is a temporary tool, until this BEP is merged to be officially included in BIDS; at that time, the official BIDSValidator will replace the AnDOChecker). We are committed to keeping these tools up to date to follow the modifications of the BEP032 that will occur to cope with the feedback from the community.
 
-
-
-
-Example of an AnDO Repository
---------------------------
+Example of an electrophysiology dataset that follows the proposed organization
+------------------------------------------------------------------------------
 
 .. image:: _static/examples.png
   :width: 400
   :align: center
   :alt: Alternative text
 
-For more examples of datasets see the BEP032 repository: https://gin.g-node.org/NeuralEnsemble/BEP032-examples
+Real examples of datasets that are organized following the BEP032 rules are available on this repository: https://gin.g-node.org/NeuralEnsemble/BEP032-examples
 
 Tools
-===========================
+-----
+
 :ref:`AnDOChecker <to_checker>`:
-   - Checks the validity of a data set with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
+   - Checks the validity of a data set with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: http://bit.ly/BIDS-animal-ephys
 
 
 :ref:`AnDOGenerator <to_generator>`:
-   - Generate a BIDS-animal-ephys folder structure that follows the BEP specifications with a overview CSV files and optional metadata files as input.
+   - Generates a BIDS-animal-ephys folder structure that follows the BEP03 specifications with a overview CSV files and optional metadata files as input.
 
 -----------
 
