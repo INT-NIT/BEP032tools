@@ -52,14 +52,17 @@ class Test(TestCase):
     def test_datasetDescriptionsMissingError(self):
         path = Path(dir_path) / "dataset" / "exp-datasetDescriptionsMissingError"
         self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]),1)
 
     def test_participantMissingError(self):
         path = Path(dir_path) / "dataset" / "exp-participantsMissingError"
         self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]), 1)
 
     def test_noSubjectsFolder(self):
         path = Path(dir_path) / "dataset" / "exp-noSubjects"
         self.assertEqual(CHK.is_valid(path)[0], False)
+
 
     ##
     # level 2
@@ -86,12 +89,19 @@ class Test(TestCase):
     def test_nonAuthorizedMetadataFilesError(self):
         path = Path(dir_path) / "dataset" / "exp-nonAuthorizedMetadataFilesError"
         self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]), 1)
 
     def test_nonAuthorizedDataFilesError(self):
         path = Path(dir_path) / "dataset" / "exp-nonAuthorizedDataFilesError"
         self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]), 1)
 
-    ##
+    def test_missingDataFile(self):
+        path = Path(dir_path) / "dataset" / "exp-missingDataFile"
+        self.assertEqual(CHK.is_valid(path)[0], False)
+        self.assertEqual(len(CHK.is_valid(path)[1]),1)
+
+        ##
     # MULTIPLE ERRORS
     ##
     def test_multipleError(self):
