@@ -14,7 +14,7 @@ The Animal Data Organization (AnDO) is a project initiated at the Institut de Ne
 
  - second, after discussions within the group, we have initiated a specific standardization effort for electrophysiology, as a BIDS Extension Proposal (BEP032: https://bids.neuroimaging.io/get_involved.html ); we are actively looking for feedback from the community on this proposal, so feel free to directly comment in the document that details the data and metadata organization: http://bit.ly/BIDS-animal-ephys.
 
-At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP032 document (note that this validator is a temporary tool, until this BEP is merged to be officially included in BIDS; at that time, the official BIDSValidator will replace the AnDOChecker). We are committed to keeping these tools up to date to follow the modifications of the BEP032 that will occur to cope with the feedback from the community.
+At this moment, this repository provides several tools, amongst them a validator (:ref:`the AnDOChecker <to_checker>`) and generator functions for user-friendly setup of an AnDO structure. The validator complies with the latest specifications described in the BEP032 document. Please note that this validator is a temporary tool and to be used until BEP032 is officially included in BIDS. From then on the official BIDS validator will replace the AnDOChecker. We are committed to keeping the AnDO tools up to date to follow the latest modifications of the BEP032 that will occur to cope with the feedback from the community.
 
 Example datasets
 ================
