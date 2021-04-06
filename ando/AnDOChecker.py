@@ -212,6 +212,4 @@ def main():
 
 
 if __name__ == "__main__":
-    test_folder = 'tests/dataset/exp-valid'
-    print(is_valid(test_folder))
-    # main()
+    main()
