@@ -41,7 +41,8 @@ currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['^$']
 currentdepth_rules['mandatory_folders'] = []
 currentdepth_rules['authorized_data_files'] = [
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)(_task-([a-zA-Z0-9]+))?(_run-([\\d])+)?(_split-\\d+)?_ephys',
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)(_task-([a-zA-Z0-9]+))?'
+    '(_run-([\\d])+)?(_split-\\d+)?_ephys',
      ANY_DATA_EXT]]
 currentdepth_rules['authorized_metadata_files'] = [
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', ANY_METADATA_EXT],
