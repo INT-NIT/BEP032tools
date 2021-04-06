@@ -19,8 +19,10 @@ The Animal Data Organization (AnDO) is a project initiated at the Institut de Ne
 
 At this moment, this repository provides several tools, amongst which a validator (:ref:`the AnDOChecker <to_checker>`) which complies to the latest specifications described in the BEP032 document (note that this validator is a temporary tool, until this BEP is merged to be officially included in BIDS; at that time, the official BIDSValidator will replace the AnDOChecker). We are committed to keeping these tools up to date to follow the modifications of the BEP032 that will occur to cope with the feedback from the community.
 
-Example of an electrophysiology dataset that follows the proposed organization
-------------------------------------------------------------------------------
+Example datasets
+----------------
+
+Here is a summarized view of an electrophysiology dataset that follows the proposed organization.
 
 .. image:: _static/examples.png
   :width: 400
@@ -33,7 +35,7 @@ Tools
 -----
 
 :ref:`AnDOChecker <to_checker>`:
-   - Checks the validity of a data set with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: http://bit.ly/BIDS-animal-ephys
+   - Checks the validity of a dataset with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: http://bit.ly/BIDS-animal-ephys
 
 
 :ref:`AnDOGenerator <to_generator>`:
@@ -47,7 +49,7 @@ Tools
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
