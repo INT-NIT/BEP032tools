@@ -110,14 +110,14 @@ def is_valid(input_directory):
         ###
         if len(currentdepth_rules["mandatory_files"]) > 0:
             # loop over rules, each rule corresponding to one mandatory file
-            for current_mandatoryfolder_rule in currentdepth_rules["mandatory_files"]:
-                list_of_mandatory_folders = build_rule_regexp(current_mandatoryfolder_rule)
-                for mandatory_files in list_of_mandatory_folders:
+            for current_mandatoryfiles_rule in currentdepth_rules["mandatory_files"]:
+                list_of_mandatory_files = build_rule_regexp(current_mandatoryfiles_rule)
+                for mandatory_files in list_of_mandatory_files:
                     file_res = [search(mandatory_files, file) is None for file in files]
                     if all(file_res):
                         error_list.append(
                             "Mandatory file not found for this rule : {}".
-                            format(current_mandatoryfolder_rule))
+                            format(current_mandatoryfiles_rule))
 
     # if there are no errors, the data set is valid!
     valid = len(error_list) == 0
@@ -212,4 +212,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    test_folder = 'tests/dataset/exp-valid'
+    print(is_valid(test_folder))
+    # main()

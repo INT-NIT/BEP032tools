@@ -51,7 +51,7 @@ currentdepth_rules['authorized_metadata_files'] = [
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs', ANY_METADATA_EXT]
     ]
 currentdepth_rules['mandatory_files'] = [
-    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', ANY_METADATA_EXT],
+    ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', ANY_DATA_EXT],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', ['.json']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels', ['.tsv']],
     ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts', ['.tsv']],
