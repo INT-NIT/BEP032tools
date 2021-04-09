@@ -26,26 +26,26 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 
 class AnDOData:
+    """
+    Representation of a AnDO Data, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
 
+    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single realization of`session` and
+    `subject`, i.e. to represent multiple `session` folders, multiple AnDOData objects are required.
+
+    Parameters
+    ----------
+        sub_id : str
+            subject identifier, e.g. '0012' or 'j.s.smith'
+        ses_id : str
+            session identifier, e.g. '2021-01-01' or '007'
+        tasks : list
+            list of strings, the task identifiers used in the session
+        runs : list or dict
+            list of integers, the run identifiers used in the session.
+            In case of more than one task a dictionary needs to be provided with the task as keys and the list of run
+            identifiers as corresponding values
+    """
     def __init__(self, sub_id, ses_id, modality='ephys'):
-        """
-        Representation of a AnDO Data, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
-
-        The AnDOData object can track multiple realizations of
-        `split`, `run`, `task` but only a single realization of `session` and
-        `subject`, i.e. to represent multiple `session` folders, multiple
-        AnDOData objects are required.
-
-        Args:
-            sub_id (str): subject identifier, e.g. '0012' or 'j.s.smith'
-            ses_id (str): session identifier, e.g. '2021-01-01' or '007'
-            tasks (list): list of strings, the task identifiers used in the 
-                session
-            runs (list or dict): list of integers, the run identifiers used in
-                the session. In case of more than one task a dictionary needs
-                to be provided with the task as keys and the list of run
-                identifiers as corresponding values
-        """
 
         if modality != 'ephys':
             raise NotImplementedError('AnDO only supports the ephys modality')
@@ -73,11 +73,11 @@ class AnDOData:
         """
         Register data with the AnDO data structure.
 
-        Args:
-            *files: path to files to be added as data files. If multiple files
-                are provided they are treated as a single data files split into
-                multiple chunks and will be enumerated according to the order
-                they are provided in.
+        Parameters
+        ----------
+            *files : path to files to be added as data files.
+                If multiple filesare provided they are treated as a single data files split into multiple chunks
+                and will be enumerated according to the order they are provided in.
         """
 
         files = [Path(f) for f in files]
@@ -116,8 +116,10 @@ class AnDOData:
     @basedir.setter
     def basedir(self, basedir):
         """
-        Args:
-            basedir (str,path): path to the projects base folder (project root)
+        Parameters
+        ----------
+            basedir : (str,path)
+                path to the projects base folder (project root)
         """
         if not Path(basedir).exists():
             raise ValueError('Base directory does not exist')
@@ -127,12 +129,16 @@ class AnDOData:
         """
         Generate the relative path to the folder of the data files
 
-        Args:
-            mode (str): Return the absolute or local path to the data folder.
+        Parameters
+        ----------
+            mode : str
+                Return the absolute or local path to the data folder.
                 Accepted values: 'absolute', 'local'
 
-        Returns:
-            path: pathlib.Path of the data folder
+        Returns
+        ----------
+            pathlib.Path
+                Path of the data folder
         """
 
         path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
@@ -148,8 +154,10 @@ class AnDOData:
         """
         Generate the required folders for storing the dataset
 
-        Returns:
-            (path): Path of created data folder
+        Returns
+        ----------
+            path :
+                Path of created data folder
         """
 
         if self.basedir is None:
@@ -164,8 +172,10 @@ class AnDOData:
         """
         Add datafiles to AnDO structure
         
-        Args:
-            mode (str): Can be either 'link' 'copy' or 'move'.
+        Parameters
+        ----------
+            mode : str
+                Can be either 'link' 'copy' or 'move'.
         """
 
         if self.basedir is None:
@@ -216,8 +226,9 @@ class AnDOData:
         """
         Validate the generated structure using the AnDO validator
 
-        Returns:
-            (bool): True if validation was successful. False if it failed.
+        Returns
+        ----------
+             bool : True if validation was successful. False if it failed.
         """
 
         raise NotImplementedError('Ando validation is not implemented yet.')
@@ -263,10 +274,13 @@ def generate_Struct(csv_file, pathToDir):
     defined in the BEP.
     Essential information of the following attributes needs to be present
     {ESSENTIAL_CSV_COLUMNS}
-
-    Args:
-        csv_file ([csv file ]): [Csv file that contains a list of directories to create]
-        pathToDir ([Path to directory]): [Path to directory where the directories will be created]
+    
+    Parameters
+    ----------
+        csv_file : csv file 
+            Csv file that contains a list of directories to create
+        pathToDir : Path to directory 
+            Path to directory where the directories will be created
     """
 
     df = extract_structure_from_csv(csv_file)
@@ -281,6 +295,9 @@ def generate_Struct(csv_file, pathToDir):
 
 def main():
     """
+    Examples
+    ----------
+
     usage: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:

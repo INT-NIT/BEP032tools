@@ -7,24 +7,24 @@ from ando.rulesStructured import RULES_SET
 
 
 def is_valid(input_directory):
-    """Checks the validity of a data set with respect to the BIDS-animal-ephys specifications.
-
+    """
+    Checks the validity of a data set with respect to the BIDS-animal-ephys specifications.
     The specifications that define what is checked by this function is available in the following document:
     https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
 
 
     Parameters
     ----------
-        input_directory : string
+    input_directory : string
             Name of the root directory containing the data set to be checked
 
     Returns
     -------
-        valid : boolean
-            True if the data set follows the ephys-BIDS specification; False if not
+    boolean
+        True if the data set follows the ephys-BIDS specification; False if not
 
-        error_list : list
-            List of errors (empty if the data set is valid)
+    list
+        List of errors (empty if the data set is valid)
 
     """
 
@@ -136,24 +136,22 @@ def build_rule_regexp(rules):
     Parameters
     ----------
 
-        rules: list
-            list of filenames
+    rules: list
+        list of filenames
             
     Returns
-    -------
-        list_of_rules : list
-            Concatenate every extension with is respective file
+    ----------
+    list
+        concatenate every extension with is respective file
 
     Examples
-    -------
+    ----------
     if :
-    file_name_regexp = [
-        ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys'],
-        ]
+    file_name_regexp = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']]
+
     then ,
-    list_of_rules = [
-        'sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv'
-        ]
+
+     list_of_rules = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv']
     """
 
     list_of_rules = list()
@@ -171,7 +169,12 @@ def main():
     """
     Main file of the AnDOChecker.
 
-    usage: AnDOChecker.py [-h] [-v] path
+    Examples
+    ----------
+
+    Usage:
+
+    AnDOChecker.py [-h] [-v] path
 
             positional arguments:
             directory      Name of the directory that contains the data set to be checked
