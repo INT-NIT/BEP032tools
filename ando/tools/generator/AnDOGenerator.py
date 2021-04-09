@@ -27,10 +27,12 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 class AnDOData:
     """
-    Representation of a AnDO Data, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
+    Representation of a AnDO Data, as specified by in the [ephys BEP]
+    (https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
 
-    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single realization of`session` and
-    `subject`, i.e. to represent multiple `session` folders, multiple AnDOData objects are required.
+    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
+    realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
+    AnDOData objects are required.
 
     Parameters
     ----------
@@ -42,8 +44,8 @@ class AnDOData:
             list of strings, the task identifiers used in the session
         runs : list or dict
             list of integers, the run identifiers used in the session.
-            In case of more than one task a dictionary needs to be provided with the task as keys and the list of run
-            identifiers as corresponding values
+            In case of more than one task a dictionary needs to be provided with the task as keys
+            and the list of run identifiers as corresponding values
     """
     def __init__(self, sub_id, ses_id, modality='ephys'):
 
@@ -75,9 +77,9 @@ class AnDOData:
 
         Parameters
         ----------
-            *files : path to files to be added as data files.
-                If multiple filesare provided they are treated as a single data files split into multiple chunks
-                and will be enumerated according to the order they are provided in.
+        *files : path to files to be added as data files.
+                If multiple filesare provided they are treated as a single data files split into
+                multiple chunks and will be enumerated according to the order they are provided in.
         """
 
         files = [Path(f) for f in files]
@@ -277,9 +279,9 @@ def generate_Struct(csv_file, pathToDir):
     
     Parameters
     ----------
-        csv_file : csv file 
+        csv_file : csv file
             Csv file that contains a list of directories to create
-        pathToDir : Path to directory 
+        pathToDir : Path to directory
             Path to directory where the directories will be created
     """
 
