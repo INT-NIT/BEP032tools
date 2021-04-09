@@ -276,7 +276,7 @@ def generate_Struct(csv_file, pathToDir):
     defined in the BEP.
     Essential information of the following attributes needs to be present
     {ESSENTIAL_CSV_COLUMNS}
-    
+
     Parameters
     ----------
         csv_file : csv file
