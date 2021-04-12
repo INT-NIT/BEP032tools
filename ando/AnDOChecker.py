@@ -10,7 +10,7 @@ def is_valid(input_directory):
     """
     Checks the validity of a data set with respect to the BIDS-animal-ephys specifications.
     The specifications that define what is checked by this function is available in the following document:
-    https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0
+    https://bids.neuroimaging.io/bep032
 
 
     Parameters
