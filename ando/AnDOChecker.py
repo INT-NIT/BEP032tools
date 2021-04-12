@@ -20,8 +20,12 @@ def is_valid(input_directory):
 
     Returns
     -------
+    A Tuple of size 2 with the first a
+
     boolean
         True if the data set follows the ephys-BIDS specification; False if not
+
+    and the second a
 
     list
         List of errors (empty if the data set is valid)
@@ -126,6 +130,18 @@ def is_valid(input_directory):
 
 
 def search(rules, where):
+    """
+    This methode search a given string in an other string using REGEXP
+    Parameters
+    ----------
+        rules: str (REGEXP)
+        where: str
+
+    Returns
+    ----------
+    boolean
+        None if the pattern is not found True if it is
+    """
     return re.compile(rules).search(where)
 
 
@@ -176,12 +192,12 @@ def main():
 
     AnDOChecker.py [-h] [-v] path
 
-            positional arguments:
-            directory      Name of the directory that contains the data set to be checked
+    positional arguments:
+            path      Name of the directory that contains the data set to be checked
 
-            optional arguments:
-            -h, --help     show this help message and exit
-            -v, --verbose  increase output verbosity
+    optional arguments:
+            -h, --help, -v, --verbose
+
     """
 
     parser = argparse.ArgumentParser()

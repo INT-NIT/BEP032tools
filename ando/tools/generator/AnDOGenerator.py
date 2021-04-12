@@ -38,7 +38,7 @@ class AnDOData:
     ----------
         sub_id : str
             subject identifier, e.g. '0012' or 'j.s.smith'
-        ses_id : str
+        ses-id : str
             session identifier, e.g. '2021-01-01' or '007'
         tasks : list
             list of strings, the task identifiers used in the session
@@ -78,7 +78,7 @@ class AnDOData:
         Parameters
         ----------
         *files : path to files to be added as data files.
-                If multiple filesare provided they are treated as a single data files split into
+                If multiple files are provided they are treated as a single data files split into
                 multiple chunks and will be enumerated according to the order they are provided in.
         """
 
@@ -230,7 +230,8 @@ class AnDOData:
 
         Returns
         ----------
-             bool : True if validation was successful. False if it failed.
+        bool
+            True if validation was successful. False if it failed.
         """
 
         raise NotImplementedError('Ando validation is not implemented yet.')
