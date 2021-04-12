@@ -239,7 +239,15 @@ class AnDOData:
 
 def create_file(source, destination, mode):
     """
-    TODO : documentation
+
+    Parameters
+    ----------
+    source:
+    destination:
+    mode:
+
+    Returns
+    -------
     """
     if mode == 'copy':
         shutil.copy(source, destination)
@@ -253,7 +261,12 @@ def create_file(source, destination, mode):
 
 def extract_structure_from_csv(csv_file):
     """
-    TODO : documentation
+    Parameters
+    ----------
+    csv_file:
+
+    Returns
+    -------
     """
     if not HAVE_PANDAS:
         raise ImportError('Extraction of ando structure from csv requires pandas.')
