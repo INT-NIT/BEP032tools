@@ -162,12 +162,9 @@ def build_rule_regexp(rules):
 
     Examples
     ----------
-    if :
-    file_name_regexp = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']]
-
-    then ,
-
-     list_of_rules = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv']
+    if : file_name_regexp = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']]
+         then ,
+         list_of_rules = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv']
     """
 
     list_of_rules = list()
