@@ -304,10 +304,10 @@ def generate_Struct(csv_file, pathToDir):
 
     Parameters
     ----------
-        csv_file : csv file
-            Csv file that contains a list of directories to create
-        pathToDir : Path to directory
-            Path to directory where the directories will be created
+    csv_file: str
+        Csv file that contains a list of directories to create.
+    pathToDir: str
+        Path to directory where the directories will be created.
     """
 
     df = extract_structure_from_csv(csv_file)
