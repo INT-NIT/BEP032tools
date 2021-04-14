@@ -191,8 +191,8 @@ def main():
     AnDOChecker.py [-h] [-v] path
 
     positional arguments:
-        path
-            Name of the directory that contains the data set to be checked
+    path
+        Name of the directory that contains the data set to be checked
 
     optional arguments:
             -h, --help, -v, --verbose
