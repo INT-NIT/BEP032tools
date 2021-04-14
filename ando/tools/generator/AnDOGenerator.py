@@ -158,8 +158,8 @@ class AnDOData:
 
         Returns
         ----------
-            path :
-                Path of created data folder
+        path :
+            Path of created data folder
         """
 
         if self.basedir is None:
