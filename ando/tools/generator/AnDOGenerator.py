@@ -176,8 +176,8 @@ class AnDOData:
         
         Parameters
         ----------
-            mode : str
-                Can be either 'link' 'copy' or 'move'.
+        mode : str
+            Can be either 'link' 'copy' or 'move'.
         """
 
         if self.basedir is None:
