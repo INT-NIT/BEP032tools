@@ -135,7 +135,7 @@ class AnDOData:
         ----------
         mode : str
             Return the absolute or local path to the data folder.
-                Accepted values: 'absolute', 'local'
+            Valid values: 'absolute', 'local'
 
         Returns
         ----------
