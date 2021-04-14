@@ -39,7 +39,7 @@ class AnDOData:
     sub_id : str
         subject identifier, e.g. '0012' or 'j.s.smith'
     ses-id : str
-        session identifier, e.g. '2021-01-01' or '007'
+        session identifier, e.g. '20210101' or '007'
     tasks : list
         list of strings, the task identifiers used in the session
     runs : list or dict
