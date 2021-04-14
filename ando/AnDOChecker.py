@@ -131,7 +131,7 @@ def is_valid(input_directory):
 
 def search(rules, where):
     """
-    This methode search a given string in an other string using REGEXP
+    This method evaluates if a string matches a particular pattern (rule) using REGEXP
     Parameters
     ----------
         rules: str (REGEXP)
