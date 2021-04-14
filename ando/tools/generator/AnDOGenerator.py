@@ -273,6 +273,8 @@ def extract_structure_from_csv(csv_file):
 
     Returns
     -------
+    pandas.dataframe
+        A dataframe containing the essential columns for creating an AnDO structure
     """
     if not HAVE_PANDAS:
         raise ImportError('Extraction of ando structure from csv requires pandas.')
