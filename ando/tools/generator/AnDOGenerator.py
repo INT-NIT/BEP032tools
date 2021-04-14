@@ -36,16 +36,16 @@ class AnDOData:
 
     Parameters
     ----------
-        sub_id : str
-            subject identifier, e.g. '0012' or 'j.s.smith'
-        ses-id : str
-            session identifier, e.g. '2021-01-01' or '007'
-        tasks : list
-            list of strings, the task identifiers used in the session
-        runs : list or dict
-            list of integers, the run identifiers used in the session.
-            In case of more than one task a dictionary needs to be provided with the task as keys
-            and the list of run identifiers as corresponding values
+    sub_id : str
+        subject identifier, e.g. '0012' or 'j.s.smith'
+    ses-id : str
+        session identifier, e.g. '2021-01-01' or '007'
+    tasks : list
+        list of strings, the task identifiers used in the session
+    runs : list or dict
+        list of integers, the run identifiers used in the session.
+        In case of more than one task a dictionary needs to be provided with the task as keys
+        and the list of run identifiers as corresponding values
     """
     def __init__(self, sub_id, ses_id, modality='ephys'):
 
