@@ -267,9 +267,12 @@ def create_file(source, destination, mode):
 
 def extract_structure_from_csv(csv_file):
     """
+    Load csv file that contains folder structure information and return it as pandas.datafram.
+    
     Parameters
     ----------
-    csv_file:
+    csv_file: str
+        The file to be loaded.
 
     Returns
     -------
