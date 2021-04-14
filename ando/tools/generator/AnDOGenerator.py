@@ -239,15 +239,21 @@ class AnDOData:
 
 def create_file(source, destination, mode):
     """
+    Create a file at a destination location
 
     Parameters
     ----------
-    source:
-    destination:
-    mode:
-
-    Returns
-    -------
+    source: str
+        Source location of the file.
+    destination: str
+        Destination location of the file.
+    mode: str
+        File creation mode. Valid parameters are 'copy', 'link' and 'move'.
+        
+    Raises
+    ----------
+    ValueError
+        In case of invalid creation mode.
     """
     if mode == 'copy':
         shutil.copy(source, destination)
