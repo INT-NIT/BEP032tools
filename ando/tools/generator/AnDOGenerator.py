@@ -176,7 +176,7 @@ class AnDOData:
         
         Parameters
         ----------
-        mode : str
+        mode: str
             Can be either 'link' 'copy' or 'move'.
         """
 
