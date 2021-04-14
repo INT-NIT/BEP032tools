@@ -102,7 +102,6 @@ class AnDOData:
     def register_metadata_files(self, *files):
         """
         Register metadata with the AnDO data structure.
-
         Parameters
         ----------
         *files: path to files to be added as metadata files. File content needs to be according
