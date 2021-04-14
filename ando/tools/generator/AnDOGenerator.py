@@ -104,8 +104,9 @@ class AnDOData:
         Register metadata with the AnDO data structure.
         Parameters
         ----------
-        *files: path to files to be added as metadata files. File content needs to be according
-        with AnDO guidelines as files will only be moved to the their correct location based on the file name
+        *files: list
+            path to files to be added as metadata files. File content needs to be according
+            with AnDO guidelines as files will only be moved to the their correct location based on the file name
 
         """
         files = [Path(f) for f in files]
