@@ -158,7 +158,7 @@ class AnDOData:
 
         Returns
         ----------
-        path :
+        path
             Path of created data folder
         """
 
