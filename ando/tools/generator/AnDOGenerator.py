@@ -120,8 +120,8 @@ class AnDOData:
         """
         Parameters
         ----------
-            basedir : (str,path)
-                path to the projects base folder (project root)
+        basedir : (str,path)
+            path to the projects base folder (project root)
         """
         if not Path(basedir).exists():
             raise ValueError('Base directory does not exist')
