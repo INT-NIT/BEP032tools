@@ -78,8 +78,8 @@ class AnDOData:
         Parameters
         ----------
         *files : path to files to be added as data files.
-                If multiple files are provided they are treated as a single data files split into
-                multiple chunks and will be enumerated according to the order they are provided in.
+            If multiple files are provided they are treated as a single data files split into
+            multiple chunks and will be enumerated according to the order they are provided in.
         """
 
         files = [Path(f) for f in files]
