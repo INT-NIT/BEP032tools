@@ -134,8 +134,10 @@ def search(rules, where):
     This method evaluates if a string matches a particular pattern (rule) using REGEXP
     Parameters
     ----------
-        rules: str (REGEXP)
-        where: str
+    rules: str 
+        regular expression pattern to match against
+    where: str
+        string to be matched
 
     Returns
     ----------
