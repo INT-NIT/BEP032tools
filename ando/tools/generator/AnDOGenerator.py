@@ -139,8 +139,8 @@ class AnDOData:
 
         Returns
         ----------
-            pathlib.Path
-                Path of the data folder
+        pathlib.Path
+            Path of the data folder
         """
 
         path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
