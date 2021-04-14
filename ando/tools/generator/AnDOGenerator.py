@@ -28,7 +28,7 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 class AnDOData:
     """
     Representation of a AnDO Data, as specified by in the [ephys BEP]
-    (https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
+    https://bids.neuroimaging.io/bep032
 
     The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
     realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
