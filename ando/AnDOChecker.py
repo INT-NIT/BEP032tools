@@ -16,7 +16,7 @@ def is_valid(input_directory):
     Parameters
     ----------
     input_directory : string
-            Name of the root directory containing the data set to be checked
+        Name of the root directory containing the data set to be checked
 
     Returns
     -------
