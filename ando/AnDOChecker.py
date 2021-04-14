@@ -151,7 +151,6 @@ def build_rule_regexp(rules):
 
     Parameters
     ----------
-
     rules: list
         list of filenames
             
