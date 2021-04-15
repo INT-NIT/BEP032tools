@@ -21,8 +21,7 @@ def is_valid(input_directory):
     Returns
     -------
     tuple
-        a tuple of size 2 containing
-        boolean
+        a tuple of size 2 containing a boolean value and a list
             True if the data set follows the ephys-BIDS specification; False if not
         list
             List of errors (empty if the data set is valid)
