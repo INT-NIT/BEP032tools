@@ -24,6 +24,7 @@ def is_valid(input_directory):
         a tuple of size 2 containing
 
         ``boolean`` : True if the data set follows the ephys-BIDS specification; False if not
+
         ``list`` : List of errors (empty if the data set is valid)
     """
 
