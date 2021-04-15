@@ -38,7 +38,11 @@ class TestNwbBIDSGenerator(unittest.TestCase):
             if sub_files.suffix=='.json':
                 json_file = sub_files
                 break
+        print('svpt: ', svpt)
+        print('all 1st level subfolders of svpt: ', [g for g in svpt.glob('*')])
+
         nwbfile = list(svpt.glob('**/*.nwb'))[0]
+        print('nwbffile: ', nwbfile)
         nwbfile = nwbfile.replace(nwbfile.with_name('newname.nwb'))
         json_file.unlink()
         validation_output = is_valid(self.savedir)
