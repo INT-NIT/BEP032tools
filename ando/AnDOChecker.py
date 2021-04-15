@@ -22,15 +22,10 @@ def is_valid(input_directory):
     -------
     tuple
         a tuple of size 2 containing
-        boolean
-            True if the data set follows the ephys-BIDS specification; False if not
-        list
-            List of errors (empty if the data set is valid)
-
-    and the second a
-
-    list
-        List of errors (empty if the data set is valid)
+        {
+        boolean : True if the data set follows the ephys-BIDS specification; False if not
+        list : List of errors (empty if the data set is valid)
+        }
 
     """
 
@@ -165,9 +160,8 @@ def build_rule_regexp(rules):
 
     Examples
     ----------
-    if : file_name_regexp = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']]
-         then ,
-         list_of_rules = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv']
+    if : file_name_regexp = [['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys']] then ,
+    list_of_rules = ['sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys.tsv']
     """
 
     list_of_rules = list()
