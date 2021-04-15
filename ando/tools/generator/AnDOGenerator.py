@@ -27,8 +27,7 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 class AnDOData:
     """
-    Representation of a AnDO Data, as specified by in the [ephys BEP]
-    https://bids.neuroimaging.io/bep032
+    Representation of a AnDO Data, as specified by in the [ephys BEP](https://bids.neuroimaging.io/bep032)
 
     The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
     realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
@@ -102,6 +101,7 @@ class AnDOData:
     def register_metadata_files(self, *files):
         """
         Register metadata with the AnDO data structure.
+
         Parameters
         ----------
         *files: list
@@ -186,7 +186,7 @@ class AnDOData:
         Parameters
         ----------
         mode: str
-            Can be either 'link' 'copy' or 'move'.
+            Can be either 'link', 'copy' or 'move'.
         """
 
         if self.basedir is None:
