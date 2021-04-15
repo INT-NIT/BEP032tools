@@ -308,13 +308,13 @@ def extract_structure_from_csv(csv_file):
     return df
 
 
-def generate_Struct(csv_file, pathToDir):
+def generate_struct(csv_file, pathToDir):
     """
     Create structure with csv file given in argument
     This file must contain a header row specifying the provided data. Accepted titles are
     defined in the BEP.
-    Essential information of the following attributes needs to be present
-    ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
+    Essential information of the following attributes needs to be present.
+    Essential columns are 'sub_id' and 'ses_id'.
 
     Parameters
     ----------
@@ -342,8 +342,8 @@ def main():
     usage: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
-    pathToCsv   Path to your folder
-    pathToDir   Path to your csv file
+        pathToCsv   Path to your folder
+        pathToDir   Path to your csv file
 
     optional arguments:
     -h, --help  show this help message and exit
@@ -361,7 +361,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    generate_Struct(args.pathToCsv, args.pathToDir)
+    generate_struct(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':
