@@ -336,13 +336,15 @@ def generate_struct(csv_file, pathToDir):
 
 def main():
     """
-    Examples
+
+    Notes
     ----------
 
     usage: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
         pathToCsv   Path to your folder
+
         pathToDir   Path to your csv file
 
     optional arguments:
