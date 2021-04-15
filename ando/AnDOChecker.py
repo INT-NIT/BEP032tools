@@ -20,20 +20,11 @@ def is_valid(input_directory):
 
     Returns
     -------
-    bool
-        True if successful, False otherwise.
+    tuple
+        a tuple of size 2 containing
 
-        The return type is not optional. The ``Returns`` section may span
-        multiple lines and paragraphs. Following lines should be indented to
-        match the first line of the description.
-
-        The ``Returns`` section supports any reStructuredText formatting,
-        including literal blocks::
-
-            {
-                'param1': param1,
-                'param2': param2
-            }
+        ``boolean`` : True if the data set follows the ephys-BIDS specification; False if not
+        ``list`` : List of errors (empty if the data set is valid)
     """
 
     input_directory = pathlib.Path(input_directory).resolve()
