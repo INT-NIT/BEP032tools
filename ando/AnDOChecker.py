@@ -181,7 +181,7 @@ def main():
     Examples
     ----------
 
-    Usage:
+    Usage via command line:
 
     AnDOChecker.py [-h] [-v] path
 
