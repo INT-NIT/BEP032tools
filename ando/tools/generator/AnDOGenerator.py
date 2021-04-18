@@ -340,7 +340,7 @@ def main():
     Notes
     ----------
 
-    usage: AnDOGenerator.py [-h] pathToCsv pathToDir
+    Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
         pathToCsv   Path to your folder
