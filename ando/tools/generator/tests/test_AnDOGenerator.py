@@ -89,7 +89,7 @@ class Test_GenerateStruct(unittest.TestCase):
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
-        generate_Struct(self.csv_file, test_directory)
+        generate_struct(self.csv_file, test_directory)
 
         # extract all paths that exist in the test directory
         existing_paths = [p[0] for p in os.walk(test_directory)]

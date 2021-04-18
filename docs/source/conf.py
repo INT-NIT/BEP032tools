@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../ando/tools'))
 # -- Project information -----------------------------------------------------
 
 project = 'AnDO'
-copyright = '2021, Jeremy Garcia, Julia Sprenger, Sylvain Takerkart ',
+copyright = '2021, Jeremy Garcia, Julia Sprenger, Sylvain Takerkart'
 author = 'Jeremy Garcia, Julia Sprenger, Sylvain Takerkart'
 
 # The full version, including alpha/beta/rc tags
@@ -33,7 +33,8 @@ release = '.'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
+    'sphinx.ext.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

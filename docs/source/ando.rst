@@ -1,4 +1,3 @@
-
 AnDO package
 ============
 Packages
@@ -6,7 +5,6 @@ Packages
 
 .. toctree::
    :maxdepth: 10
-
 
    ando.tools
 
@@ -19,5 +17,3 @@ ando.AnDOChecker module
    :members:
    :undoc-members:
    :show-inheritance:
-
-
