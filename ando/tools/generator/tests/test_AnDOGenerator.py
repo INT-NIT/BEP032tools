@@ -55,6 +55,7 @@ class Test_AnDOData(unittest.TestCase):
 
         for f in self.test_data_files:
             self.assertTrue((self.ando_data.basedir / f).exists())
+            self.assertTrue(f.name.find("ephys"))
 
     def test_metadata_files(self):
         self.ando_data.generate_structure()
