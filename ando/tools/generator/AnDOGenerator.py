@@ -188,7 +188,7 @@ class AnDOData:
         mode: str
             Can be either 'link', 'copy' or 'move'.
         """
-
+        postfix = '_ephys'
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
@@ -209,10 +209,9 @@ class AnDOData:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + suffix
+                new_filename = filename_stem + key + split + suffix + postfix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode)
-
 
     def generate_metadata_files(self):
         """
