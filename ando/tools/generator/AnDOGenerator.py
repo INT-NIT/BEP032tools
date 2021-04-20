@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 
+import ando.AnDOChecker
 
 try:
     import pandas as pd
@@ -238,17 +239,23 @@ class AnDOData:
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
 
-    def validate(self):
+    def validate(self, output_folder):
         """
         Validate the generated structure using the AnDO validator
+
+        Parameters
+        ----------
+        output_folder: str
+            path to the folder to validate
 
         Returns
         ----------
         bool
             True if validation was successful. False if it failed.
         """
+        ando.AnDOChecker.is_valid(output_folder)
 
-        raise NotImplementedError('Ando validation is not implemented yet.')
+
 
 
 def create_file(source, destination, mode):
