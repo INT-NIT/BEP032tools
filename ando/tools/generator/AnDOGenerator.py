@@ -343,17 +343,17 @@ def main():
     Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
-        pathToCsv   Path to your folder
+        pathToCsv   Path to your csv file
 
-        pathToDir   Path to your csv file
+        pathToDir   Path to your folder
 
     optional arguments:
         -h, --help  show this help message and exit
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('pathToCsv', help='Path to your folder')
-    parser.add_argument('pathToDir', help='Path to your csv file')
+    parser.add_argument('pathToCsv', help='Path to your csv file')
+    parser.add_argument('pathToDir', help='Path to your folder')
 
     # Create two argument groups
 
