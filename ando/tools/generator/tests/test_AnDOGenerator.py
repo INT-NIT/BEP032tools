@@ -63,7 +63,7 @@ class Test_AnDOData(unittest.TestCase):
 
     def test_data_files_complex(self):
         self.ando_data.generate_structure()
-        nix_files = [self.test_data_files[0]]*3
+        nix_files = [self.test_data_files[0]] * 3
         runs = ['run1', 'run2']
         tasks = ['task1', 'task2']
         for run in runs:
@@ -76,23 +76,23 @@ class Test_AnDOData(unittest.TestCase):
         session_folder = self.ando_data.get_data_folder()
         self.assertTrue(session_folder.exists())
         data_files = list(session_folder.glob('*.nix'))
-        self.assertEqual(len(data_files), len(runs)*len(tasks)*len(nix_files))
+        self.assertEqual(len(data_files), len(runs) * len(tasks) * len(nix_files))
 
         for data_file in data_files:
             self.assertTrue(data_file.name.find("_ephys"))
 
         for run in runs:
-            exp = len(tasks)*len(nix_files)
+            exp = len(tasks) * len(nix_files)
             files = list(session_folder.glob(f'*_run-{run}*.nix'))
             self.assertEqual(len(files), exp)
 
         for task in tasks:
-            exp = len(runs)*len(nix_files)
+            exp = len(runs) * len(nix_files)
             files = list(session_folder.glob(f'*_task-{task}*.nix'))
             self.assertEqual(len(files), exp)
 
         for split in range(len(nix_files)):
-            exp = len(runs)*len(tasks)
+            exp = len(runs) * len(tasks)
             files = list(session_folder.glob(f'*_split-{split}*.nix'))
             self.assertEqual(len(files), exp)
 
@@ -140,6 +140,7 @@ class Test_ReadCsv(unittest.TestCase):
         df = extract_structure_from_csv(self.csv_file)
         expected_headers = ['sub_id', 'ses_id']
         self.assertListEqual(expected_headers, list(df))
+
 
 class Test_GenerateStruct(unittest.TestCase):
 
