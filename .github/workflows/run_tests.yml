@@ -55,7 +55,7 @@ jobs:
         run: pip install coveralls
 
       - name: Create coverage
-        run: coverage run --source=ando -m pytest ando/tests/
+        run: coverage run --source=ando -m pytest ando/
 
       - name: Submit to coveralls
         env:
