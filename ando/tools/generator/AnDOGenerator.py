@@ -53,7 +53,7 @@ class AnDOData:
 
         # check for invalid arguments
         for arg in [sub_id, ses_id]:
-            invalid_characters = '\/_'  # TODO: Should this be part of the AnDO core?
+            invalid_characters = r'\/_'  # TODO: Should this be part of the AnDO core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
