@@ -239,7 +239,7 @@ class AnDOData:
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
 
-    def validate(self, output_folder):
+    def validate(self):
         """
         Validate the generated structure using the AnDO validator
 
@@ -253,7 +253,7 @@ class AnDOData:
         bool
             True if validation was successful. False if it failed.
         """
-        ando.AnDOChecker.is_valid(output_folder)
+        ando.AnDOChecker.is_valid(self.basedir)
 
 
 
