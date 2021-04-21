@@ -49,10 +49,7 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Install package
-        run: pip install .[test]
-
-      - name: Install requirements
-        run: pip install -r requirements.txt
+        run: pip install .[tools,test]
 
       - name: Install Python test dependencies
         run: pip install coveralls
