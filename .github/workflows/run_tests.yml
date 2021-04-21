@@ -49,13 +49,13 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Install package
-        run: pip install .[test]
+        run: pip install .[tools,test]
 
       - name: Install Python test dependencies
         run: pip install coveralls
 
       - name: Create coverage
-        run: coverage run --source=ando -m pytest ando/tests/
+        run: coverage run --source=ando -m pytest ando/
 
       - name: Submit to coveralls
         env:
