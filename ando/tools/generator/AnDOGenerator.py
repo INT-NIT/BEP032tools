@@ -240,13 +240,37 @@ class AnDOData:
                                 mode='copy')
 
     def create_metadata_file_participants(self) -> bool:
-        pass
+        file = "participants"
+        exts = ['.csv','.json']
+        for ext in exts:
+            filename = file +ext
+            try:
+                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+            except FileExistsError:
+                print(f'{filename} already exist')
+        return True
 
     def create_metadata_file_tasks(self) -> bool:
-        pass
+        file = "tasks"
+        exts = ['.csv', '.json']
+        for ext in exts:
+            filename =  file +ext
+            try:
+                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+            except FileExistsError:
+                print(f'{filename} already exist')
+        return True
 
     def create_metadata_file_dataset_description(self) -> bool:
-        pass
+        file = "dataset_description"
+        exts = ['.json']
+        for ext in exts:
+            filename =  file +ext
+            try:
+                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+            except FileExistsError:
+                print(f'{filename} already exist')
+        return True
 
     def create_metadata_file_sessions(self) -> bool:
         pass
