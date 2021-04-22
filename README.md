@@ -8,7 +8,7 @@ This project is composed of three main scrip :
 -AnDOGenerator script that create a dataset based on a CSV files
 -AnDOViewer script that display your dataset directory in a convenient way.
 
-Futher information on Specs : https://int-nit.github.io/AnDOChecker/
+Futher information on Specs : https://bids.neuroimaging.io/bep032
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/INT-NIT/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 

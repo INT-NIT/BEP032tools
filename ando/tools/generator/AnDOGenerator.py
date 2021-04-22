@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 
+import ando.AnDOChecker
 
 try:
     import pandas as pd
@@ -31,7 +32,8 @@ class AnDOData:
 
     The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
     realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
-    AnDOData objects are required.
+    AnDOData objects are required. To include multiple realizations of tasks
+    or runs, call the `register_data` method for each set of parameters separately.
 
     Parameters
     ----------
@@ -39,12 +41,12 @@ class AnDOData:
         subject identifier, e.g. '0012' or 'j.s.smith'
     ses-id : str
         session identifier, e.g. '20210101' or '007'
-    tasks : list
-        list of strings, the task identifiers used in the session
-    runs : list or dict
-        list of integers, the run identifiers used in the session.
-        In case of more than one task a dictionary needs to be provided with the task as keys
-        and the list of run identifiers as corresponding values
+    tasks : str
+        task identifier of data files
+    runs : str
+        run identifier of data files
+
+
     """
     def __init__(self, sub_id, ses_id, modality='ephys'):
 
@@ -53,15 +55,13 @@ class AnDOData:
 
         # check for invalid arguments
         for arg in [sub_id, ses_id]:
-            invalid_characters = '\/_'  # TODO: Should this be part of the AnDO core?
+            invalid_characters = r'\/_'  # TODO: Should this be part of the AnDO core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
 
         self.sub_id = sub_id
         self.ses_id = ses_id
-        # self.tasks = tasks
-        # self.runs = runs
         self.modality = modality
 
         # initialize data and metadata structures
@@ -79,6 +79,11 @@ class AnDOData:
         *files : path to files to be added as data files.
             If multiple files are provided they are treated as a single data files split into
             multiple chunks and will be enumerated according to the order they are provided in.
+
+        task: str
+            task name used
+        run: str
+            run name used
         """
 
         files = [Path(f) for f in files]
@@ -89,14 +94,16 @@ class AnDOData:
 
         key = ''
         if task is not None:
-            key += f'task_{task}'
+            key += f'task-{task}'
         if run is not None:
+            if key:
+                key += '_'
             key += f'run-{run}'
 
         if key not in self.data:
             self.data[key] = files
         else:
-            self.data['key'].extend(files)
+            self.data[key].extend(files)
 
     def register_metadata_files(self, *files):
         """
@@ -188,7 +195,7 @@ class AnDOData:
         mode: str
             Can be either 'link', 'copy' or 'move'.
         """
-
+        postfix = '_ephys'
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
@@ -209,10 +216,9 @@ class AnDOData:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + suffix
+                new_filename = filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode)
-
 
     def generate_metadata_files(self):
         """
@@ -237,13 +243,19 @@ class AnDOData:
         """
         Validate the generated structure using the AnDO validator
 
+        Parameters
+        ----------
+        output_folder: str
+            path to the folder to validate
+
         Returns
         ----------
         bool
             True if validation was successful. False if it failed.
         """
+        ando.AnDOChecker.is_valid(self.basedir)
 
-        raise NotImplementedError('Ando validation is not implemented yet.')
+
 
 
 def create_file(source, destination, mode):
@@ -343,17 +355,17 @@ def main():
     Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
-        pathToCsv   Path to your folder
+        pathToCsv   Path to your csv file
 
-        pathToDir   Path to your csv file
+        pathToDir   Path to your folder
 
     optional arguments:
         -h, --help  show this help message and exit
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('pathToCsv', help='Path to your folder')
-    parser.add_argument('pathToDir', help='Path to your csv file')
+    parser.add_argument('pathToCsv', help='Path to your csv file')
+    parser.add_argument('pathToDir', help='Path to your folder')
 
     # Create two argument groups
 
