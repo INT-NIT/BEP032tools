@@ -245,7 +245,7 @@ class AnDOData:
         for ext in exts:
             filename = file +ext
             try:
-                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+                f = open(os.path.join(self.basedir, filename), 'w+')
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
@@ -256,7 +256,7 @@ class AnDOData:
         for ext in exts:
             filename =  file +ext
             try:
-                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+                f = open(os.path.join(self.basedir, filename), 'w+')
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
@@ -267,7 +267,7 @@ class AnDOData:
         for ext in exts:
             filename =  file +ext
             try:
-                f = open(os.path.join(os.sep, filename, self.basedir), 'w+')
+                f = open(os.path.join(self.basedir, filename), 'w+')
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
