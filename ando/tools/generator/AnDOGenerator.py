@@ -241,7 +241,7 @@ class AnDOData:
 
     def create_metadata_file_participants(self) -> bool:
         file = "participants"
-        exts = ['.csv','.json']
+        exts = ['.csv', '.json']
         for ext in exts:
             filename = file + ext
             try:
