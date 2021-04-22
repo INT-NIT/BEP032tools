@@ -243,9 +243,10 @@ class AnDOData:
         file = "participants"
         exts = ['.csv','.json']
         for ext in exts:
-            filename = file +ext
+            filename = file + ext
             try:
                 f = open(os.path.join(self.basedir, filename), 'w+')
+                f.close()
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
@@ -254,9 +255,10 @@ class AnDOData:
         file = "tasks"
         exts = ['.csv', '.json']
         for ext in exts:
-            filename =  file +ext
+            filename = file + ext
             try:
                 f = open(os.path.join(self.basedir, filename), 'w+')
+                f.close()
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
@@ -265,9 +267,10 @@ class AnDOData:
         file = "dataset_description"
         exts = ['.json']
         for ext in exts:
-            filename =  file +ext
+            filename = file + ext
             try:
                 f = open(os.path.join(self.basedir, filename), 'w+')
+                f.close()
             except FileExistsError:
                 print(f'{filename} already exist')
         return True
