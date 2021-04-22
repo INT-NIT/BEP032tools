@@ -239,6 +239,19 @@ class AnDOData:
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
 
+    def create_metadata_file_participants(self) -> bool:
+        pass
+
+    def create_metadata_file_tasks(self) -> bool:
+        pass
+
+    def create_metadata_file_dataset_description(self) -> bool:
+        pass
+
+    def create_metadata_file_sessions(self) -> bool:
+        pass
+
+
     def validate(self):
         """
         Validate the generated structure using the AnDO validator
