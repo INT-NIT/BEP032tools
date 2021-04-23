@@ -43,20 +43,20 @@ class TestNwbBIDSGenerator(unittest.TestCase):
 
         nwbfile = list(svpt.glob('**/*.nwb'))[0]
         print('nwbffile: ', nwbfile)
-        print(f'{nwbfile.name}')
+        print(f'nwbfile.name: {nwbfile.name}')
         nwbfile = nwbfile.replace(nwbfile.with_name('newname.nwb'))
         json_file.unlink()
         validation_output = is_valid(self.savedir)
 
         print(f'validation_output: {validation_output}')
-        try:
-            for x, i in enumerate(validation_output[1]):
+        for x, i in enumerate(validation_output[1]):
+            try:
                 if re.search(f'naming.+not.+{nwbfile.name}', i, flags=re.I) is not None:
                     print(f'x={x}: True\t(naming.+not.+{nwbfile.name}, i={i})')
                 else:
-                    print(f'x={x}: True\t(naming.+not.+{nwbfile.name}, i={i})')
-        except:
-            pass
+                    print(f'x={x}: False\t(naming.+not.+{nwbfile.name}, i={i})')
+            except:
+                print(f'Error in validation output number {x}: {i}')
 
         assert validation_output[0]==False, 'validating incorrectly'
         assert(any([True if re.search(f'naming.+not.+{nwbfile.name}',i, flags=re.I) is not None
