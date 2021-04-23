@@ -21,8 +21,8 @@ setup(
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
     license='MIT',
     install_requires=[],
-    to_include=['.csv','.tsv'],
     include_package_data=True,
+    package_date={'': ['ando/tools/tests/tests_file/*.tsv', 'ando/tools/tests/tests_file/*.csv']},
     entry_points={
 
         'console_scripts': ['AnDOChecker=ando.AnDOChecker:main',
