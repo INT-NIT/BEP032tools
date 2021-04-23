@@ -1,1 +1,1 @@
-recursive-include ando/rules/ *.json
+recursive-include ando/rules/ *.json , 'ando/tools/tests/tests_file/*.tsv', 'ando/tools/tests/tests_file/*.csv'
