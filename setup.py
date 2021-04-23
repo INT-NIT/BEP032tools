@@ -15,14 +15,13 @@ setup(
     packages=find_packages(),
     package_data={
             # If any package contains *.json or *.csv files, include them:
-            "": ["*.json", '*.csv'],
+            "": ["*.json", '*.csv','ando/tools/tests/tests_file/*.tsv', 'ando/tools/tests/tests_file/*.csv'],
     },
     author="Jeremy Garcia, Sylvain Takerkart , Julia Sprenger",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
     license='MIT',
     install_requires=[],
     include_package_data=True,
-    package_date={'': ['ando/tools/tests/tests_file/*.tsv', 'ando/tools/tests/tests_file/*.csv']},
     entry_points={
 
         'console_scripts': ['AnDOChecker=ando.AnDOChecker:main',
