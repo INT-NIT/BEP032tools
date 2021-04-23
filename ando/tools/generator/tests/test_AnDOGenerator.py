@@ -53,8 +53,68 @@ class Test_AnDOData(unittest.TestCase):
         self.ando_data.register_data_files(*self.test_data_files)
         self.ando_data.generate_data_files()
 
-        for f in self.test_data_files:
-            self.assertTrue((self.ando_data.basedir / f).exists())
+        session_folder = self.ando_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        data_files += list(session_folder.glob('*.nwb'))
+        self.assertEqual(len(self.test_data_files), len(data_files))
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find("_ephys"))
+
+    def test_data_files_complex(self):
+        self.ando_data.generate_structure()
+        nix_files = [self.test_data_files[0]] * 3
+        runs = ['run1', 'run2']
+        tasks = ['task1', 'task2']
+        for run in runs:
+            for task in tasks:
+                self.ando_data.register_data_files(*nix_files,
+                                                   run=run, task=task)
+
+        self.ando_data.generate_data_files()
+
+        session_folder = self.ando_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        self.assertEqual(len(data_files), len(runs) * len(tasks) * len(nix_files))
+
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find("_ephys"))
+
+        for run in runs:
+            exp = len(tasks) * len(nix_files)
+            files = list(session_folder.glob(f'*_run-{run}*.nix'))
+            self.assertEqual(len(files), exp)
+
+        for task in tasks:
+            exp = len(runs) * len(nix_files)
+            files = list(session_folder.glob(f'*_task-{task}*.nix'))
+            self.assertEqual(len(files), exp)
+
+        for split in range(len(nix_files)):
+            exp = len(runs) * len(tasks)
+            files = list(session_folder.glob(f'*_split-{split}*.nix'))
+            self.assertEqual(len(files), exp)
+
+    def test_data_files_same_key(self):
+        self.ando_data.generate_structure()
+        nix_files = [self.test_data_files[0]]
+        run = 'run1'
+        task = 'task1'
+
+        self.ando_data.register_data_files(*nix_files, run=run, task=task)
+        # register more data files in a second step
+        self.ando_data.register_data_files(*nix_files, run=run, task=task)
+
+        self.ando_data.generate_data_files()
+
+        session_folder = self.ando_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        self.assertEqual(len(data_files), 2)
+
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find(f"_task-{task}_run-{run}_split-"))
 
     def test_metadata_files(self):
         self.ando_data.generate_structure()
@@ -81,6 +141,7 @@ class Test_ReadCsv(unittest.TestCase):
         expected_headers = ['sub_id', 'ses_id']
         self.assertListEqual(expected_headers, list(df))
 
+
 class Test_GenerateStruct(unittest.TestCase):
 
     def setUp(self):
@@ -89,7 +150,7 @@ class Test_GenerateStruct(unittest.TestCase):
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
-        generate_Struct(self.csv_file, test_directory)
+        generate_struct(self.csv_file, test_directory)
 
         # extract all paths that exist in the test directory
         existing_paths = [p[0] for p in os.walk(test_directory)]

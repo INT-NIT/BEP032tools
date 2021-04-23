@@ -5,6 +5,7 @@ import argparse
 import os
 import re
 
+import ando.AnDOChecker
 
 try:
     import pandas as pd
@@ -26,26 +27,28 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 
 class AnDOData:
+    """
+    Representation of a AnDO Data, as specified by in the [ephys BEP](https://bids.neuroimaging.io/bep032)
 
+    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
+    realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
+    AnDOData objects are required. To include multiple realizations of tasks
+    or runs, call the `register_data` method for each set of parameters separately.
+
+    Parameters
+    ----------
+    sub_id : str
+        subject identifier, e.g. '0012' or 'j.s.smith'
+    ses-id : str
+        session identifier, e.g. '20210101' or '007'
+    tasks : str
+        task identifier of data files
+    runs : str
+        run identifier of data files
+
+
+    """
     def __init__(self, sub_id, ses_id, modality='ephys'):
-        """
-        Representation of a AnDO Data, as specified by in the [ephys BEP](https://docs.google.com/document/d/1oG-C8T-dWPqfVzL2W8HO3elWK8NIh2cOCPssRGv23n0/edit#heading=h.7jcxz3flgq5o)
-
-        The AnDOData object can track multiple realizations of
-        `split`, `run`, `task` but only a single realization of `session` and
-        `subject`, i.e. to represent multiple `session` folders, multiple
-        AnDOData objects are required.
-
-        Args:
-            sub_id (str): subject identifier, e.g. '0012' or 'j.s.smith'
-            ses_id (str): session identifier, e.g. '2021-01-01' or '007'
-            tasks (list): list of strings, the task identifiers used in the 
-                session
-            runs (list or dict): list of integers, the run identifiers used in
-                the session. In case of more than one task a dictionary needs
-                to be provided with the task as keys and the list of run
-                identifiers as corresponding values
-        """
 
         if modality != 'ephys':
             raise NotImplementedError('AnDO only supports the ephys modality')
@@ -59,8 +62,6 @@ class AnDOData:
 
         self.sub_id = sub_id
         self.ses_id = ses_id
-        # self.tasks = tasks
-        # self.runs = runs
         self.modality = modality
 
         # initialize data and metadata structures
@@ -73,11 +74,16 @@ class AnDOData:
         """
         Register data with the AnDO data structure.
 
-        Args:
-            *files: path to files to be added as data files. If multiple files
-                are provided they are treated as a single data files split into
-                multiple chunks and will be enumerated according to the order
-                they are provided in.
+        Parameters
+        ----------
+        *files : path to files to be added as data files.
+            If multiple files are provided they are treated as a single data files split into
+            multiple chunks and will be enumerated according to the order they are provided in.
+
+        task: str
+            task name used
+        run: str
+            run name used
         """
 
         files = [Path(f) for f in files]
@@ -88,16 +94,28 @@ class AnDOData:
 
         key = ''
         if task is not None:
-            key += f'task_{task}'
+            key += f'task-{task}'
         if run is not None:
+            if key:
+                key += '_'
             key += f'run-{run}'
 
         if key not in self.data:
             self.data[key] = files
         else:
-            self.data['key'].extend(files)
+            self.data[key].extend(files)
 
     def register_metadata_files(self, *files):
+        """
+        Register metadata with the AnDO data structure.
+
+        Parameters
+        ----------
+        *files: list
+            path to files to be added as metadata files. File content needs to be according
+            with AnDO guidelines as files will only be moved to the their correct location based on the file name
+
+        """
         files = [Path(f) for f in files]
         for file in files:
             if file.suffix not in METADATA_EXTENSIONS:
@@ -116,8 +134,10 @@ class AnDOData:
     @basedir.setter
     def basedir(self, basedir):
         """
-        Args:
-            basedir (str,path): path to the projects base folder (project root)
+        Parameters
+        ----------
+        basedir : (str,path)
+            path to the projects base folder (project root).
         """
         if not Path(basedir).exists():
             raise ValueError('Base directory does not exist')
@@ -127,12 +147,16 @@ class AnDOData:
         """
         Generate the relative path to the folder of the data files
 
-        Args:
-            mode (str): Return the absolute or local path to the data folder.
-                Accepted values: 'absolute', 'local'
+        Parameters
+        ----------
+        mode : str
+            Return the absolute or local path to the data folder.
+            Valid values: 'absolute', 'local'
 
-        Returns:
-            path: pathlib.Path of the data folder
+        Returns
+        ----------
+        pathlib.Path
+            Path of the data folder
         """
 
         path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
@@ -148,8 +172,10 @@ class AnDOData:
         """
         Generate the required folders for storing the dataset
 
-        Returns:
-            (path): Path of created data folder
+        Returns
+        ----------
+        path
+            Path of created data folder
         """
 
         if self.basedir is None:
@@ -164,10 +190,12 @@ class AnDOData:
         """
         Add datafiles to AnDO structure
         
-        Args:
-            mode (str): Can be either 'link' 'copy' or 'move'.
+        Parameters
+        ----------
+        mode: str
+            Can be either 'link', 'copy' or 'move'.
         """
-
+        postfix = '_ephys'
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
@@ -188,10 +216,9 @@ class AnDOData:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + suffix
+                new_filename = filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode)
-
 
     def generate_metadata_files(self):
         """
@@ -216,14 +243,39 @@ class AnDOData:
         """
         Validate the generated structure using the AnDO validator
 
-        Returns:
-            (bool): True if validation was successful. False if it failed.
-        """
+        Parameters
+        ----------
+        output_folder: str
+            path to the folder to validate
 
-        raise NotImplementedError('Ando validation is not implemented yet.')
+        Returns
+        ----------
+        bool
+            True if validation was successful. False if it failed.
+        """
+        ando.AnDOChecker.is_valid(self.basedir)
+
+
 
 
 def create_file(source, destination, mode):
+    """
+    Create a file at a destination location
+
+    Parameters
+    ----------
+    source: str
+        Source location of the file.
+    destination: str
+        Destination location of the file.
+    mode: str
+        File creation mode. Valid parameters are 'copy', 'link' and 'move'.
+        
+    Raises
+    ----------
+    ValueError
+        In case of invalid creation mode.
+    """
     if mode == 'copy':
         shutil.copy(source, destination)
     elif mode == 'link':
@@ -235,7 +287,19 @@ def create_file(source, destination, mode):
 
 
 def extract_structure_from_csv(csv_file):
+    """
+    Load csv file that contains folder structure information and return it as pandas.datafram.
+    
+    Parameters
+    ----------
+    csv_file: str
+        The file to be loaded.
 
+    Returns
+    -------
+    pandas.dataframe
+        A dataframe containing the essential columns for creating an AnDO structure
+    """
     if not HAVE_PANDAS:
         raise ImportError('Extraction of ando structure from csv requires pandas.')
 
@@ -256,17 +320,20 @@ def extract_structure_from_csv(csv_file):
     return df
 
 
-def generate_Struct(csv_file, pathToDir):
-    f"""
+def generate_struct(csv_file, pathToDir):
+    """
     Create structure with csv file given in argument
     This file must contain a header row specifying the provided data. Accepted titles are
     defined in the BEP.
-    Essential information of the following attributes needs to be present
-    {ESSENTIAL_CSV_COLUMNS}
+    Essential information of the following attributes needs to be present.
+    Essential columns are 'sub_id' and 'ses_id'.
 
-    Args:
-        csv_file ([csv file ]): [Csv file that contains a list of directories to create]
-        pathToDir ([Path to directory]): [Path to directory where the directories will be created]
+    Parameters
+    ----------
+    csv_file: str
+        Csv file that contains a list of directories to create.
+    pathToDir: str
+        Path to directory where the directories will be created.
     """
 
     df = extract_structure_from_csv(csv_file)
@@ -281,19 +348,24 @@ def generate_Struct(csv_file, pathToDir):
 
 def main():
     """
-    usage: AnDOGenerator.py [-h] pathToCsv pathToDir
+
+    Notes
+    ----------
+
+    Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
 
     positional arguments:
-    pathToCsv   Path to your folder
-    pathToDir   Path to your csv file
+        pathToCsv   Path to your csv file
+
+        pathToDir   Path to your folder
 
     optional arguments:
-    -h, --help  show this help message and exit
+        -h, --help  show this help message and exit
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('pathToCsv', help='Path to your folder')
-    parser.add_argument('pathToDir', help='Path to your csv file')
+    parser.add_argument('pathToCsv', help='Path to your csv file')
+    parser.add_argument('pathToDir', help='Path to your folder')
 
     # Create two argument groups
 
@@ -303,7 +375,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    generate_Struct(args.pathToCsv, args.pathToDir)
+    generate_struct(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':
