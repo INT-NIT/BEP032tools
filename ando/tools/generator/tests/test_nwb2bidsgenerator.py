@@ -49,16 +49,26 @@ class TestNwbBIDSGenerator(unittest.TestCase):
         validation_output = is_valid(self.savedir)
 
         print(f'validation_output: {validation_output}')
-        for x, i in enumerate(validation_output[1]):
-            try:
-                if re.search(f'naming.+not.+{nwbfile.name}', i, flags=re.I) is not None:
-                    print(f'x={x}: True\t(naming.+not.+{nwbfile.name}, i={i})')
-                else:
-                    print(f'x={x}: False\t(naming.+not.+{nwbfile.name}, i={i})')
-            except:
-                print(f'Error in validation output number {x}: {i}')
+        # for x, i in enumerate(validation_output[1]):
+        #     try:
+        #         if re.search(f'naming.+not.+{nwbfile.name}', i, flags=re.I) is not None:
+        #             print(f'x={x}: True\t(naming.+not.+{nwbfile.name}, i={i})')
+        #         else:
+        #             print(f'x={x}: False\t(naming.+not.+{nwbfile.name}, i={i})')
+        #     except:
+        #         print(f'Error in validation output number {x}: {i}')
 
         assert validation_output[0]==False, 'validating incorrectly'
+
+
+
+        print(f'validation_output[1]: {validation_output[1]}')
+        search_results = [re.search(f'naming.+not.+{nwbfile.name}',i, flags=re.I) for i in validation_output[1]]
+        print(f'search_results: {search_results}')
+        matching_error = [e for e in search_results if e is not None]
+        print(f'matching_error: {matching_error}')
+        assert matching_error, 'naming rule validation error'
+
         assert(any([True if re.search(f'naming.+not.+{nwbfile.name}',i, flags=re.I) is not None
                     else False
                     for i in validation_output[1]
