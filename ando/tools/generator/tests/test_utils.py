@@ -29,7 +29,8 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(Path(path_to_save).exists())
 
     def test_create_dummy_file(self):
-        df = pd.read_csv(os.path.join(test_directory / 'test_files/participants.tsv'), sep='\t')
+        print((test_directory / 'test_files').glob("*"))
+        df = pd.read_csv(os.path.join(test_directory / 'test_files' / 'participants.tsv'), sep='\t')
         path_to_save = os.path.join(test_directory, "test_create_dummy_file.tsv")
         save_tsv(df, path_to_save)
 
@@ -52,8 +53,8 @@ class TestUtils(unittest.TestCase):
             "c": ['NaN', 0],
             "d": ['NaN', 2]
         })
-        save_tsv(a, os.path.join(test_directory / 'test_files/dummy.tsv'))
-        df_test = pd.read_csv(os.path.join(test_directory / 'test_files/dummy.tsv'), sep='\t')
+        save_tsv(a, os.path.join(test_directory / 'test_files' / 'dummy.tsv'))
+        df_test = pd.read_csv(os.path.join(test_directory / 'test_files' / 'dummy.tsv'), sep='\t')
         self.assertEqual(set(df_test),set(res))
 
 
