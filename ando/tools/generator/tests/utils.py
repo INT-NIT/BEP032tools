@@ -1,8 +1,9 @@
 import os
 import tempfile
 import shutil
-
-test_directory = os.path.join(tempfile.gettempdir(), 'ando_testfiles')
+import pathlib
+from os import path
+test_directory = pathlib.Path(tempfile.gettempdir()) / 'ando_testfiles'
 
 def initialize_test_directory(clean=True):
     """
@@ -23,6 +24,8 @@ def initialize_test_directory(clean=True):
 
     if not os.path.exists(test_directory):
         os.mkdir(test_directory)
+    packaged_testfolder = pathlib.Path(__file__).parent / 'test_files'
+    shutil.copytree(packaged_testfolder, test_directory / 'test_files')
 
     return test_directory
 
@@ -51,4 +54,3 @@ def generate_simple_csv_file():
         f.writelines(csv_lines)
 
     return file_path
-
