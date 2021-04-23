@@ -29,7 +29,7 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(Path(path_to_save).exists())
 
     def test_create_dummy_file(self):
-        print(list(test_directory / 'test_files').glob("*")) #print
+        print(list((test_directory / 'test_files').glob("*"))) #print
         df = pd.read_csv(os.path.join(test_directory / 'test_files' / 'participants.tsv'), sep='\t')
         path_to_save = os.path.join(test_directory, "test_create_dummy_file.tsv")
         save_tsv(df, path_to_save)
