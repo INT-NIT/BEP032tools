@@ -45,8 +45,9 @@ class TestUtils(unittest.TestCase):
         a = pd.DataFrame({
             "a": [1],
             "c": [0],
-            "d": [2]})
-        res =  pd.DataFrame({
+            "d": [2]
+        })
+        res = pd.DataFrame({
             "a": [0, 1],
             "b": [1, 'NaN'],
             "c": ['NaN', 0],
