@@ -68,13 +68,22 @@ jobs:
           pytest
 
   run-coverall:
-    runs-on: [ubuntu-latest]
+    name: Running tests using miniconda
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
     steps:
       - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
         with:
-          activate-environment: deptest-3.8
-          python-version: 3.8
+          activate-environment: deptest-${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
           channels: conda-forge
 
       - name: Show conda details
@@ -86,8 +95,8 @@ jobs:
 
       - name: Install other conda dependencies
         run: |
-          conda install -c conda-forge datalad git-annex
-          conda install pip
+          conda install -c conda-forge datalad
+          conda install pip pytest
 
       - name: Configure git-annex
         run: |
@@ -96,8 +105,7 @@ jobs:
 
       - name: Install pip dependencies
         run: |
-          pip install .[tools]
-          pip install pytest
+          pip install .[tools,test]
           pip install coveralls
 
       - name: Create coverage
