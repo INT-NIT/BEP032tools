@@ -23,7 +23,7 @@ jobs:
       run:
         shell: bash -l {0}
     strategy:
-      max-parallel: 2
+      max-parallel: 4
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: [3.6, 3.8]
@@ -42,7 +42,7 @@ jobs:
           conda --version
       - name: Install Conda dependencies
         run: |
-          conda install -c conda-forge datalad
+          conda install -c conda-forge datalad git-annex
           conda install pip pytest
       - name: Configure git-annex
         run: |
