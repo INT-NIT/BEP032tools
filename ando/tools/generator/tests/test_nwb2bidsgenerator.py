@@ -44,14 +44,16 @@ class TestNwbBIDSGenerator(unittest.TestCase):
 
         # invalidating structure: use custom filename for nwb file
         nwbfile = list(svpt.glob('**/*.nwb'))[0]
-        nwbfile = nwbfile.replace(nwbfile.with_name('newname.nwb'))
+        new_nwbfile = nwbfile.with_name('newname.nwb')
+        # `replace` only provide return value for python >= 3.8
+        nwbfile.replace(new_nwbfile)
 
         validation_output = is_valid(self.savedir)
 
         assert validation_output[0] == False, 'validating incorrectly'
 
         # validate that incorrect json file name is detected
-        pattern = 'naming.+not.+' + nwbfile.name
+        pattern = 'naming.+not.+' + new_nwbfile.name
         search_results = [re.search(pattern, i, flags=re.I) for i in
                           validation_output[1]]
         matching_error = [e for e in search_results if e is not None]
