@@ -45,7 +45,7 @@ jobs:
           if [ "$RUNNER_OS" == "macOS" ]; then
                brew install git-annex
           elif [ "$RUNNER_OS" == "Windows" ]; then
-               choco install git-annex
+               conda install -c conda-forge git-annex
           fi
         shell: bash
       - name: Install Conda dependencies
