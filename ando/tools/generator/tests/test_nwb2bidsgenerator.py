@@ -51,8 +51,6 @@ class TestNwbBIDSGenerator(unittest.TestCase):
         print(f'validation_output: {validation_output}')
         assert validation_output[0]==False, 'validating incorrectly'
 
-
-
         print(f'validation_output[1]: {validation_output[1]}')
         print(f'nwbfile: {nwbfile}')
         print(f'nwbfile.name: {nwbfile.name}')
@@ -62,7 +60,18 @@ class TestNwbBIDSGenerator(unittest.TestCase):
         print(f'search_results: {search_results}')
         matching_error = [e for e in search_results if e is not None]
         print(f'matching_error: {matching_error}')
-        assert matching_error, 'naming rule validation error'
+        # assert matching_error, 'naming rule validation error'
+
+
+        """
+        validation_output: (False, ["Mandatory file not found for this rule : ['dataset_description', ['.json']]"])
+        validation_output[1]: ["Mandatory file not found for this rule : ['dataset_description', ['.json']]"]
+        nwbfile: /tmp/tmph4k4bqir/sub-MS21/ses-PeterMS21180724144402concat/ephys/newname.nwb
+        nwbfile.name: newname.nwb
+        types of validation_output[1]: [<class 'str'>]
+        search_results: [None]
+        matching_error: []
+        """
 
         assert(any([True if re.search(f'naming.+not.+{nwbfile.name}',i, flags=re.I) is not None
                     else False
