@@ -31,31 +31,38 @@ jobs:
           activate-environment: deptest-${{ matrix.python-version }}
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
+
       - name: Show conda details
         run: |
           conda info
           conda list
           which python
           conda --version
+
       - name: Install git-annex on OSX
         if: runner.os == 'macOS'
         run: |
           brew install git-annex
+
       - name: Install git-annex on Windows
         if: runner.os == 'Windows'
         run: |
           choco install --ignore-checksums git-annex
+
       - name: Install other conda dependencies
         run: |
           conda install -c conda-forge datalad
           conda install pip pytest
+
       - name: Configure git-annex
         run: |
           git config --global user.email "AnDOTest@githubactions.com"
           git config --global user.name "Github Actions"
+
       - name: Install pip dependencies
         run: |
           pip install .[tools,test]
+
       - name: Run tests
         run: |
           pytest
@@ -64,19 +71,32 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: "3.9"
+          activate-environment: deptest-3.8
+          python-version: 3.8
+          channels: conda-forge
 
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
+      - name: Show conda details
+        run: |
+          conda info
+          conda list
+          which python
+          conda --version
 
-      - name: Install package
-        run: pip install .[tools,test]
+      - name: Install other conda dependencies
+        run: |
+          conda install -c conda-forge datalad
+          conda install pip pytest
 
-      - name: Install Python test dependencies
-        run: pip install coveralls
+      - name: Configure git-annex
+        run: |
+          git config --global user.email "AnDOTest@githubactions.com"
+          git config --global user.name "Github Actions"
+
+      - name: Install pip dependencies
+        run: |
+          pip install .[tools,test]
 
       - name: Create coverage
         run: coverage run --source=ando -m pytest ando/
