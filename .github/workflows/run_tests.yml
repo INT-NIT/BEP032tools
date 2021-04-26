@@ -87,7 +87,7 @@ jobs:
       - name: Install other conda dependencies
         run: |
           conda install -c conda-forge datalad git-annex
-          conda install pip
+          conda install pip pytest
 
       - name: Configure git-annex
         run: |
@@ -96,7 +96,7 @@ jobs:
 
       - name: Install pip dependencies
         run: |
-          pip install .[tools,test]
+          pip install .[tools]
           pip install coveralls
 
       - name: Create coverage
