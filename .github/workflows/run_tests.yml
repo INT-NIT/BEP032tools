@@ -40,9 +40,13 @@ jobs:
           conda list
           which python
           conda --version
+      - name: Install git-annex on OSX
+        if: runner.os == 'macOS'
+        run: |
+          brew install git-annex
       - name: Install Conda dependencies
         run: |
-          conda install -c conda-forge datalad git-annex
+          conda install -c conda-forge datalad
           conda install pip pytest
       - name: Configure git-annex
         run: |
