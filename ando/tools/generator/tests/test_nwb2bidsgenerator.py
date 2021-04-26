@@ -33,53 +33,34 @@ class TestNwbBIDSGenerator(unittest.TestCase):
     def test_validation(self):
         n2b = NwbToBIDS(self.datadir)
         n2b.organize(output_path=self.savedir, move_nwb=False, validate=False)
-        svpt = Path(self.savedir)
-        for sub_files in svpt.iterdir():
-            if sub_files.suffix=='.json':
-                json_file = sub_files
-                break
-        print('svpt: ', svpt)
-        print('all 1st level subfolders of svpt: ', [g for g in svpt.glob('*')])
 
-        nwbfile = list(svpt.glob('**/*.nwb'))[0]
-        print('nwbffile: ', nwbfile)
-        print(f'nwbfile.name: {nwbfile.name}')
-        nwbfile = nwbfile.with_name('newname.nwb')
+        # invalidating structure: removing json file
+        svpt = Path(self.savedir)
+        for sub_file in svpt.iterdir():
+            if sub_file.suffix=='.json':
+                json_file = sub_file
+                break
         json_file.unlink()
+
+        # invalidating structure: use custom filename for nwb file
+        nwbfile = list(svpt.glob('**/*.nwb'))[0]
+        nwbfile = nwbfile.replace(nwbfile.with_name('newname.nwb'))
+
         validation_output = is_valid(self.savedir)
 
-        print(f'validation_output: {validation_output}')
-        assert validation_output[0]==False, 'validating incorrectly'
+        assert validation_output[0] == False, 'validating incorrectly'
 
-        print(f'validation_output[1]: {validation_output[1]}')
-        print(f'nwbfile: {nwbfile}')
-        print(f'nwbfile.name: {nwbfile.name}')
-        print(f'types of validation_output[1]: {[type(v) for v in validation_output[1]]}')
+        # validate that incorrect json file name is detected
         pattern = 'naming.+not.+' + nwbfile.name
-        search_results = [re.search(pattern, i, flags=re.I) for i in validation_output[1]]
-        print(f'search_results: {search_results}')
+        search_results = [re.search(pattern, i, flags=re.I) for i in
+                          validation_output[1]]
         matching_error = [e for e in search_results if e is not None]
-        print(f'matching_error: {matching_error}')
-        # assert matching_error, 'naming rule validation error'
+        assert matching_error, 'naming rule validation error'
 
+        # validate that incorrect nwb file name is detected
+        pattern = f'mandatory.+not.+{json_file.stem}.*'
+        search_results = [re.search(pattern, i, flags=re.I) for i in
+                          validation_output[1]]
+        matching_error = [e for e in search_results if e is not None]
+        assert matching_error, 'mandatory file rule validation error'
 
-        """
-        validation_output: (False, ["Mandatory file not found for this rule : ['dataset_description', ['.json']]"])
-        validation_output[1]: ["Mandatory file not found for this rule : ['dataset_description', ['.json']]"]
-        nwbfile: /tmp/tmph4k4bqir/sub-MS21/ses-PeterMS21180724144402concat/ephys/newname.nwb
-        nwbfile.name: newname.nwb
-        types of validation_output[1]: [<class 'str'>]
-        search_results: [None]
-        matching_error: []
-        """
-
-        assert(any([True if re.search(f'naming.+not.+{nwbfile.name}',i, flags=re.I) is not None
-                    else False
-                    for i in validation_output[1]
-                    ])), \
-            'naming rule validation error'
-        assert (any([True if re.search(f'mandatory.+not.+{json_file.stem}.*', i, flags=re.I) is not None
-                     else False
-                     for i in validation_output[1]
-                     ])), \
-            'mandatory file rule validation error'
