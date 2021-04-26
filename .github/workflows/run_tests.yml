@@ -40,15 +40,14 @@ jobs:
           conda list
           which python
           conda --version
-      - name: Install git-annex on OSX & Windows
+      - name: Install git-annex on OSX
+        if: runner.os == 'macOS'
         run: |
-          if [ "$RUNNER_OS" == "macOS" ]; then
-               brew install git-annex
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-               conda install -c conda-forge git-annex
-          fi
-        shell: bash
-      - name: Install Conda dependencies
+          brew install git-annex
+      - name: Install git-annex on Windows
+        run: |
+          conda install -c conda-forge git-annex
+      - name: Install other conda dependencies
         run: |
           conda install -c conda-forge datalad
           conda install pip pytest
