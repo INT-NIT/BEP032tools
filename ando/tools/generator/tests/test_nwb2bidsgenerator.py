@@ -37,7 +37,7 @@ class TestNwbBIDSGenerator(unittest.TestCase):
         # invalidating structure: removing json file
         svpt = Path(self.savedir)
         for sub_file in svpt.iterdir():
-            if sub_file.suffix=='.json':
+            if sub_file.suffix == '.json':
                 json_file = sub_file
                 break
         json_file.unlink()
