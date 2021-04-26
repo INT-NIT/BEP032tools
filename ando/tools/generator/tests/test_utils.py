@@ -4,6 +4,7 @@ from ando.tools.generator.tests.utils import *
 from ando.tools.generator.utils import *
 import pandas as pd
 import os
+import json
 from pathlib import Path
 
 
@@ -11,17 +12,6 @@ class TestUtils(unittest.TestCase):
 
     def setUp(self) -> None:
         initialize_test_directory()
-
-    def test_merge_if_file_exist(self):
-        pass
-
-    def test_merge_if_file_not_exist(self):
-        pass
-        # safe_tsv(pd,path)
-        # self.assertTrue((path).exists())
-        # new_df = DataFrame.from_csv(path, sep='\t', header=0)
-        # self.assertEqual(df.columns,new_df.columns)
-        # self.assertEqual(df.shape,new_df.shape)
 
     def test_create_file(self):
         df = pd.DataFrame()
@@ -56,3 +46,15 @@ class TestUtils(unittest.TestCase):
         save_tsv(a, os.path.join(test_directory / 'test_files' / 'dummy.tsv'))
         df_test = pd.read_csv(os.path.join(test_directory / 'test_files' / 'dummy.tsv'), sep='\t')
         self.assertEqual(set(df_test), set(res))
+
+    def test_create_json(self):
+        data = {'test': 'dummy'}
+        path_to_save = os.path.join(test_directory, "dummy.json")
+        save_json(data, path_to_save)
+        self.assertTrue(Path(path_to_save).exists())
+
+    def test_create_json_file_existing(self):
+        data = {'test': 'dummy'}
+        path_to_save = os.path.join(test_directory / 'test_files' /"dummy_file.json")
+        save_json(data, path_to_save)
+        self.assertTrue(Path(path_to_save).exists())
