@@ -88,6 +88,7 @@ jobs:
         run: |
           conda install -c conda-forge datalad
           conda install pip pytest
+          conda install -c anaconda coverage
 
       - name: Configure git-annex
         run: |
