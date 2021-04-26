@@ -5,6 +5,7 @@ import pathlib
 from os import path
 test_directory = pathlib.Path(tempfile.gettempdir()) / 'ando_testfiles'
 
+
 def initialize_test_directory(clean=True):
     """
     Create main test folder if required

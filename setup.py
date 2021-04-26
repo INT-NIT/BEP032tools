@@ -16,7 +16,7 @@ setup(
     include_package_data=True,
     package_data={
             # If any package contains *.json or *.csv files, include them:
-            "": ["*.json", '*.csv','*.tsv'],
+            "": ["*.json", '*.csv', '*.tsv'],
     },
     author="Jeremy Garcia, Sylvain Takerkart , Julia Sprenger",
     description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",

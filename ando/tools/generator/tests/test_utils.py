@@ -6,6 +6,7 @@ import pandas as pd
 import os
 from pathlib import Path
 
+
 class TestUtils(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -44,8 +45,7 @@ class TestUtils(unittest.TestCase):
         a = pd.DataFrame({
             "a": [1],
             "c": [0],
-            "d": [2]
-        })
+            "d": [2]})
         res =  pd.DataFrame({
             "a": [0, 1],
             "b": [1, 'NaN'],
@@ -54,7 +54,4 @@ class TestUtils(unittest.TestCase):
         })
         save_tsv(a, os.path.join(test_directory / 'test_files' / 'dummy.tsv'))
         df_test = pd.read_csv(os.path.join(test_directory / 'test_files' / 'dummy.tsv'), sep='\t')
-        self.assertEqual(set(df_test),set(res))
-
-
-
+        self.assertEqual(set(df_test), set(res))
