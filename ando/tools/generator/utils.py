@@ -17,23 +17,23 @@ def save_json(new_dict, path_to_save):
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
             mergejson(data_existing,new_dict)
-                    # todo : check other possibility
     else:
         with open(path_to_save, 'w') as outfile:
-            json.dump(dict, outfile)
+            json.dump(new_dict, outfile)
 
 
-def mergejson(data_existing,new_data):
-    for key_exist in list(data_existing.keys()):
+def mergejson(new_data,data_existing):
+        # todo : comment
         for new_key in new_data.keys():
-            if type(data_existing[key_exist]) == str and key_exist == new_key and data_existing[key_exist] == new_data[new_key]:
-                print('error')
-            if type(data_existing[key_exist]) == str and key_exist != new_key:
-                data_to_append = {new_key: new_data[new_key]}
-                data_existing.update(data_to_append)
-            if type(data_existing[key_exist]) == list and key_exist == new_key:
-                data_existing[key_exist].extend(new_data[new_key])
-            if type(data_existing[key_exist]) == dict and key_exist == new_key :
-                mergejson(data_existing[key_exist],new_data[new_key])
-
+            if new_key not in data_existing :
+                data_existing[new_key] = new_data[new_key]
+            else:
+                if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
+                    pass
+                elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
+                    print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
+                if type(data_existing[new_key]) == list :
+                    data_existing[new_key].extend(new_data[new_key])
+                elif type(data_existing[new_key]) == dict :
+                    mergejson(new_data[new_key],data_existing[new_key])
 

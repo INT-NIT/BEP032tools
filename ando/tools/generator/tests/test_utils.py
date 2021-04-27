@@ -6,7 +6,7 @@ import pandas as pd
 import os
 import json
 from pathlib import Path
-
+import copy
 
 class TestUtils(unittest.TestCase):
 
@@ -55,7 +55,15 @@ class TestUtils(unittest.TestCase):
 
     def test_create_json_file_existing(self):
         data = {'test': 'dummy' ,
-                'list': ['dummy']}
+                'list': ['dummy'],
+                "test_dict": {
+                    "key_in_dict_1": "1",
+                    }
+                }
+        result = copy.deepcopy(data)
         path_to_save = os.path.join(test_directory / 'test_files' /"dummy_file.json")
-        save_json(data, path_to_save)
-        self.assertTrue(Path(path_to_save).exists())
+        save_json(result, path_to_save)
+        self.assertTrue(all([k in result for k in data.keys()])) # key at first lvl
+        self.assertTrue(all([data[k] == result[k] for k in data.keys() if not hasattr(data[k], '__iter__')])) # check keys are the same
+        self.assertEqual(result["test_dict"]["key_in_dict_1"], "1") # 2nd lvl hard coded
+

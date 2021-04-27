@@ -1,2 +1,8 @@
-{"testa": "dummy", "list": ["dummyn2"],"list2": ["dummyn2"]
+{
+  "testa": "dummy",
+  "list": ["dummyn2"],
+  "list2": ["dummyn2"],
+  "test_dict" : {
+        "key_in_dict":"1"
+      }
   }
