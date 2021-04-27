@@ -54,7 +54,8 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(Path(path_to_save).exists())
 
     def test_create_json_file_existing(self):
-        data = {'test': 'dummy'}
+        data = {'test': 'dummy' ,
+                'list': ['dummy']}
         path_to_save = os.path.join(test_directory / 'test_files' /"dummy_file.json")
         save_json(data, path_to_save)
         self.assertTrue(Path(path_to_save).exists())
