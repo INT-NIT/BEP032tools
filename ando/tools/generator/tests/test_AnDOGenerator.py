@@ -130,7 +130,7 @@ class Test_AnDOData(unittest.TestCase):
         self.assertTrue((self.basedir / 'participants.json').exists())
         self.assertTrue((self.basedir / 'participants.tsv').exists())
         self.assertTrue((self.basedir / 'tasks.json').exists())
-        self.assertTrue((self.basedir / 'tasks.csv').exists())
+        self.assertTrue((self.basedir / 'tasks.tsv').exists())
 
     def tearDown(self):
         initialize_test_directory(clean=True)
