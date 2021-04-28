@@ -245,7 +245,7 @@ class AnDOData:
     def create_metadata_file_participants(self) -> bool:
         file = "participants"
         exts = ['.tsv', '.json']
-        # here we want to call safejson and safetsv() path = os.path.join(self.basedir, filename
+        # here we want to call save_json and save_tsv
 
         return True
 
