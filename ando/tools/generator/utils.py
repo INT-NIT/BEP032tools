@@ -45,13 +45,13 @@ def save_json(new_dict, path_to_save):
     if path.exists(path_to_save):
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
-            mergejson(data_existing,new_dict)
+            mergejson(data_existing, new_dict)
     else:
         with open(path_to_save, 'w') as outfile:
             json.dump(new_dict, outfile)
 
 
-def mergejson(new_data,data_existing):
+def mergejson(new_data, data_existing):
     """
 
     Parameters
@@ -66,7 +66,7 @@ def mergejson(new_data,data_existing):
 
     """
     for new_key in new_data.keys():
-        if new_key not in data_existing :
+        if new_key not in data_existing:
             # new entry that does not exist -> just added it
             data_existing[new_key] = new_data[new_key]
         else:
@@ -81,4 +81,4 @@ def mergejson(new_data,data_existing):
                 data_existing[new_key].extend(new_data[new_key])
             # if dict call recursive in the new dict
             elif type(data_existing[new_key]) == dict:
-                mergejson(new_data[new_key],data_existing[new_key])
+                mergejson(new_data[new_key], data_existing[new_key])

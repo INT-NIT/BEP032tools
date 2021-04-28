@@ -59,10 +59,10 @@ class TestUtils(unittest.TestCase):
                 'list': ['dummy'],
                 "test_dict": {
                             "key_in_dict_1": "1",
-                             }
+                            }
                 }
         result = copy.deepcopy(data)
-        path_to_save = os.path.join(test_directory / 'test_files' /"dummy_file.json")
+        path_to_save = os.path.join(test_directory / 'test_files' / "dummy_file.json")
         save_json(result, path_to_save)
         self.assertTrue(all([k in result for k in data.keys()]))  # key at first lvl
         # check keys are the same
