@@ -79,6 +79,6 @@ def mergejson(new_data, data_existing):
             # if the it a list just add it to the list
             if type(data_existing[new_key]) == list:
                 data_existing[new_key].extend(new_data[new_key])
-            # if dict call recursive in the new dict
+            # merge dictionaries recursively
             elif type(data_existing[new_key]) == dict:
                 mergejson(new_data[new_key], data_existing[new_key])
