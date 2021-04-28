@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import json
 
+
 def save_tsv(dataframe, path_to_save):
     """
 
@@ -25,6 +26,7 @@ def save_tsv(dataframe, path_to_save):
 
     else:
         dataframe.to_csv(path_to_save, sep="\t", index=False)
+
 
 def save_json(new_dict, path_to_save):
     """
@@ -80,4 +82,3 @@ def mergejson(new_data,data_existing):
             # if dict call recursive in the new dict
             elif type(data_existing[new_key]) == dict:
                 mergejson(new_data[new_key],data_existing[new_key])
-
