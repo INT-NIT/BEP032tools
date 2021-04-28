@@ -239,6 +239,7 @@ class AnDOData:
                 if re.compile(regex).match(mfile.name):
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
+        # todo : call the other metadate files maybe in the register
 
     def create_metadata_file_participants(self) -> bool:
         file = "participants"
@@ -261,7 +262,7 @@ class AnDOData:
 
     def create_metadata_file_tasks(self) -> bool:
         file = "tasks"
-        exts = ['.csv', '.json']
+        exts = ['.tsv', '.json']
         for ext in exts:
             filename = file + ext
             try:
