@@ -46,7 +46,7 @@ class TestUtils(unittest.TestCase):
         })
         save_tsv(a, test_directory / 'test_files' / 'dummy.tsv')
         df_test = pd.read_csv(test_directory / 'test_files' / 'dummy.tsv', sep='\t')
-        self.assertEqual(set(df_test), set(res))
+        self.assertTrue(df_test.equals(res))
 
     def test_create_json(self):
         data = {'test': 'dummy'}
