@@ -244,44 +244,20 @@ class AnDOData:
     def create_metadata_file_participants(self) -> bool:
         file = "participants"
         exts = ['.tsv', '.json']
-        for ext in exts:
-            filename = file + ext
-            try:
-                f = open(os.path.join(self.basedir, filename), 'x')
-                f.close()
-            except FileExistsError:
-                # TODO : merge
-                # data1 = pd.read_csv(file1)
-                # data2 = pd.read_csv(file2)
+        # here we want to call safejson and safetsv() path = os.path.join(self.basedir, filename
 
-                # using merge function by setting how='outer'
-                # output4 = pd.merge(data1, data2,
-                #                  how='outer')
-                print(f'{filename} already exist')
         return True
 
     def create_metadata_file_tasks(self) -> bool:
         file = "tasks"
         exts = ['.tsv', '.json']
-        for ext in exts:
-            filename = file + ext
-            try:
-                f = open(os.path.join(self.basedir, filename), 'x')
-                f.close()
-            except FileExistsError:
-                print(f'{filename} already exist')
+        # here we want to call safejson and safetsv() path = os.path.join(self.basedir, filename
         return True
 
     def create_metadata_file_dataset_description(self) -> bool:
         file = "dataset_description"
         exts = ['.json']
-        for ext in exts:
-            filename = file + ext
-            try:
-                f = open(os.path.join(self.basedir, filename), 'x')
-                f.close()
-            except FileExistsError:
-                print(f'{filename} already exist')
+        # here we want to call safejson and safetsv() path = os.path.join(self.basedir, filename
         return True
 
     def create_metadata_file_sessions(self) -> bool:
