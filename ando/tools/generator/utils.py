@@ -4,7 +4,21 @@ import os
 import json
 
 def save_tsv(dataframe, path_to_save):
+    """
+
+    Parameters
+    ----------
+    dataframe: dataframe
+        dataframe to save in a TSV format
+    path_to_save: str
+        path to save the TSV file
+
+    Returns
+    -------
+
+    """
     if path.exists(path_to_save):
+
         df = pd.read_csv(os.path.join(path_to_save), sep='\t')
         output = df.append(dataframe, sort=True)
         output.to_csv(path_to_save, sep="\t", index=False)
@@ -13,6 +27,19 @@ def save_tsv(dataframe, path_to_save):
         dataframe.to_csv(path_to_save, sep="\t", index=False)
 
 def save_json(new_dict, path_to_save):
+    """
+
+    Parameters
+    ----------
+    new_dict: dict
+        dict to save in a json format
+
+    path_to_save
+
+    Returns
+    -------
+
+    """
     if path.exists(path_to_save):
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
@@ -23,17 +50,34 @@ def save_json(new_dict, path_to_save):
 
 
 def mergejson(new_data,data_existing):
-        # todo : comment
-        for new_key in new_data.keys():
-            if new_key not in data_existing :
-                data_existing[new_key] = new_data[new_key]
-            else:
-                if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
-                    pass
-                elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
-                    print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
-                if type(data_existing[new_key]) == list :
-                    data_existing[new_key].extend(new_data[new_key])
-                elif type(data_existing[new_key]) == dict :
-                    mergejson(new_data[new_key],data_existing[new_key])
+    """
+
+    Parameters
+    ----------
+    new_data : dict
+        data to merge in the already existing json file
+    data_existing : dict
+        the already existing json file convert to dict
+
+    Returns
+    -------
+
+    """
+    for new_key in new_data.keys():
+        if new_key not in data_existing :
+            # new entry that does not exist -> just added it
+            data_existing[new_key] = new_data[new_key]
+        else:
+            # if the key are the same but not iterable just pass
+            if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
+                pass
+            # if the value for the same key are different in an  no iterable key
+            elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
+                print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
+            # if the it a list just add it to the list
+            if type(data_existing[new_key]) == list:
+                data_existing[new_key].extend(new_data[new_key])
+            # if dict call recursive in the new dict
+            elif type(data_existing[new_key]) == dict:
+                mergejson(new_data[new_key],data_existing[new_key])
 
