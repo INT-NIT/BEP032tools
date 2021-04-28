@@ -252,7 +252,7 @@ class AnDOData:
     def create_metadata_file_tasks(self) -> bool:
         file = "tasks"
         exts = ['.tsv', '.json']
-        # here we want to call safejson and safetsv() path = os.path.join(self.basedir, filename
+        # here we want to call save_json and save_tsv()
         return True
 
     def create_metadata_file_dataset_description(self) -> bool:
