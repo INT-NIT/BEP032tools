@@ -16,17 +16,17 @@ class TestUtils(unittest.TestCase):
 
     def test_create_file(self):
         df = pd.DataFrame()
-        path_to_save = os.path.join(test_directory, "test_create_file.tsv")
+        path_to_save = test_directory / "test_create_file.tsv"
         save_tsv(df, path_to_save)
         self.assertTrue(Path(path_to_save).exists())
 
     def test_create_dummy_file(self):
-        df = pd.read_csv(os.path.join(test_directory / 'test_files' / 'participants.tsv'), sep='\t')
+        df = pd.read_csv(test_directory / 'test_files' / 'participants.tsv', sep='\t')
         path_to_save = os.path.join(test_directory, "test_create_dummy_file.tsv")
         save_tsv(df, path_to_save)
 
         self.assertTrue(Path(path_to_save).exists())
-        df_test = pd.read_csv(os.path.join(test_directory, "test_create_dummy_file.tsv"), sep='\t')
+        df_test = pd.read_csv(test_directory / "test_create_dummy_file.tsv" , sep='\t')
 
         self.assertEqual(set(df.columns), set(df_test.columns))
         self.assertEqual(df.shape, df_test.shape)
@@ -44,13 +44,13 @@ class TestUtils(unittest.TestCase):
             "c": ['NaN', 0],
             "d": ['NaN', 2]
         })
-        save_tsv(a, os.path.join(test_directory / 'test_files' / 'dummy.tsv'))
-        df_test = pd.read_csv(os.path.join(test_directory / 'test_files' / 'dummy.tsv'), sep='\t')
+        save_tsv(a, test_directory / 'test_files' / 'dummy.tsv')
+        df_test = pd.read_csv(test_directory / 'test_files' / 'dummy.tsv', sep='\t')
         self.assertEqual(set(df_test), set(res))
 
     def test_create_json(self):
         data = {'test': 'dummy'}
-        path_to_save = os.path.join(test_directory, "dummy.json")
+        path_to_save = test_directory, "dummy.json"
         save_json(data, path_to_save)
         self.assertTrue(Path(path_to_save).exists())
 
@@ -62,7 +62,7 @@ class TestUtils(unittest.TestCase):
                             }
                 }
         result = copy.deepcopy(data)
-        path_to_save = os.path.join(test_directory / 'test_files' / "dummy_file.json")
+        path_to_save = test_directory / 'test_files' / "dummy_file.json"
         save_json(result, path_to_save)
         self.assertTrue(all([k in result for k in data.keys()]))  # key at first lvl
         # check keys are the same
