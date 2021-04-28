@@ -239,7 +239,8 @@ class AnDOData:
                 if re.compile(regex).match(mfile.name):
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
-        # todo : call the other metadate files maybe in the register
+        # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
+        # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
     def create_metadata_file_participants(self) -> bool:
         file = "participants"
