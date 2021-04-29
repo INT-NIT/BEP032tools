@@ -49,8 +49,12 @@ def save_json(data_dict, path_to_save):
 
 def merge_dict(original_data, new_data):
     """
-    Merge dict if possible depending of the format of the value of the keys
-    in the dict
+    Merge two dictionaries.
+   
+   Merge the content of a `new` dictionary into another, `original` dictionary. A new 
+   dictionary with the merged content is created. Values are preserved and a ValueError is
+   raised if incompatible content is encountered. Overlapping lists are extended and nested
+   dictionaries are merged recursively.
 
     Parameters
     ----------
