@@ -1,7 +1,7 @@
 import unittest
 
-from ando.tools.generator.tests.utils import *
-from ando.tools.generator.utils import *
+from ando.tools.generator.tests.utils import (initialize_test_directory, test_directory)
+from ando.tools.generator.utils import (save_tsv, save_json)
 import pandas as pd
 import os
 from pathlib import Path
@@ -27,8 +27,9 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(Path(path_to_save).exists())
         df_test = pd.read_csv(test_directory / "test_create_dummy_file.tsv" , sep='\t')
         self.assertTrue(df_test.equals(df))
-
-    def test_create_dummy_file_existing(self):
+    #change name
+    def test_merge_existing_file(self):
+        # write dataframe 1 then data frame 2 the test merge
         a = pd.DataFrame({
             "a": [1],
             "c": [0],

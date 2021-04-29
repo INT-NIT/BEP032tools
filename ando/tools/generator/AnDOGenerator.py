@@ -242,28 +242,27 @@ class AnDOData:
         # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
         # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
-    def create_metadata_file_participants(self) -> bool:
+    def generate_metadata_file_participants(self) -> bool:
         file = "participants"
         exts = ['.tsv', '.json']
         # here we want to call save_json and save_tsv
 
         return True
 
-    def create_metadata_file_tasks(self) -> bool:
+    def generate_metadata_file_tasks(self) -> bool:
         file = "tasks"
         exts = ['.tsv', '.json']
         # here we want to call save_json and save_tsv()
         return True
 
-    def create_metadata_file_dataset_description(self) -> bool:
+    def generate_metadata_file_dataset_description(self) -> bool:
         file = "dataset_description"
         exts = ['.json']
         # here we want to call save_json and save_tsv
         return True
 
-    def create_metadata_file_sessions(self) -> bool:
+    def generate_metadata_file_sessions(self) -> bool:
         pass
-
 
     def validate(self):
         """
@@ -280,8 +279,6 @@ class AnDOData:
             True if validation was successful. False if it failed.
         """
         ando.AnDOChecker.is_valid(self.basedir)
-
-
 
 
 def create_file(source, destination, mode):

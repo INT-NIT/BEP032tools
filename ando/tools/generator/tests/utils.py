@@ -2,7 +2,6 @@ import os
 import tempfile
 import shutil
 import pathlib
-from os import path
 test_directory = pathlib.Path(tempfile.gettempdir()) / 'ando_testfiles'
 
 
