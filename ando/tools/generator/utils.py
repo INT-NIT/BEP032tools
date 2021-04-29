@@ -27,6 +27,7 @@ def save_tsv(dataframe, path_to_save):
 def save_json(data_dict, path_to_save):
     """
     Append or create a json file corresponding of dict data
+
     Parameters
     ----------
     data_dict: dict
@@ -50,6 +51,7 @@ def merge_dict(original_data, data_existing):
     """
     Merge dict if possible depending of the format of the value of the keys
     in the dict
+
     Parameters
     ----------
     original_data : dict
