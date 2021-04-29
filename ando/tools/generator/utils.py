@@ -80,4 +80,5 @@ def merge_dict(original_data, data_existing):
                 merge_dict(original_data[key], result[key])
             else:
                 raise ValueError()
+
     return result

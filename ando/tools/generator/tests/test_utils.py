@@ -27,13 +27,18 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(Path(path_to_save).exists())
         df_test = pd.read_csv(test_directory / "test_create_dummy_file.tsv" , sep='\t')
         self.assertTrue(df_test.equals(df))
-    #change name
+
     def test_merge_existing_file(self):
-        # write dataframe 1 then data frame 2 the test merge
+
         a = pd.DataFrame({
             "a": [1],
             "c": [0],
             "d": [2]
+        })
+        b = pd.DataFrame({
+            "a": [0],
+            "b": [1],
+
         })
         res = pd.DataFrame({
             "a": [0, 1],
@@ -41,9 +46,18 @@ class TestUtils(unittest.TestCase):
             "c": ['NaN', 0],
             "d": ['NaN', 2]
         })
-        save_tsv(a, test_directory / 'test_files' / 'dummy.tsv')
-        df_test = pd.read_csv(test_directory / 'test_files' / 'dummy.tsv', sep='\t')
-        self.assertTrue(df_test.equals(res))
+        a.to_csv(test_directory / 'test_files' / 'a.tsv', sep='\t', index=False)
+        b.to_csv(test_directory / 'test_files' / 'b.tsv', sep='\t', index=False)
+        res.to_csv(test_directory / 'test_files' / 'dummy_res.tsv', sep='\t', index=False)
+
+        df_dummy = pd.read_csv(test_directory / 'test_files' / 'a.tsv', sep='\t')
+        df_res = pd.read_csv(test_directory / 'test_files' / 'dummy_res.tsv', sep='\t')
+        # merge a -> b
+        save_tsv(df_dummy, test_directory / 'test_files' / 'b.tsv')
+        # read b
+        df_test = pd.read_csv(test_directory / 'test_files' / 'b.tsv', sep='\t')
+
+        self.assertTrue(df_test.equals(df_res))
 
     def test_create_json(self):
         data = {'test': 'dummy'}
