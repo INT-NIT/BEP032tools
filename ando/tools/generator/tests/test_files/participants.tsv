@@ -1,0 +1,4 @@
+participantID	species	age	sex	birthday
+sub-P001	rattus norvegicus	p20	M	2001-01-01T00:00:00
+sub-P002	rattus norvegicus	p25	M	2005-11-01T00:00:00
+sub-P002	rattus norvegicus	p30	F	2006-01-01T00:00:00

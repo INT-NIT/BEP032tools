@@ -120,11 +120,18 @@ class Test_AnDOData(unittest.TestCase):
         self.ando_data.generate_structure()
         self.ando_data.register_metadata_files(*self.test_mdata_files)
         self.ando_data.generate_metadata_files()
+        self.ando_data.generate_metadata_file_participants()
+        self.ando_data.generate_metadata_file_tasks()
 
         prefix = 'sub-sub5_ses-ses1'
         for f in [prefix + '_probes.tsv', prefix + '_contacts.json']:
             self.assertTrue((self.ando_data.get_data_folder() / f).exists())
+        """
         self.assertTrue((self.basedir / 'dataset_description.json').exists())
+        self.assertTrue((self.basedir / 'participants.json').exists())
+        self.assertTrue((self.basedir / 'participants.tsv').exists())
+        self.assertTrue((self.basedir / 'tasks.json').exists())
+        self.assertTrue((self.basedir / 'tasks.tsv').exists())"""
 
     def tearDown(self):
         initialize_test_directory(clean=True)

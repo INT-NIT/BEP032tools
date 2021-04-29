@@ -1,3 +1,4 @@
+import glob
 from pathlib import Path
 import shutil
 import warnings
@@ -238,6 +239,29 @@ class AnDOData:
                 if re.compile(regex).match(mfile.name):
                     create_file(mfile, parents[(3-level)] / mfile.name,
                                 mode='copy')
+        # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
+        # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
+
+    def generate_metadata_file_participants(self) -> bool:
+        file = "participants"
+        exts = ['.tsv', '.json']
+        # here we want to call save_json and save_tsv
+        return True
+
+    def generate_metadata_file_tasks(self) -> bool:
+        file = "tasks"
+        exts = ['.tsv', '.json']
+        # here we want to call save_json and save_tsv()
+        return True
+
+    def generate_metadata_file_dataset_description(self) -> bool:
+        file = "dataset_description"
+        exts = ['.json']
+        # here we want to call save_json and save_tsv
+        return True
+
+    def generate_metadata_file_sessions(self) -> bool:
+        pass
 
     def validate(self):
         """
@@ -254,8 +278,6 @@ class AnDOData:
             True if validation was successful. False if it failed.
         """
         ando.AnDOChecker.is_valid(self.basedir)
-
-
 
 
 def create_file(source, destination, mode):
