@@ -6,7 +6,7 @@ import json
 
 def save_tsv(dataframe, path_to_save):
     """
-
+    Append or create a tsv file corresponding of dataframe data
     Parameters
     ----------
     dataframe: dataframe
@@ -26,7 +26,7 @@ def save_tsv(dataframe, path_to_save):
 
 def save_json(data_dict, path_to_save):
     """
-
+    Append or create a json file corresponding of dict data
     Parameters
     ----------
     data_dict: dict
@@ -39,8 +39,8 @@ def save_json(data_dict, path_to_save):
     if Path(path_to_save).exists():
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
-            merge_dict(data_existing, data_dict)
-            #overwrite
+            new_dict = merge_dict(data_existing, data_dict)
+            json_file.write(new_dict)
     else:
         with open(path_to_save, 'w') as outfile:
             json.dump(data_dict, outfile)
@@ -48,7 +48,8 @@ def save_json(data_dict, path_to_save):
 
 def merge_dict(original_data, data_existing):
     """
-
+    Merge dict if possible depending of the format of the value of the keys
+    in the dict
     Parameters
     ----------
     original_data : dict
@@ -72,7 +73,7 @@ def merge_dict(original_data, data_existing):
                 pass
             # contradicting values can not be merged
             elif not hasattr(data_existing[key], '__iter__') and original_data[key] != data_existing[key]:
-                print(f"Error different values for the same key {key} : {original_data[key]} {data_existing[key]}")
+                raise ValueError(f"Error different values for the same key {key} : {original_data[key]} {data_existing[key]}")
             # merge lists by concatenation of values
             if type(data_existing[key]) == list:
                 result[key].extend(original_data[key])
@@ -80,6 +81,6 @@ def merge_dict(original_data, data_existing):
             elif type(data_existing[key]) == dict:
                 merge_dict(original_data[key], result[key])
             else:
-                raise ValueError()
+                raise ValueError("Data format not implemented yet")
 
     return result
