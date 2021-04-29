@@ -63,7 +63,7 @@ def merge_dict(original_data, data_existing):
     -------
 
     """
-    # deep copy
+    # deep copying input dictionary to not overwrite existing values in-place
     result = copy.deepcopy(data_existing)
     for key in original_data.keys():
         if key not in data_existing:
