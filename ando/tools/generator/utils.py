@@ -43,7 +43,7 @@ def save_json(data_dict, path_to_save):
             new_dict = merge_dict(data_existing, data_dict)
             json.dump(new_dict, json_file)
     else:
-        with open(path_to_save, 'w') as outfile:
+        with open(path_to_save, 'w') as json_file:
             json.dump(data_dict, outfile)
 
 
