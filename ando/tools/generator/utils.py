@@ -38,7 +38,7 @@ def save_json(data_dict, path_to_save):
 
     """
     if Path(path_to_save).exists():
-        with open(path_to_save,'r+') as json_file:
+        with open(path_to_save,'w+') as json_file:
             data_existing = json.load(json_file)
             new_dict = merge_dict(data_existing, data_dict)
             json.dump(new_dict, json_file)
