@@ -73,7 +73,7 @@ def mergejson(new_data, data_existing):
             # if the key are the same but not iterable just pass
             if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
                 pass
-            # if the value for the same key are different in an  no iterable key
+            # contradicting values can not be merged
             elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
                 print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
             # merge lists by concatenation of values
