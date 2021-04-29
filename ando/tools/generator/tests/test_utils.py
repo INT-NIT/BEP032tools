@@ -60,7 +60,7 @@ class TestUtils(unittest.TestCase):
         result = copy.deepcopy(data)
         path_to_save = test_directory / 'test_files' / "dummy_file.json"
         save_json(result, path_to_save)
+        # verify that all 1st level keys and values are preserved
         self.assertTrue(all([k in result for k in data.keys()]))  # key at first lvl
-        # check keys are the same
         self.assertTrue(all([data[k] == result[k] for k in data.keys() if not hasattr(data[k], '__iter__')]))
         self.assertEqual(result["test_dict"]["key_in_dict_1"], "1")  # 2nd lvl hard coded
