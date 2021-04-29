@@ -246,7 +246,6 @@ class AnDOData:
         file = "participants"
         exts = ['.tsv', '.json']
         # here we want to call save_json and save_tsv
-
         return True
 
     def generate_metadata_file_tasks(self) -> bool:
