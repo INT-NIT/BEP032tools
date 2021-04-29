@@ -83,6 +83,6 @@ def merge_dict(original_data, data_existing):
             elif type(data_existing[key]) == dict:
                 merge_dict(original_data[key], result[key])
             else:
-                raise ValueError("Data format not implemented yet")
+                raise ValueError("Can not merge unexpected data type: {type(data_existing)}")
 
     return result
