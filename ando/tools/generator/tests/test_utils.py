@@ -61,7 +61,7 @@ class TestUtils(unittest.TestCase):
 
     def test_create_json(self):
         data = {'test': 'dummy'}
-        path_to_save = test_directory, "dummy.json"
+        path_to_save = test_directory / "dummy.json"
         save_json(data, path_to_save)
         self.assertTrue(Path(path_to_save).exists())
 
