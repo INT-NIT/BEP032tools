@@ -4,7 +4,6 @@ from ando.tools.generator.tests.utils import *
 from ando.tools.generator.utils import *
 import pandas as pd
 import os
-import json
 from pathlib import Path
 import copy
 
@@ -27,10 +26,7 @@ class TestUtils(unittest.TestCase):
 
         self.assertTrue(Path(path_to_save).exists())
         df_test = pd.read_csv(test_directory / "test_create_dummy_file.tsv" , sep='\t')
-
-        self.assertEqual(set(df.columns), set(df_test.columns))
-        self.assertEqual(df.shape, df_test.shape)
-        self.assertEqual(set(df), set(df_test))
+        self.assertTrue(df_test.equals(df))
 
     def test_create_dummy_file_existing(self):
         a = pd.DataFrame({
