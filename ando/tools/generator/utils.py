@@ -68,7 +68,7 @@ def mergejson(new_data, data_existing):
             # new entry that does not exist -> just added it
             data_existing[new_key] = new_data[new_key]
         else:
-            # if the key are the same but not iterable just pass
+            # if the values have a simple data type and are identical then nothing needs to be done
             if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
                 pass
             # contradicting values can not be merged
