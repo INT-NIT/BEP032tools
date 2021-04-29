@@ -47,7 +47,7 @@ def save_json(data_dict, path_to_save):
             json.dump(data_dict, outfile)
 
 
-def merge_dict(original_data, data_existing):
+def merge_dict(original_data, new_data):
     """
     Merge dict if possible depending of the format of the value of the keys
     in the dict
@@ -56,31 +56,28 @@ def merge_dict(original_data, data_existing):
     ----------
     original_data : dict
         data to merge in the already existing json file
-    data_existing : dict
+    new_data : dict
         the already existing json file convert to dict
-
-    Returns
-    -------
 
     """
     # deep copying input dictionary to not overwrite existing values in-place
-    result = copy.deepcopy(data_existing)
+    result = copy.deepcopy(new_data)
     for key in original_data.keys():
-        if key not in data_existing:
+        if key not in new_data:
             # new entry that does not exist -> just added it
             result[key] = original_data[key]
         else:
             # if the values have a simple data type and are identical then nothing needs to be done
-            if not hasattr(data_existing[key], '__iter__') and original_data[key] == data_existing[key]:
+            if not hasattr(new_data[key], '__iter__') and original_data[key] == new_data[key]:
                 pass
             # contradicting values can not be merged
-            elif not hasattr(data_existing[key], '__iter__') and original_data[key] != data_existing[key]:
-                raise ValueError(f"Error different values for the same key {key} : {original_data[key]} {data_existing[key]}")
+            elif not hasattr(new_data[key], '__iter__') and original_data[key] != new_data[key]:
+                raise ValueError(f"Error different values for the same key {key} : {original_data[key]} {new_data[key]}")
             # merge lists by concatenation of values
-            if type(data_existing[key]) == list:
+            if type(new_data[key]) == list:
                 result[key].extend(original_data[key])
             # merge dictionaries recursively
-            elif type(data_existing[key]) == dict:
+            elif type(new_data[key]) == dict:
                 merge_dict(original_data[key], result[key])
             else:
                 raise ValueError("Can not merge unexpected data type: {type(data_existing)}")
