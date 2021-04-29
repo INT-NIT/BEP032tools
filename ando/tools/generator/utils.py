@@ -1,5 +1,5 @@
 import copy
-
+from pathlib import Path
 import pandas as pd
 import json
 
@@ -15,10 +15,11 @@ def save_tsv(dataframe, path_to_save):
         path to save the TSV file
 
     """
-    if path_to_save.exists():
+    if Path(path_to_save).exists():
         df = pd.read_csv(path_to_save, sep='\t')
         output = df.append(dataframe, sort=True)
         output.to_csv(path_to_save, sep="\t", index=False)
+
     else:
         dataframe.to_csv(path_to_save, sep="\t", index=False)
 
@@ -35,7 +36,7 @@ def save_json(data_dict, path_to_save):
         path to save the JSON file
 
     """
-    if path_to_save.exists():
+    if Path(path_to_save).exists():
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
             merge_dict(data_existing, data_dict)
