@@ -1,6 +1,6 @@
-from os import path
+import copy
+
 import pandas as pd
-import os
 import json
 
 
@@ -14,11 +14,8 @@ def save_tsv(dataframe, path_to_save):
     path_to_save: str
         path to save the TSV file
 
-    Returns
-    -------
-
     """
-    if path.exists(path_to_save):
+    if path_to_save.exists():
         df = pd.read_csv(path_to_save, sep='\t')
         output = df.append(dataframe, sort=True)
         output.to_csv(path_to_save, sep="\t", index=False)
@@ -26,35 +23,34 @@ def save_tsv(dataframe, path_to_save):
         dataframe.to_csv(path_to_save, sep="\t", index=False)
 
 
-def save_json(new_dict, path_to_save):
+def save_json(data_dict, path_to_save):
     """
 
     Parameters
     ----------
-    new_dict: dict
+    data_dict: dict
         dict to save in a json format
 
-    path_to_save
-
-    Returns
-    -------
+    path_to_save: str
+        path to save the JSON file
 
     """
-    if path.exists(path_to_save):
+    if path_to_save.exists():
         with open(path_to_save) as json_file:
             data_existing = json.load(json_file)
-            mergejson(data_existing, new_dict)
+            merge_dict(data_existing, data_dict)
+            #overwrite
     else:
         with open(path_to_save, 'w') as outfile:
-            json.dump(new_dict, outfile)
+            json.dump(data_dict, outfile)
 
 
-def mergejson(new_data, data_existing):
+def merge_dict(original_data, data_existing):
     """
 
     Parameters
     ----------
-    new_data : dict
+    original_data : dict
         data to merge in the already existing json file
     data_existing : dict
         the already existing json file convert to dict
@@ -63,20 +59,25 @@ def mergejson(new_data, data_existing):
     -------
 
     """
-    for new_key in new_data.keys():
-        if new_key not in data_existing:
+    # deep copy
+    result = copy.deepcopy(data_existing)
+    for key in original_data.keys():
+        if key not in data_existing:
             # new entry that does not exist -> just added it
-            data_existing[new_key] = new_data[new_key]
+            result[key] = original_data[key]
         else:
             # if the values have a simple data type and are identical then nothing needs to be done
-            if not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] == data_existing[new_key]:
+            if not hasattr(data_existing[key], '__iter__') and original_data[key] == data_existing[key]:
                 pass
             # contradicting values can not be merged
-            elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
-                print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
+            elif not hasattr(data_existing[key], '__iter__') and original_data[key] != data_existing[key]:
+                print(f"Error different values for the same key {key} : {original_data[key]} {data_existing[key]}")
             # merge lists by concatenation of values
-            if type(data_existing[new_key]) == list:
-                data_existing[new_key].extend(new_data[new_key])
+            if type(data_existing[key]) == list:
+                result[key].extend(original_data[key])
             # merge dictionaries recursively
-            elif type(data_existing[new_key]) == dict:
-                mergejson(new_data[new_key], data_existing[new_key])
+            elif type(data_existing[key]) == dict:
+                merge_dict(original_data[key], result[key])
+            else:
+                raise ValueError()
+    return result
