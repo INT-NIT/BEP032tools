@@ -76,7 +76,7 @@ def mergejson(new_data, data_existing):
             # if the value for the same key are different in an  no iterable key
             elif not hasattr(data_existing[new_key], '__iter__') and new_data[new_key] != data_existing[new_key]:
                 print(f"Error different values for the same key {new_key} : {new_data[new_key]} {data_existing[new_key]}")
-            # if the it a list just add it to the list
+            # merge lists by concatenation of values
             if type(data_existing[new_key]) == list:
                 data_existing[new_key].extend(new_data[new_key])
             # merge dictionaries recursively
