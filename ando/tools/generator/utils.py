@@ -63,6 +63,12 @@ def merge_dict(original_data, new_data):
     new_data : dict
         the already existing json file convert to dict
 
+    Raises
+    ----------
+    ValueError
+        if the data type of the value is neither iterable or basic type like int str
+
+
     """
     # deep copying input dictionary to not overwrite existing values in-place
     result = copy.deepcopy(new_data)
