@@ -21,7 +21,7 @@ class TestUtils(unittest.TestCase):
 
     def test_create_dummy_file(self):
         df = pd.read_csv(test_directory / 'test_files' / 'participants.tsv', sep='\t')
-        path_to_save = os.path.join(test_directory, "test_create_dummy_file.tsv")
+        path_to_save = test_directory / "test_create_dummy_file.tsv"
         save_tsv(df, path_to_save)
 
         self.assertTrue(Path(path_to_save).exists())
