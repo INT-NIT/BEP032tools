@@ -142,6 +142,13 @@ class Test_AnDOData(unittest.TestCase):
             self.ando_data.generate_metadata_file_dataset_description()
         with self.assertRaises(NotImplementedError):
             self.ando_data.generate_metadata_file_participants()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_probes()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_channels()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_contacts()
+
 
     def tearDown(self):
         initialize_test_directory(clean=True)
