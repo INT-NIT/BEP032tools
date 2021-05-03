@@ -285,8 +285,6 @@ class AnDOData:
         [paths.append(self.basedir / sub_folder / ses_folder / ses_metadata_f.with_suffix(ext)) for ext in exts]
 
         raise NotImplementedError()
-    # add prob contactcs
-    # todo : one function that rules them all
 
     def generate_metadata_file_probes(self):
         raise NotImplementedError()
@@ -296,6 +294,15 @@ class AnDOData:
 
     def generate_metadata_file_contacts(self):
         raise NotImplementedError()
+
+    def generate_all_metadata_files(self):
+        self.generate_metadata_file_contacts()
+        self.generate_metadata_file_participants()
+        self.generate_metadata_file_channels()
+        self.generate_metadata_file_probes()
+        self.generate_metadata_file_dataset_description()
+        self.generate_metadata_file_tasks()
+        self.generate_metadata_file_sessions()
 
     def validate(self):
         """
