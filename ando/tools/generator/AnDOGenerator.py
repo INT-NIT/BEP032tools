@@ -242,26 +242,40 @@ class AnDOData:
         # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
         # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
-    def generate_metadata_file_participants(self) -> bool:
+    def generate_metadata_file_participants(self):
+        # create the filename raise not impremented
         file = "participants"
         exts = ['.tsv', '.json']
-        # here we want to call save_json and save_tsv
-        return True
+        paths = list()
+        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
+        # here we want to call save_json and save_tsv int the interface
+        raise NotImplementedError()
 
-    def generate_metadata_file_tasks(self) -> bool:
+    def generate_metadata_file_tasks(self):
         file = "tasks"
         exts = ['.tsv', '.json']
+        paths = list()
+        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
         # here we want to call save_json and save_tsv()
-        return True
+        raise NotImplementedError()
 
-    def generate_metadata_file_dataset_description(self) -> bool:
+    def generate_metadata_file_dataset_description(self):
         file = "dataset_description"
         exts = ['.json']
+        paths = list()
+        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
         # here we want to call save_json and save_tsv
-        return True
+        raise NotImplementedError()
 
-    def generate_metadata_file_sessions(self) -> bool:
-        pass
+    def generate_metadata_file_sessions(self):
+        paths = list()
+        exts = ['.tsv', '.json']
+        sub_folder = Path(f'sub-{self.sub_id}')
+        ses_folder = Path(f'ses-{self.ses_id}')
+        ses_metadata_f =Path(f'sub-{self.sub_id}_sessions')
+        [paths.append(self.basedir / sub_folder / ses_folder / ses_metadata_f.with_suffix(ext)) for ext in exts]
+
+        raise NotImplementedError()
 
     def validate(self):
         """
