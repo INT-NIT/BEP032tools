@@ -11,6 +11,7 @@ ando/tools/generator/dist/*
 ando/tools/generator/build/*
 ando/tools/viewer/build/*
 ando/tools/viewer/dist/*
+ando/tools/generator/tests/BEP032-examples
 
 # sphinx build folder
 build

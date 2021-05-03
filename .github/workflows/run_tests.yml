@@ -1,58 +1,112 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python package
+name: AnDO Tests
 
 on:
+  # Run one build a month at 01:00
+  schedule:
+  - cron:  '0 1 1 * *'
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
-
+  run-test:
+    name: Running tests using miniconda
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
     strategy:
+      max-parallel: 3
       matrix:
-        # Tests on Windows elicit errors so keeping only ubuntu/macos for now
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: [3.6, 3.9]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Display Python version
-      run: python -c "import sys; print(sys.version)"
-
-    - name: Install package
-      run: pip install .[tools,test]
-
-    - name: Test with pytest
-      run: |
-        pytest
-
-  run-coverall:
-    runs-on: [ubuntu-latest]
+        python-version: [3.6, 3.8]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Python 3.8
-        uses: actions/setup-python@v2
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: "3.9"
+          activate-environment: deptest-${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
 
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
+      - name: Show conda details
+        run: |
+          conda info
+          conda list
+          which python
+          conda --version
 
-      - name: Install package
-        run: pip install .[tools,test]
+      - name: Install git-annex on OSX
+        if: runner.os == 'macOS'
+        run: |
+          brew install git-annex
 
-      - name: Install Python test dependencies
-        run: pip install coveralls
+      - name: Install git-annex on Windows
+        if: runner.os == 'Windows'
+        run: |
+          choco install --ignore-checksums git-annex
+
+      - name: Install other conda dependencies
+        run: |
+          conda install -c conda-forge datalad
+          conda install pip pytest
+
+      - name: Configure git-annex
+        run: |
+          git config --global user.email "AnDOTest@githubactions.com"
+          git config --global user.name "Github Actions"
+
+      - name: Install pip dependencies
+        run: |
+          pip install .[tools,test]
+
+      - name: Run tests
+        run: |
+          pytest
+
+  run-coverall:
+    name: Running tests using miniconda
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: deptest-${{ matrix.python-version }}
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
+
+      - name: Show conda details
+        run: |
+          conda info
+          conda list
+          which python
+          conda --version
+
+      - name: Install other conda dependencies
+        run: |
+          conda install -c conda-forge datalad
+          conda install pip pytest
+
+      - name: Configure git-annex
+        run: |
+          git config --global user.email "AnDOTest@githubactions.com"
+          git config --global user.name "Github Actions"
+
+      - name: Install pip dependencies
+        run: |
+          pip install .[tools,test]
+          pip install coveralls
 
       - name: Create coverage
         run: coverage run --source=ando -m pytest ando/
