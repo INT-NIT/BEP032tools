@@ -134,14 +134,14 @@ class Test_AnDOData(unittest.TestCase):
         self.assertTrue((self.basedir / 'tasks.tsv').exists())"""
     def test_implemented_error_raised(self):
 
-            with self.assertRaises(NotImplementedError):
-                self.ando_data.generate_metadata_file_sessions()
-            with self.assertRaises(NotImplementedError):
-                self.ando_data.generate_metadata_file_tasks()
-            with self.assertRaises(NotImplementedError):
-                self.ando_data.generate_metadata_file_dataset_description()
-            with self.assertRaises(NotImplementedError):
-                self.ando_data.generate_metadata_file_participants()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_sessions()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_tasks()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_dataset_description()
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_participants()
 
     def tearDown(self):
         initialize_test_directory(clean=True)
