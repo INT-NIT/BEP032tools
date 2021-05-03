@@ -277,6 +277,8 @@ class AnDOData:
 
         raise NotImplementedError()
 
+    # todo : one function that rules them all
+
     def validate(self):
         """
         Validate the generated structure using the AnDO validator
