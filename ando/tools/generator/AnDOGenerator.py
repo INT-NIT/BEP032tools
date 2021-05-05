@@ -281,7 +281,8 @@ class AnDOData:
         exts = ['.tsv', '.json']
         sub_folder = Path(f'sub-{self.sub_id}')
         ses_folder = Path(f'ses-{self.ses_id}')
-        ses_metadata_f =Path(f'sub-{self.sub_id}_sessions')
+        ses_metadata_f = Path(f'sub-{self.sub_id}_sessions')
+        # func that create path
         [paths.append(self.basedir / sub_folder / ses_folder / ses_metadata_f.with_suffix(ext)) for ext in exts]
 
         raise NotImplementedError()
@@ -295,14 +296,32 @@ class AnDOData:
     def generate_metadata_file_contacts(self):
         raise NotImplementedError()
 
+    def generate_metadata_file_ephys(self):
+        raise NotImplementedError()
+
+    def generate_metadata_file_runs(self):
+        raise NotImplementedError()
+
     def generate_all_metadata_files(self):
-        self.generate_metadata_file_contacts()
-        self.generate_metadata_file_participants()
-        self.generate_metadata_file_channels()
-        self.generate_metadata_file_probes()
-        self.generate_metadata_file_dataset_description()
-        self.generate_metadata_file_tasks()
-        self.generate_metadata_file_sessions()
+        dest_path = self.get_data_folder(mode='absolute') / 'ephys'
+        exts = ['.tsv', '.json']
+        for ext in exts:
+            for key in self.data.keys():
+                self.generate_metadata_file_contacts(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts.{ext}')
+                self.generate_metadata_file_channels(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels.{ext}')
+                self.generate_metadata_file_probes(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes.{ext}')
+                self.generate_metadata_file_ephys(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys.{ext}')
+                if re.match('.*run-\\d+.*',key) in key :
+                    runs_dest = key.split('run')[0]+'runs'+ext
+                dest_path = dest_path / runs_dest
+                self.generate_metadata_file_runs(dest_path)
+
+        self.generate_metadata_file_participants(self.basedir)
+        self.generate_metadata_file_dataset_description(self.basedir)
+        self.generate_metadata_file_tasks(self.basedir)
+        self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}-sessions.tsv')
+
+    # todo : update dataset() with , fetch ,create struct, create metadata files
 
     def validate(self):
         """
