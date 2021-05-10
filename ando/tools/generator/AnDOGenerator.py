@@ -305,7 +305,12 @@ class AnDOData:
     def generate_all_metadata_files(self):
         dest_path = self.get_data_folder(mode='absolute') / 'ephys'
         exts = ['.tsv', '.json']
+        self.generate_metadata_file_dataset_description(self.basedir / "dataset_description.json")
         for ext in exts:
+            self.generate_metadata_file_participants(self.basedir / "participants" + ext)
+
+            self.generate_metadata_file_tasks(self.basedir / "tasks" + ext)
+            self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}-sessions.tsv')
             for key in self.data.keys():
                 self.generate_metadata_file_contacts(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts.{ext}')
                 self.generate_metadata_file_channels(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels.{ext}')
@@ -316,10 +321,8 @@ class AnDOData:
                 dest_path = dest_path / runs_dest
                 self.generate_metadata_file_runs(dest_path)
 
-        self.generate_metadata_file_participants(self.basedir)
-        self.generate_metadata_file_dataset_description(self.basedir)
-        self.generate_metadata_file_tasks(self.basedir)
-        self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}-sessions.tsv')
+
+
 
     # todo : update dataset() with , fetch ,create struct, create metadata files
 
