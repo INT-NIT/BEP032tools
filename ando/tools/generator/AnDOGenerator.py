@@ -251,7 +251,7 @@ class AnDOData:
         # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
         # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
-    def generate_metadata_file_participants(self):
+    def generate_metadata_file_participants(self, output):
         # create the filename raise not impremented
         file = "participants"
         exts = ['.tsv', '.json']
@@ -260,7 +260,7 @@ class AnDOData:
         # here we want to call save_json and save_tsv int the interface
         raise NotImplementedError()
 
-    def generate_metadata_file_tasks(self):
+    def generate_metadata_file_tasks(self, output):
         file = "tasks"
         exts = ['.tsv', '.json']
         paths = list()
@@ -268,7 +268,7 @@ class AnDOData:
         # here we want to call save_json and save_tsv()
         raise NotImplementedError()
 
-    def generate_metadata_file_dataset_description(self):
+    def generate_metadata_file_dataset_description(self, output):
         file = "dataset_description"
         exts = ['.json']
         paths = list()
@@ -287,19 +287,19 @@ class AnDOData:
 
         raise NotImplementedError()
 
-    def generate_metadata_file_probes(self):
+    def generate_metadata_file_probes(self, output):#add  output dir
         raise NotImplementedError()
 
-    def generate_metadata_file_channels(self):
+    def generate_metadata_file_channels(self, output):
         raise NotImplementedError()
 
-    def generate_metadata_file_contacts(self):
+    def generate_metadata_file_contacts(self, output):
         raise NotImplementedError()
 
-    def generate_metadata_file_ephys(self):
+    def generate_metadata_file_ephys(self, output):
         raise NotImplementedError()
 
-    def generate_metadata_file_runs(self):
+    def generate_metadata_file_runs(self, output):
         raise NotImplementedError()
 
     def generate_all_metadata_files(self):
