@@ -252,42 +252,20 @@ class AnDOData:
         # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
     def generate_metadata_file_participants(self, output):
-        # create the filename raise not impremented
-        file = "participants"
-        exts = ['.tsv', '.json']
-        paths = list()
-        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
-        # here we want to call save_json and save_tsv int the interface
         raise NotImplementedError()
 
     def generate_metadata_file_tasks(self, output):
-        file = "tasks"
-        exts = ['.tsv', '.json']
-        paths = list()
-        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
         # here we want to call save_json and save_tsv()
         raise NotImplementedError()
 
     def generate_metadata_file_dataset_description(self, output):
-        file = "dataset_description"
-        exts = ['.json']
-        paths = list()
-        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
         # here we want to call save_json and save_tsv
         raise NotImplementedError()
 
     def generate_metadata_file_sessions(self,output):
-        paths = list()
-        exts = ['.tsv', '.json']
-        sub_folder = Path(f'sub-{self.sub_id}')
-        ses_folder = Path(f'ses-{self.ses_id}')
-        ses_metadata_f = Path(f'sub-{self.sub_id}_sessions')
-        # func that create path
-        [paths.append(self.basedir / sub_folder / ses_folder / ses_metadata_f.with_suffix(ext)) for ext in exts]
-
         raise NotImplementedError()
 
-    def generate_metadata_file_probes(self, output):#add  output dir
+    def generate_metadata_file_probes(self, output):
         raise NotImplementedError()
 
     def generate_metadata_file_channels(self, output):
@@ -303,23 +281,25 @@ class AnDOData:
         raise NotImplementedError()
 
     def generate_all_metadata_files(self):
-        dest_path = self.get_data_folder(mode='absolute') / 'ephys'
+        dest_path = self.get_data_folder(mode='absolute')
         exts = ['.tsv', '.json']
+
         self.generate_metadata_file_dataset_description(self.basedir / "dataset_description.json")
         for ext in exts:
-            self.generate_metadata_file_participants(self.basedir / "participants" + ext)
+            self.generate_metadata_file_participants(self.basedir / f"participants{ext}")
 
-            self.generate_metadata_file_tasks(self.basedir / "tasks" + ext)
-            self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}-sessions.tsv')
+            self.generate_metadata_file_tasks(self.basedir / f"tasks{ext}")
+            self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}_sessions.tsv')
             for key in self.data.keys():
-                self.generate_metadata_file_contacts(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts.{ext}')
-                self.generate_metadata_file_channels(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels.{ext}')
-                self.generate_metadata_file_probes(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes.{ext}')
-                self.generate_metadata_file_ephys(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys.{ext}')
-                if re.match('.*run-\\d+.*',key) in key :
+                runs_dest = ""
+                self.generate_metadata_file_contacts(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts{ext}')
+                self.generate_metadata_file_channels(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
+                self.generate_metadata_file_probes(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes{ext}')
+                self.generate_metadata_file_ephys(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
+                if re.search('run-\\d+', key) :
                     runs_dest = key.split('run')[0]+'runs'+ext
-                dest_path = dest_path / runs_dest
-                self.generate_metadata_file_runs(dest_path)
+                runs_path = dest_path / runs_dest
+                # self.generate_metadata_file_runs(runs_path)
 
 
 

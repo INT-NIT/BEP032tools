@@ -6,6 +6,8 @@ from datalad.api import install, Dataset
 
 from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 
+
+@unittest.skip
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):

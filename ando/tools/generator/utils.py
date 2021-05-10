@@ -2,7 +2,7 @@ import copy
 from pathlib import Path
 import pandas as pd
 import json
-
+import os
 
 def save_tsv(dataframe, path_to_save):
     """
@@ -15,7 +15,7 @@ def save_tsv(dataframe, path_to_save):
         path to save the TSV file
 
     """
-    if Path(path_to_save).exists():
+    if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1:
         df = pd.read_csv(path_to_save, sep='\t')
         output = df.append(dataframe, sort=True)
         output.to_csv(path_to_save, sep="\t", index=False)

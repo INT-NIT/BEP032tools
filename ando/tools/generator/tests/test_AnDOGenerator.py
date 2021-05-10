@@ -131,25 +131,24 @@ class Test_AnDOData(unittest.TestCase):
         self.assertTrue((self.basedir / 'tasks.json').exists())
         self.assertTrue((self.basedir / 'tasks.tsv').exists())"""
 
-    @unittest.skip
     def test_implemented_error_raised(self):
-
+        path = ""
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_sessions()
+            self.ando_data.generate_metadata_file_sessions(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_tasks()
+            self.ando_data.generate_metadata_file_tasks(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_dataset_description()
+            self.ando_data.generate_metadata_file_dataset_description(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_participants()
+            self.ando_data.generate_metadata_file_participants(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_probes()
+            self.ando_data.generate_metadata_file_probes(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_channels()
+            self.ando_data.generate_metadata_file_channels(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_contacts()
+            self.ando_data.generate_metadata_file_contacts(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_all_metadata_files()
+            self.ando_data.generate_all_metadata_files(path)
 
     def tearDown(self):
         initialize_test_directory(clean=True)
