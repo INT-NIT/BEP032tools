@@ -65,7 +65,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest
+          pytest -v
 
   run-coverall:
     name: Running tests using miniconda
