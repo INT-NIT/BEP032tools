@@ -276,7 +276,7 @@ class AnDOData:
         # here we want to call save_json and save_tsv
         raise NotImplementedError()
 
-    def generate_metadata_file_sessions(self):
+    def generate_metadata_file_sessions(self,output):
         paths = list()
         exts = ['.tsv', '.json']
         sub_folder = Path(f'sub-{self.sub_id}')
