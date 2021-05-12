@@ -102,33 +102,39 @@ def merge_dict(original_data, new_data):
     return result
 
 
-def merge_dfs_by_index(original_df, new_df):
+def merge_dfs_by_index(df1, df2):
     """
     Merge two pandas dataframe index-by-index.
 
     The dataframes have to share the same index name. Shared indexes will be
     merged without data loss. In case of conflicting entries a ValueError is 
-    raised.
+    raised. The merge operation is symmetric and does not depend on the
+    order of df1 and df2.
 
     Parameters
     ----------
-    original_df: dataframe
-        Pandas dataframe to be extended in-place
-    new_df: dataframe
-        Pandas dataframe with data to be added
+    df1: dataframe
+        Pandas dataframe to be extended
+    df2: dataframe
+        Pandas dataframe with used for extension
+        
+    Returns
+    -------
+    dataframe:
+        The merged dataframe
 
     Raises
     ----------
     ValueError
         in case of incompatible index names or values
     """
-    if original_df.index.name != new_df.index.name:
+    if df1.index.name != df2.index.name:
         raise ValueError('Dataframes have incompatible indexes: '
-                         f'{original_df.index.name} != {new_df.index.name}.')
+                         f'{df1.index.name} != {df2.index.name}.')
 
     # check for contradicting values by comparing A+B with B+A
-    left_combine = original_df.combine_first(new_df)
-    right_combine = new_df.combine_first(original_df)
+    left_combine = df1.combine_first(df2)
+    right_combine = df2.combine_first(df1)
 
     if not left_combine.equals(right_combine):
         raise ValueError('Dataframes have incompatible values: '
