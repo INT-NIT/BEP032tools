@@ -148,7 +148,7 @@ class Test_AnDOData(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             self.ando_data.generate_metadata_file_contacts(path)
         with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_all_metadata_files(path)
+            self.ando_data.generate_all_metadata_files()
 
     def tearDown(self):
         initialize_test_directory(clean=True)
