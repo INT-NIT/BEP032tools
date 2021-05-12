@@ -3,11 +3,13 @@ import unittest
 from pathlib import Path
 import re
 from datalad.api import install, Dataset
+import os
+ON_GITHUB = 'GITHUB_WORKFLOW' in os.environ
 
 from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 
 
-@unittest.skip
+@unittest.skipIf(ON_GITHUB, 'Not running NWB test on github for performance reasons')
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):
