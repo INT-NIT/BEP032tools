@@ -289,7 +289,7 @@ class AnDOData:
             self.generate_metadata_file_participants(self.basedir / f"participants{ext}")
 
             self.generate_metadata_file_tasks(self.basedir / f"tasks{ext}")
-            self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}_sessions.tsv')
+            self.generate_metadata_file_sessions(self.get_data_folder().parent.parent / f'sub-{self.sub_id}_sessions.tsv')
             for key in self.data.keys():
                 runs_dest = ""
                 self.generate_metadata_file_contacts(dest_path /
@@ -302,7 +302,7 @@ class AnDOData:
                                                    f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
                 if re.search('run-\\d+', key) :
                     runs_dest = key.split('run')[0]+'runs'+ext
-                runs_path = dest_path / runs_dest
+                # runs_path = dest_path / runs_dest
                 # self.generate_metadata_file_runs(runs_path)
 
 
