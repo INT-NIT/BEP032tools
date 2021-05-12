@@ -1,8 +1,10 @@
 import copy
-from pathlib import Path
-import pandas as pd
 import json
 import os
+from pathlib import Path
+
+import pandas as pd
+
 
 def save_tsv(dataframe, path_to_save):
     """
@@ -16,12 +18,12 @@ def save_tsv(dataframe, path_to_save):
 
     """
     if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1:
-        df = pd.read_csv(path_to_save, sep='\t')
-        output = df.append(dataframe, sort=True)
-        output.to_csv(path_to_save, sep="\t", index=False)
+        existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0)
+        merged_dfs = merge_dfs_by_index(existing_df, dataframe)
+        merged_dfs.to_csv(path_to_save, sep="\t", index=True)
 
     else:
-        dataframe.to_csv(path_to_save, sep="\t", index=False)
+        dataframe.to_csv(path_to_save, sep="\t", index=True)
 
 
 def save_json(data_dict, path_to_save):
@@ -52,10 +54,11 @@ def merge_dict(original_data, new_data):
     """
     Merge two dictionaries.
    
-   Merge the content of a `new` dictionary into another, `original` dictionary. A new 
-   dictionary with the merged content is created. Values are preserved and a ValueError is
-   raised if incompatible content is encountered. Overlapping lists are extended and nested
-   dictionaries are merged recursively.
+    Merge the content of a `new` dictionary into another, `original` dictionary.
+    A new dictionary with the merged content is created. Values are preserved
+    and a ValueError is raised if incompatible content is encountered.
+    Overlapping lists are extended and nested dictionaries are merged
+    recursively.
 
     Parameters
     ----------
@@ -67,30 +70,69 @@ def merge_dict(original_data, new_data):
     Raises
     ----------
     ValueError
-        if the data type of the value is neither iterable or basic type like int str
-
+        if the data type of the value is neither iterable or basic dtype
 
     """
     # deep copying input dictionary to not overwrite existing values in-place
-    result = copy.deepcopy(new_data)
-    for key in original_data.keys():
-        if key not in new_data:
+    result = copy.deepcopy(original_data)
+    for key in new_data.keys():
+        if key not in original_data:
             # new entry that does not exist -> just added it
-            result[key] = original_data[key]
+            result[key] = new_data[key]
         else:
-            # if the values have a simple data type and are identical then nothing needs to be done
-            if not hasattr(new_data[key], '__iter__') and original_data[key] == new_data[key]:
-                pass
+            # if the values are simple and identical then no action required
+            if not hasattr(original_data[key], '__iter__') \
+                    and new_data[key] == original_data[key]:
+                continue
             # contradicting values can not be merged
-            elif not hasattr(new_data[key], '__iter__') and original_data[key] != new_data[key]:
-                raise ValueError(f"Error different values for the same key {key} : {original_data[key]} {new_data[key]}")
+            elif not hasattr(original_data[key], '__iter__') \
+                    and new_data[key] != original_data[key]:
+                raise ValueError(f"Error different values for the same key "
+                                 f"{key}: {new_data[key]} {original_data[key]}")
             # merge lists by concatenation of values
-            if type(new_data[key]) == list:
-                result[key].extend(original_data[key])
+            if type(original_data[key]) == list:
+                result[key].extend(new_data[key])
             # merge dictionaries recursively
-            elif type(new_data[key]) == dict:
-                merge_dict(original_data[key], result[key])
+            elif type(original_data[key]) == dict:
+                result[key] = merge_dict(result[key], new_data[key])
             else:
-                raise ValueError("Can not merge unexpected data type: {type(data_existing)}")
+                raise ValueError(f"Can not merge unexpected data type: "
+                                 f"{type(original_data[key])}")
 
     return result
+
+
+def merge_dfs_by_index(original_df, new_df):
+    """
+    Merge two pandas dataframe index-by-index.
+
+    The dataframes have to share the same index name. Shared indexes will be
+    merged without data loss. In case of conflicting entries a ValueError is 
+    raised.
+
+    Parameters
+    ----------
+    original_df: dataframe
+        Pandas dataframe to be extended in-place
+    new_df: dataframe
+        Pandas dataframe with data to be added
+
+    Raises
+    ----------
+    ValueError
+        in case of incompatible index names or values
+    """
+    if original_df.index.name != new_df.index.name:
+        raise ValueError('Dataframes have incompatible indexes: '
+                         f'{original_df.index.name} != {new_df.index.name}.')
+
+    # check for contradicting values by comparing A+B with B+A
+    left_combine = original_df.combine_first(new_df)
+    right_combine = new_df.combine_first(original_df)
+
+    if not left_combine.equals(right_combine):
+        raise ValueError('Dataframes have incompatible values: '
+                         f'{left_combine.compare(right_combine)}')
+
+    return right_combine
+
