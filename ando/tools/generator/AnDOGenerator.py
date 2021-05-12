@@ -262,7 +262,7 @@ class AnDOData:
         # here we want to call save_json and save_tsv
         raise NotImplementedError()
 
-    def generate_metadata_file_sessions(self,output):
+    def generate_metadata_file_sessions(self, output):
         raise NotImplementedError()
 
     def generate_metadata_file_probes(self, output):
@@ -292,10 +292,14 @@ class AnDOData:
             self.generate_metadata_file_sessions(self.get_data_folder().parent / f'sub-{self.sub_id}_sessions.tsv')
             for key in self.data.keys():
                 runs_dest = ""
-                self.generate_metadata_file_contacts(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts{ext}')
-                self.generate_metadata_file_channels(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
-                self.generate_metadata_file_probes(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes{ext}')
-                self.generate_metadata_file_ephys(dest_path / f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
+                self.generate_metadata_file_contacts(dest_path /
+                                                     f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts{ext}')
+                self.generate_metadata_file_channels(dest_path /
+                                                      f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
+                self.generate_metadata_file_probes(dest_path /
+                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes{ext}')
+                self.generate_metadata_file_ephys(dest_path /
+                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
                 if re.search('run-\\d+', key) :
                     runs_dest = key.split('run')[0]+'runs'+ext
                 runs_path = dest_path / runs_dest
