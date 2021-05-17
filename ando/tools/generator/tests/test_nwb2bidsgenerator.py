@@ -14,7 +14,7 @@ from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):
-        pt = test_directory / "BEP032-examples"
+        pt = test_directory.parent / "BEP032-examples"
         if pt.exists():
             self.dataset = Dataset(str(pt))
             self.dataset.clean()
