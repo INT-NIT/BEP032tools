@@ -15,7 +15,7 @@ class TestNwbBIDSGenerator(unittest.TestCase):
     def setUp(self):
         pt = Path.cwd()/"BEP032-examples"
         if pt.exists():
-            self.dataset = Dataset(pt)
+            self.dataset = Dataset(str(pt))
             self.dataset.clean()
             self.dataset.update(merge=True)
             self.dataset.get()
