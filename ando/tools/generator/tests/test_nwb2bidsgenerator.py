@@ -13,7 +13,7 @@ from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):
-        pt = Path.cwd()/"BEP032-examples"
+        pt = Path(__file__).parent/"BEP032-examples"
         if pt.exists():
             self.dataset = Dataset(str(pt))
             self.dataset.clean()
