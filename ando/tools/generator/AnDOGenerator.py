@@ -300,10 +300,10 @@ class AnDOData:
                                                       f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
                 self.generate_metadata_file_ephys(dest_path /
                                                    f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
-                if re.search('run-\\d+', key) :
-                    runs_dest = key.split('run')[0]+'runs'+ext
-                runs_path = dest_path / runs_dest
-                self.generate_metadata_file_runs(runs_path)
+                if re.search('run-\\d+', key):
+                    runs_dest = key.split('run')[0] + 'runs' + ext
+                    runs_path = dest_path / runs_dest
+                    self.generate_metadata_file_runs(runs_path)
 
 
 
