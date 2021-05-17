@@ -113,15 +113,6 @@ class AnDOData:
         Parameters
         ----------
         *files: list
-    def generate_metadata_file_tasks(self):
-        # create the filename raise not impremented
-        file = "participants"
-        exts = ['.tsv', '.json']
-        paths = list()
-        [paths.append(self.basedir / Path(file).with_suffix(ext)) for ext in exts]
-        # here we want to call save_json and save_tsv int the interface
-        raise NotImplementedError()
-
             path to files to be added as metadata files. File content needs to be according
             with AnDO guidelines as files will only be moved to the their correct location based on the file name
 
