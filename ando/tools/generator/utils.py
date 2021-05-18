@@ -90,6 +90,14 @@ def merge_dict(original_data, new_data):
                     and new_data[key] != original_data[key]:
                 raise ValueError(f"Error different values for the same key "
                                  f"{key}: {new_data[key]} {original_data[key]}")
+            # compare strings explicitly
+            if isinstance(original_data[key], str):
+                if original_data[key] == new_data[key]:
+                    continue
+                else:
+                    raise ValueError(f"Error different values for the same key "
+                                     f"{key}: {new_data[key]} "
+                                     f"{original_data[key]}")
             # merge lists by concatenation of values
             if type(original_data[key]) == list:
                 result[key].extend(new_data[key])
