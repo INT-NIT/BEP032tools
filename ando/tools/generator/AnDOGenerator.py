@@ -106,28 +106,6 @@ class AnDOData:
         else:
             self.data[key].extend(files)
 
-    def register_metadata_files(self, *files):
-        """
-        Register metadata with the AnDO data structure.
-
-        Parameters
-        ----------
-        *files: list
-            path to files to be added as metadata files. File content needs to be according
-            with AnDO guidelines as files will only be moved to the their correct location based on the file name
-
-        """
-        files = [Path(f) for f in files]
-        for file in files:
-            if file.suffix not in METADATA_EXTENSIONS:
-                raise ValueError(f'Wrong file format of data {file.suffix}. '
-                                 f'Valid formats are {METADATA_EXTENSIONS}')
-
-        self.mdata = files
-
-    # def __str__(self):
-    #     return f'{self.date}_{self.sesNumber}_{self.customSesField}'
-
     @property
     def basedir(self):
         return self._basedir
@@ -187,7 +165,7 @@ class AnDOData:
 
         return data_folder
 
-    def generate_data_files(self, mode='link'):
+    def organize_data_files(self, mode='link'):
         """
         Add datafiles to AnDO structure
         
@@ -220,27 +198,6 @@ class AnDOData:
                 new_filename = filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode)
-
-    def generate_metadata_files(self):
-        """
-        Copy registered metadata files into BIDS structure
-
-        This method currently only takes the file postfix into account
-        to determine the target folder.
-
-        """
-
-        data_folder = self.get_data_folder(mode='absolute')
-
-        parents = (data_folder / '_').parents
-
-        for mfile in self.mdata:
-            for regex, level in METADATA_LEVEL_BY_NAME.items():
-                if re.compile(regex).match(mfile.name):
-                    create_file(mfile, parents[(3-level)] / mfile.name,
-                                mode='copy')
-        # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
-        # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
     def generate_metadata_file_participants(self, output):
         raise NotImplementedError()
