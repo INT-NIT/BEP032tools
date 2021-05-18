@@ -51,7 +51,7 @@ class Test_AnDOData(unittest.TestCase):
     def test_data_files(self):
         self.ando_data.generate_structure()
         self.ando_data.register_data_files(*self.test_data_files)
-        self.ando_data.generate_data_files()
+        self.ando_data.organize_data_files()
 
         session_folder = self.ando_data.get_data_folder()
         self.assertTrue(session_folder.exists())
@@ -71,7 +71,7 @@ class Test_AnDOData(unittest.TestCase):
                 self.ando_data.register_data_files(*nix_files,
                                                    run=run, task=task)
 
-        self.ando_data.generate_data_files()
+        self.ando_data.organize_data_files()
 
         session_folder = self.ando_data.get_data_folder()
         self.assertTrue(session_folder.exists())
@@ -106,7 +106,7 @@ class Test_AnDOData(unittest.TestCase):
         # register more data files in a second step
         self.ando_data.register_data_files(*nix_files, run=run, task=task)
 
-        self.ando_data.generate_data_files()
+        self.ando_data.organize_data_files()
 
         session_folder = self.ando_data.get_data_folder()
         self.assertTrue(session_folder.exists())
@@ -115,21 +115,6 @@ class Test_AnDOData(unittest.TestCase):
 
         for data_file in data_files:
             self.assertTrue(data_file.name.find(f"_task-{task}_run-{run}_split-"))
-
-    def test_metadata_files(self):
-        self.ando_data.generate_structure()
-        self.ando_data.register_metadata_files(*self.test_mdata_files)
-        self.ando_data.generate_metadata_files()
-
-        prefix = 'sub-sub5_ses-ses1'
-        for f in [prefix + '_probes.tsv', prefix + '_contacts.json']:
-            self.assertTrue((self.ando_data.get_data_folder() / f).exists())
-        """
-        self.assertTrue((self.basedir / 'dataset_description.json').exists())
-        self.assertTrue((self.basedir / 'participants.json').exists())
-        self.assertTrue((self.basedir / 'participants.tsv').exists())
-        self.assertTrue((self.basedir / 'tasks.json').exists())
-        self.assertTrue((self.basedir / 'tasks.tsv').exists())"""
 
     def test_implemented_error_raised(self):
         path = ""
