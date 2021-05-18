@@ -230,33 +230,26 @@ class AnDOData:
 
     def generate_all_metadata_files(self):
         dest_path = self.get_data_folder(mode='absolute')
-        exts = ['.tsv', '.json']
 
-        self.generate_metadata_file_dataset_description(self.basedir / "dataset_description.json")
-        for ext in exts:
-            self.generate_metadata_file_participants(self.basedir / f"participants{ext}")
+        self.generate_metadata_file_dataset_description(self.basedir
+                                                        / "dataset_description")
+        self.generate_metadata_file_participants(self.basedir / f"participants")
 
-            self.generate_metadata_file_tasks(self.basedir / f"tasks{ext}")
-            self.generate_metadata_file_sessions(self.get_data_folder().parent.parent / f'sub-{self.sub_id}_sessions.tsv')
-            for key in self.data.keys():
-                runs_dest = ""
-                self.generate_metadata_file_probes(dest_path /
-                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes{ext}')
-                self.generate_metadata_file_contacts(dest_path /
-                                                     f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts{ext}')
-                self.generate_metadata_file_channels(dest_path /
-                                                      f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
-                self.generate_metadata_file_ephys(dest_path /
-                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
-                if re.search('run-\\d+', key):
-                    runs_dest = key.split('run')[0] + 'runs' + ext
-                    runs_path = dest_path / runs_dest
-                    self.generate_metadata_file_runs(runs_path)
-
-
-
-
-    # todo : update dataset() with , fetch ,create struct, create metadata files
+        self.generate_metadata_file_tasks(self.basedir / f"tasks")
+        self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
+                                             f'sub-{self.sub_id}_sessions')
+        for key in self.data.keys():
+            stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+            if key:
+                stem += f'_{key}'
+            self.generate_metadata_file_probes(dest_path / (stem + '_probes'))
+            self.generate_metadata_file_contacts(dest_path / (stem + '_contacts'))
+            self.generate_metadata_file_channels(dest_path / (stem + '_channels'))
+            self.generate_metadata_file_ephys(dest_path / (stem + '_ephys'))
+            if re.search('run-\\d+', key):
+                runs_dest = key.split('run')[0] + 'runs'
+                runs_path = dest_path / runs_dest
+                self.generate_metadata_file_runs(runs_path)
 
     def validate(self):
         """
