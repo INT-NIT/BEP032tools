@@ -2,21 +2,27 @@ import tempfile
 import unittest
 from pathlib import Path
 import re
+from ando.tools.generator.tests.utils import test_directory
 from datalad.api import install, Dataset
+import os
+ON_GITHUB = 'GITHUB_WORKFLOW' in os.environ
 
 from ando.tools.generator.nwb2bidsgenerator import NwbToBIDS, is_valid
 
+
+@unittest.skipIf(ON_GITHUB, 'Not running NWB test on github for performance reasons')
 class TestNwbBIDSGenerator(unittest.TestCase):
 
     def setUp(self):
-        pt = Path.cwd()/"BEP032-examples"
+        pt = test_directory.parent / "BEP032-examples"
         if pt.exists():
-            self.dataset = Dataset(pt)
+            self.dataset = Dataset(str(pt))
             self.dataset.clean()
             self.dataset.update(merge=True)
             self.dataset.get()
         else:
             self.dataset = install(
+                path=str(pt),
                 source="https://gin.g-node.org/NeuralEnsemble/BEP032-examples",
                 get_data=True,
             )

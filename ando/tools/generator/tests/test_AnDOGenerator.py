@@ -120,8 +120,6 @@ class Test_AnDOData(unittest.TestCase):
         self.ando_data.generate_structure()
         self.ando_data.register_metadata_files(*self.test_mdata_files)
         self.ando_data.generate_metadata_files()
-        self.ando_data.generate_metadata_file_participants()
-        self.ando_data.generate_metadata_file_tasks()
 
         prefix = 'sub-sub5_ses-ses1'
         for f in [prefix + '_probes.tsv', prefix + '_contacts.json']:
@@ -132,6 +130,25 @@ class Test_AnDOData(unittest.TestCase):
         self.assertTrue((self.basedir / 'participants.tsv').exists())
         self.assertTrue((self.basedir / 'tasks.json').exists())
         self.assertTrue((self.basedir / 'tasks.tsv').exists())"""
+
+    def test_implemented_error_raised(self):
+        path = ""
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_sessions(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_tasks(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_dataset_description(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_participants(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_probes(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_channels(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_metadata_file_contacts(path)
+        with self.assertRaises(NotImplementedError):
+            self.ando_data.generate_all_metadata_files()
 
     def tearDown(self):
         initialize_test_directory(clean=True)

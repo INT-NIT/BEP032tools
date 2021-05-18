@@ -26,6 +26,8 @@ jobs:
         python-version: [3.6, 3.8]
     steps:
       - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: deptest-${{ matrix.python-version }}
@@ -65,7 +67,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest
+          pytest -v
 
   run-coverall:
     name: Running tests using miniconda

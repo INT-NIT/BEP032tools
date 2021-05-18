@@ -242,26 +242,64 @@ class AnDOData:
         # todo : rename methods 'generate_metadata_files' -> 'organize_metadata_files'
         # add new method 'generate_metadata_files' that is calling all 'create_metadata_file_*' methods
 
-    def generate_metadata_file_participants(self) -> bool:
-        file = "participants"
-        exts = ['.tsv', '.json']
-        # here we want to call save_json and save_tsv
-        return True
+    def generate_metadata_file_participants(self, output):
+        raise NotImplementedError()
 
-    def generate_metadata_file_tasks(self) -> bool:
-        file = "tasks"
-        exts = ['.tsv', '.json']
+    def generate_metadata_file_tasks(self, output):
         # here we want to call save_json and save_tsv()
-        return True
+        raise NotImplementedError()
 
-    def generate_metadata_file_dataset_description(self) -> bool:
-        file = "dataset_description"
-        exts = ['.json']
+    def generate_metadata_file_dataset_description(self, output):
         # here we want to call save_json and save_tsv
-        return True
+        raise NotImplementedError()
 
-    def generate_metadata_file_sessions(self) -> bool:
-        pass
+    def generate_metadata_file_sessions(self, output):
+        raise NotImplementedError()
+
+    def generate_metadata_file_probes(self, output):
+        raise NotImplementedError()
+
+    def generate_metadata_file_channels(self, output):
+        raise NotImplementedError()
+
+    def generate_metadata_file_contacts(self, output):
+        raise NotImplementedError()
+
+    def generate_metadata_file_ephys(self, output):
+        raise NotImplementedError()
+
+    def generate_metadata_file_runs(self, output):
+        raise NotImplementedError()
+
+    def generate_all_metadata_files(self):
+        dest_path = self.get_data_folder(mode='absolute')
+        exts = ['.tsv', '.json']
+
+        self.generate_metadata_file_dataset_description(self.basedir / "dataset_description.json")
+        for ext in exts:
+            self.generate_metadata_file_participants(self.basedir / f"participants{ext}")
+
+            self.generate_metadata_file_tasks(self.basedir / f"tasks{ext}")
+            self.generate_metadata_file_sessions(self.get_data_folder().parent.parent / f'sub-{self.sub_id}_sessions.tsv')
+            for key in self.data.keys():
+                runs_dest = ""
+                self.generate_metadata_file_probes(dest_path /
+                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_probes{ext}')
+                self.generate_metadata_file_contacts(dest_path /
+                                                     f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_contacts{ext}')
+                self.generate_metadata_file_channels(dest_path /
+                                                      f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_channels{ext}')
+                self.generate_metadata_file_ephys(dest_path /
+                                                   f'sub-{self.sub_id}_ses-{self.ses_id}_{key}_ephys{ext}')
+                if re.search('run-\\d+', key):
+                    runs_dest = key.split('run')[0] + 'runs' + ext
+                    runs_path = dest_path / runs_dest
+                    self.generate_metadata_file_runs(runs_path)
+
+
+
+
+    # todo : update dataset() with , fetch ,create struct, create metadata files
 
     def validate(self):
         """
