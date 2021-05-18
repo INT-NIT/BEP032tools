@@ -17,6 +17,8 @@ def save_tsv(dataframe, path_to_save):
         path to save the TSV file
 
     """
+    path_to_save = path_to_save.with_suffix('.tsv')
+
     # Check if path exist and if the file is empty
     if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1:
         existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0)
@@ -40,6 +42,8 @@ def save_json(data_dict, path_to_save):
         path to save the JSON file
 
     """
+    path_to_save = path_to_save.with_suffix('.json')
+
     if Path(path_to_save).exists():
         with open(path_to_save, 'r') as json_file:
             data_existing = json.load(json_file)
