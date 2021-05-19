@@ -49,10 +49,10 @@ def save_json(data_dict, path_to_save):
             data_existing = json.load(json_file)
             new_dict = merge_dict(data_existing, data_dict)
         with open(path_to_save, 'w+') as json_file:
-            json.dump(new_dict, json_file)
+            json.dump(new_dict, json_file, indent='  ')
     else:
         with open(path_to_save, 'w') as json_file:
-            json.dump(data_dict, json_file)
+            json.dump(data_dict, json_file, indent='  ')
 
 
 def merge_dict(original_data, new_data):
