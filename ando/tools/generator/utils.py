@@ -85,23 +85,16 @@ def merge_dict(original_data, new_data):
             # new entry that does not exist -> just added it
             result[key] = new_data[key]
         else:
-            # if the values are simple and identical then no action required
-            if not hasattr(original_data[key], '__iter__') \
-                    and new_data[key] == original_data[key]:
-                continue
-            # contradicting values can not be merged
-            elif not hasattr(original_data[key], '__iter__') \
-                    and new_data[key] != original_data[key]:
-                raise ValueError(f"Error different values for the same key "
-                                 f"{key}: {new_data[key]} {original_data[key]}")
-            # compare strings explicitly
-            if isinstance(original_data[key], str):
-                if original_data[key] == new_data[key]:
+            # deal with simple data types
+            if not isinstance(original_data[key], (list, dict)):
+                if new_data[key] == original_data[key]:
                     continue
                 else:
+                    # contradicting values can not be merged
                     raise ValueError(f"Error different values for the same key "
                                      f"{key}: {new_data[key]} "
                                      f"{original_data[key]}")
+
             # merge lists by concatenation of values
             if type(original_data[key]) == list:
                 result[key].extend(new_data[key])
