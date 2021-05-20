@@ -142,7 +142,8 @@ def merge_dfs_by_index(df1, df2):
     left_combine = df1.combine_first(df2)
     right_combine = df2.combine_first(df1)
 
-    if not left_combine.equals(right_combine):
+    # ignoring dtypes when checking equality
+    if not left_combine.astype(object).equals(right_combine.astype(object)):
         raise ValueError('Dataframes have incompatible values: '
                          f'{left_combine.compare(right_combine)}')
 
