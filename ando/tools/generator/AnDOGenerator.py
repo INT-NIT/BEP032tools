@@ -247,7 +247,7 @@ class AnDOData:
             self.generate_metadata_file_channels(dest_path / (stem + '_channels'))
             self.generate_metadata_file_ephys(dest_path / (stem + '_ephys'))
             if re.search('run-\\d+', key):
-                runs_dest = key.split('run')[0] + 'runs'
+                runs_dest = stem.split('run')[0] + 'runs'
                 runs_path = dest_path / runs_dest
                 self.generate_metadata_file_runs(runs_path)
 
