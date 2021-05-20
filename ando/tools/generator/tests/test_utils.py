@@ -63,6 +63,26 @@ class TestUtils(unittest.TestCase):
 
         self.assertTrue(expected.equals(merged_ab_read))
 
+    def test_save_index_dtype_str(self):
+        a = pd.DataFrame({
+            "i": ['1'],
+            "a": ["a"]
+        })
+        a.set_index('i', inplace=True)
+
+        expected = a
+
+        # merge a -> a
+        save_tsv(a, test_directory / 'test_files' / 'a.tsv')
+        save_tsv(a, test_directory / 'test_files' / 'a.tsv')
+
+        # read merged version of b
+        merged_read = pd.read_csv(test_directory / 'test_files' / 'a.tsv',
+                                  sep='\t', index_col=0)
+        merged_read = merged_read.set_index(merged_read.index.astype(str))
+
+        self.assertTrue(expected.equals(merged_read))
+
     def test_create_json(self):
         data = {'test': 'dummy'}
         path_to_save = test_directory / "dummy.json"
@@ -126,13 +146,6 @@ class TestUtils(unittest.TestCase):
             "a": ['b1', 'a2'],
         })
         b.set_index('i', inplace=True)
-        # res = pd.DataFrame({
-        #     "i": [1, 2, 3, 4, 5],
-        #     "a": ['a1', 'a2', 'a3', None, None],
-        #     "b": [None, 'b2', 'b3', 'b4', 'b5'],
-        #     "c": [None, 'c2', None, 'c4', 'c5'],
-        # })
-        # res.set_index('i', inplace=True)
 
         for df in [a, b]:
             df.fillna(value=np.nan, inplace=True)

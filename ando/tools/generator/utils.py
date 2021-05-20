@@ -23,6 +23,9 @@ def save_tsv(dataframe, path_to_save):
     if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1 \
             and dataframe.size > 0:
         existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0)
+        # transforming all indices to str for comparison
+        existing_df = existing_df.set_index(existing_df.index.astype(str))
+        dataframe = dataframe.set_index(dataframe.index.astype(str))
         merged_dfs = merge_dfs_by_index(existing_df, dataframe)
         merged_dfs.to_csv(path_to_save, sep="\t", index=True)
 
