@@ -20,7 +20,8 @@ def save_tsv(dataframe, path_to_save):
     path_to_save = path_to_save.with_suffix('.tsv')
 
     # Check if path exist and if the file is empty
-    if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1:
+    if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1 \
+            and dataframe.size > 0:
         existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0)
         merged_dfs = merge_dfs_by_index(existing_df, dataframe)
         merged_dfs.to_csv(path_to_save, sep="\t", index=True)
