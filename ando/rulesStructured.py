@@ -49,7 +49,7 @@ currentdepth_rules['authorized_metadata_files'] = [
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels', ANY_METADATA_EXT],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts', ANY_METADATA_EXT],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes', ANY_METADATA_EXT],
-    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs', ANY_METADATA_EXT]
+    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs', ANY_METADATA_EXT],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_events', ANY_METADATA_EXT]
     ]
 currentdepth_rules['mandatory_files'] = [
@@ -58,6 +58,5 @@ currentdepth_rules['mandatory_files'] = [
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels', ['.tsv']],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts', ['.tsv']],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes', ['.tsv']]
-    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_events', ['.tsv']]
     ]
 RULES_SET.append(currentdepth_rules)
