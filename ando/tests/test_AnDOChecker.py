@@ -31,6 +31,12 @@ class Test(TestCase):
         path = Path(dir_path) / "dataset" / "exp-valid_full_metadata"
         self.assertEqual(CHK.is_valid(path)[0], True)
 
+    def test_valid_full_metadata_with_event_scans(self):
+        path = Path(dir_path) / "dataset" / "exp-valid_full_metadata_with_events_scans"
+        print(CHK.is_valid(path)[1])
+        self.assertEqual(CHK.is_valid(path)[0], True)
+
+
     ##
     # level 0
     ##
