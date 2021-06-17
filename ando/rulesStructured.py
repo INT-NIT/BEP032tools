@@ -33,7 +33,8 @@ currentdepth_rules={}
 currentdepth_rules['authorized_folders'] = ['ephys']
 currentdepth_rules['mandatory_folders'] = [['ephys']]
 currentdepth_rules['authorized_data_files'] = [['^$']]
-currentdepth_rules['authorized_metadata_files'] = [['^$']]
+currentdepth_rules['authorized_metadata_files'] = [['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)_scans',
+                                                    ANY_METADATA_EXT]]
 currentdepth_rules['mandatory_files'] = []
 RULES_SET.append(currentdepth_rules)
 # level 3
@@ -49,7 +50,8 @@ currentdepth_rules['authorized_metadata_files'] = [
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_channels', ANY_METADATA_EXT],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_contacts', ANY_METADATA_EXT],
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_probes', ANY_METADATA_EXT],
-    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs', ANY_METADATA_EXT]
+    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_runs', ANY_METADATA_EXT],
+    ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_events', ANY_METADATA_EXT]
     ]
 currentdepth_rules['mandatory_files'] = [
     ['^sub-([a-zA-Z0-9]+)_ses-([a-zA-Z0-9]+)([\\w\\-]*)_ephys', ANY_DATA_EXT],
