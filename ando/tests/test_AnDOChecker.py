@@ -31,8 +31,6 @@ class Test(TestCase):
         path = Path(dir_path) / "dataset" / "exp-valid_full_metadata"
         self.assertEqual(CHK.is_valid(path)[0], True)
 
-
-
     ##
     # level 0
     ##
