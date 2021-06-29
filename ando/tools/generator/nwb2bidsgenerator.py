@@ -23,8 +23,8 @@ class NwbToBIDS(BidsConverter):
 
     def _extract_metadata(self):
         self._participants_dict.update(data=pd.DataFrame(
-                                           columns=['Species', 'ParticipantID', 'Sex', 'Birthdate', 'Age', 'Genotype',
-                                                    'Weight']))
+                                           columns=['species', 'participant_id', 'sex', 'birthdate', 'age', 'genotype',
+                                                    'weight']))
         for file_no, nwb_file in enumerate(tqdm(self.datafiles_list)):
             with NWBHDF5IO(str(nwb_file), 'r') as io:
                 nwbfile = io.read()
@@ -32,7 +32,7 @@ class NwbToBIDS(BidsConverter):
                 # 1) FULL DATASET INFO:
                 # subject info:
                 sub_df, subject_label = self._get_subject_info(nwbfile, subject_suffix=str(file_no))
-                if not self._participants_dict['data']['ParticipantID'].str.contains(
+                if not self._participants_dict['data']['participant_id'].str.contains(
                         subject_label).any():
                     self._participants_dict['data'].loc[len(self._participants_dict['data'].index)] = sub_df
                 # dataset_info:
@@ -94,7 +94,6 @@ class NwbToBIDS(BidsConverter):
     @staticmethod
     def _get_dataset_info(nwbfile):
         return dict(
-            InstitutionName=nwbfile.institution, InstitutionalDepartmentName=nwbfile.lab,
             Name='Electrophysiology', BIDSVersion='1.0.X',
             Licence='CC BY 4.0',
             Authors=[
@@ -114,7 +113,7 @@ class NwbToBIDS(BidsConverter):
     @staticmethod
     def _get_channels_info(nwbfile):
         channels_df = pd.DataFrame(
-            columns=['channel_id', 'Contact_id', 'type', 'units', 'sampling_frequency',
+            columns=['channel_id', 'contact_id', 'type', 'units', 'sampling_frequency',
                      'unit_conversion_multiplier'])
         es = [
             i for i in nwbfile.children if isinstance(
@@ -133,7 +132,9 @@ class NwbToBIDS(BidsConverter):
 
     @staticmethod
     def _get_ephys_info(nwbfile, **kwargs):
-        return dict(PowerLineFrequency=kwargs.get('powerlinefrequency', 50.0))
+        return dict(PowerLineFrequency=kwargs.get('PowerLineFrequency', 50.0),
+                    InstitutionName=nwbfile.institution,
+                    InstitutionalDepartmentName=nwbfile.lab)
 
     @staticmethod
     def _get_contacts_info(nwbfile, **kwargs):
@@ -145,8 +146,8 @@ class NwbToBIDS(BidsConverter):
                 'impedance',
                 'contact_id',
                 'probe_id',
-                'Location'])
-        probes_df = pd.DataFrame(columns=['probeID', 'type'])
+                'location'])
+        probes_df = pd.DataFrame(columns=['probe_id', 'type'])
         e_table = nwbfile.electrodes
         if e_table is not None:
             for contact_no in range(len(e_table)):
@@ -192,7 +193,7 @@ class NwbToBIDS(BidsConverter):
             data.to_csv(loc, sep='\t', index=False)
 
         # 3) subject>sessions>ephys specific files:
-        for subject_id in self._participants_dict['data']['ParticipantID']:
+        for subject_id in self._participants_dict['data']['participant_id']:
             for session_id in self._sessions_dict[subject_id]['data']['session_id']:
                 # ephys.json
                 base_loc = output_path/subject_id/session_id/'ephys'
