@@ -5,7 +5,9 @@ The AnDO project (for Animal Data Organization) gathers a set of tools dedicated
 This project is composed of three main scrip :
 
 -AnDOChecker script that check if your dataset follows AnDO rules
+
 -AnDOGenerator script that create a dataset based on a CSV files
+
 -AnDOViewer script that display your dataset directory in a convenient way.
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/INT-NIT/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
