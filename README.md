@@ -1,14 +1,12 @@
 # AnDO-Project
 
-The Animal Data Organization (AnDO) is a set of specifications for the organization of a directory containing experimental data recorded in animals. It is very inspired by the BIDS specifications ( https://bids-specification.readthedocs.io  ). The main difference lies in the fact that in experiments conducted with animals, it is very common to have different settings for different sessions, and more importantly for different animals (whereas research on human subjects tends to have exactly the same protocol used for all subjects, as looked after by the BIDS specifications).
+The AnDO project (for Animal Data Organization) gathers a set of tools dedicated to the ongoing process of extending the BIDS standard ( https://bids-specification.readthedocs.io  ) so that it supports electrophysiological data recorded in animal modelsis a set of specifications for the organization of a directory containing experimental data recorded in animals. The proposed specifications are described in the following document: https://bids.neuroimaging.io/bep032 . This document is open to any type of feedback from the community and we are welcoming all types of constructive comments.
 
 This project is composed of three main scrip :
 
 -AnDOChecker script that check if your dataset follows AnDO rules
 -AnDOGenerator script that create a dataset based on a CSV files
 -AnDOViewer script that display your dataset directory in a convenient way.
-
-Futher information on Specs : https://bids.neuroimaging.io/bep032
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![Generic badge](https://travis-ci.org/INT-NIT/BidsValidatorA.svg?branch=master)](https://shields.io/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
