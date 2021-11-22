@@ -23,18 +23,20 @@ class NwbToBIDS(BidsConverter):
 
     def _extract_metadata(self):
         self._participants_dict.update(data=pd.DataFrame(
-                                           columns=['species', 'participant_id', 'sex', 'birthdate', 'age', 'genotype',
-                                                    'weight']))
+            columns=['species', 'participant_id', 'sex',
+                     'birthdate', 'age', 'genotype', 'weight']))
         for file_no, nwb_file in enumerate(tqdm(self.datafiles_list)):
             with NWBHDF5IO(str(nwb_file), 'r') as io:
                 nwbfile = io.read()
 
                 # 1) FULL DATASET INFO:
                 # subject info:
-                sub_df, subject_label = self._get_subject_info(nwbfile, subject_suffix=str(file_no))
+                sub_df, subject_label = self._get_subject_info(nwbfile,
+                                                               subject_suffix=str(file_no))
                 if not self._participants_dict['data']['participant_id'].str.contains(
                         subject_label).any():
-                    self._participants_dict['data'].loc[len(self._participants_dict['data'].index)] = sub_df
+                    self._participants_dict['data'].loc[
+                        len(self._participants_dict['data'].index)] = sub_df
                 # dataset_info:
                 if self._dataset_desc_json['data'] is None:
                     self._dataset_desc_json['data'] = self._get_dataset_info(nwbfile)
@@ -42,7 +44,7 @@ class NwbToBIDS(BidsConverter):
                 # 2) SUBJECT SPECIFIC:
                 # session info:
                 base_location_1 = Path(f'{subject_label}')
-                session_default_dict = dict(name=base_location_1/f'{subject_label}_sessions.tsv',
+                session_default_dict = dict(name=base_location_1 / f'{subject_label}_sessions.tsv',
                                             data=pd.DataFrame(
                                                 columns=['session_id', '#_trials', 'comment']))
                 session_info = self._get_session_info(nwbfile)
@@ -54,27 +56,33 @@ class NwbToBIDS(BidsConverter):
                 self._sessions_dict[subject_label] = session_default_dict
 
                 # 3) SUBJECT>SESSION SPECIFIC:
-                base_location_2 = Path(subject_label)/Path(sessions_label)/Path('ephys')
+                base_location_2 = Path(subject_label) / Path(sessions_label) / Path('ephys')
                 # channels_info:
-                channel_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_channels.tsv',
-                                            data=self._get_channels_info(nwbfile))
+                channel_default_dict = dict(
+                    name=base_location_2 / f'{subject_label}_{sessions_label}_channels.tsv',
+                    data=self._get_channels_info(nwbfile))
                 self._channels_dict[subject_label].update({sessions_label: channel_default_dict})
                 # ephys_json:
-                ephys_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_ephys.json',
-                                          data=self._get_ephys_info(nwbfile, **self._kwargs))
+                ephys_default_dict = dict(
+                    name=base_location_2 / f'{subject_label}_{sessions_label}_ephys.json',
+                    data=self._get_ephys_info(nwbfile, **self._kwargs))
                 self._ephys_dict[subject_label].update({sessions_label: ephys_default_dict})
                 # contacts/probes info:
                 contact_df, probes_df = self._get_contacts_info(nwbfile, **self._kwargs)
-                contacts_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_contacts.tsv',
-                                             data=contact_df)
-                probes_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_probes.tsv',
-                                           data=probes_df)
+                contacts_default_dict = dict(
+                    name=base_location_2 / f'{subject_label}_{sessions_label}_contacts.tsv',
+                    data=contact_df)
+                probes_default_dict = dict(
+                    name=base_location_2 / f'{subject_label}_{sessions_label}_probes.tsv',
+                    data=probes_df)
                 self._contacts_dict[subject_label].update({sessions_label: contacts_default_dict})
                 self._probes_dict[subject_label].update({sessions_label: probes_default_dict})
                 # nwbfile location:
-                nwbfile_default_dict = dict(name=base_location_2/f'{subject_label}_{sessions_label}_ephys.nwb',
-                                            data=nwb_file)
-                self._nwbfile_name_dict[subject_label].update({sessions_label: nwbfile_default_dict})
+                nwbfile_default_dict = dict(
+                    name=base_location_2 / f'{subject_label}_{sessions_label}_ephys.nwb',
+                    data=nwb_file)
+                self._nwbfile_name_dict[subject_label].update(
+                    {sessions_label: nwbfile_default_dict})
 
     @staticmethod
     def _get_subject_info(nwbfile, subject_suffix=''):
@@ -166,7 +174,7 @@ class NwbToBIDS(BidsConverter):
     def organize(self, output_path=None, move_nwb=False,
                  re_write=True, validate=True):
         if output_path is None:
-            output_path = self.dataset_path.parent/'BIDSExt'/self.dataset_path.name
+            output_path = self.dataset_path.parent / 'BIDSExt' / self.dataset_path.name
         else:
             output_path = Path(output_path)
         if re_write and output_path.exists():
@@ -196,7 +204,7 @@ class NwbToBIDS(BidsConverter):
         for subject_id in self._participants_dict['data']['participant_id']:
             for session_id in self._sessions_dict[subject_id]['data']['session_id']:
                 # ephys.json
-                base_loc = output_path/subject_id/session_id/'ephys'
+                base_loc = output_path / subject_id / session_id / 'ephys'
                 if not base_loc.exists():
                     base_loc.mkdir(parents=True)
                 data, loc = self._parse_data_dict(
@@ -233,7 +241,7 @@ class NwbToBIDS(BidsConverter):
             is_valid(output_path)
 
     def _parse_data_dict(self, data_dict, output_path):
-        return data_dict['data'], output_path/data_dict['name']
+        return data_dict['data'], output_path / data_dict['name']
 
     def _write_csv(self, data, loc):
         if not loc.exists():
