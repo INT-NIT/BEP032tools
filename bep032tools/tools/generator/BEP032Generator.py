@@ -33,11 +33,12 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 class BEP032Data:
     """
-    Representation of a BEP032 Data, as specified by in the [ephys BEP](https://bids.neuroimaging.io/bep032)
+    Representation of a BEP032 Data, as specified by in the
+    [ephys BEP](https://bids.neuroimaging.io/bep032)
 
-    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a single
-    realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
-    BEP032Data objects are required. To include multiple realizations of tasks
+    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
+    single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
+    multiple BEP032Data objects are required. To include multiple realizations of tasks
     or runs, call the `register_data` method for each set of parameters separately.
 
     Parameters

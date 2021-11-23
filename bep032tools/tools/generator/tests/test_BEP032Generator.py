@@ -3,6 +3,7 @@ from bep032tools.tools.generator.BEP032Generator import *
 
 from bep032tools.tools.generator.tests.utils import *
 
+
 class Test_BEP032Data(unittest.TestCase):
 
     def setUp(self):
