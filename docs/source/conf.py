@@ -12,13 +12,13 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../ando/'))
-sys.path.insert(0, os.path.abspath('../ando/tools'))
+sys.path.insert(0, os.path.abspath('../bep032tools/'))
+sys.path.insert(0, os.path.abspath('../bep032tools/tools'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'AnDO'
+project = 'BEP032tools'
 copyright = '2021, Jeremy Garcia, Julia Sprenger, Sylvain Takerkart'
 author = 'Jeremy Garcia, Julia Sprenger, Sylvain Takerkart'
 
@@ -43,7 +43,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['/source/ando.tests*']
+exclude_patterns = ['/source/bep032tools.tests*']
 
 
 # -- Options for HTML output -------------------------------------------------

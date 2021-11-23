@@ -1,6 +1,6 @@
 .. _to_generator:
 
-ando.tools.generator package
+bep032tools.tools.generator package
 ============================
 
 Subpackages
@@ -9,15 +9,15 @@ Subpackages
 .. toctree::
    :maxdepth: 10
 
-   ando.tools.generator.tests
+   bep032tools.tools.generator.tests
 
 Submodules
 ----------
 
-ando.tools.generator.AnDOGenerator module
+bep032tools.tools.generator.BEP032Generator module
 -----------------------------------------
 
-.. automodule:: ando.tools.generator.AnDOGenerator
+.. automodule:: bep032tools.tools.generator.BEP032Generator
    :members:
    :undoc-members:
    :show-inheritance:
@@ -25,7 +25,7 @@ ando.tools.generator.AnDOGenerator module
 Module contents
 ---------------
 
-.. automodule:: ando.tools.generator
+.. automodule:: bep032tools.tools.generator
    :members:
    :undoc-members:
    :show-inheritance:

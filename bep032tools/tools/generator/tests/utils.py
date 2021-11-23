@@ -2,7 +2,7 @@ import os
 import tempfile
 import shutil
 import pathlib
-test_directory = pathlib.Path(tempfile.gettempdir()) / 'ando_testfiles'
+test_directory = pathlib.Path(tempfile.gettempdir()) / 'bep032tools_testfiles'
 
 
 def initialize_test_directory(clean=True):
@@ -33,7 +33,7 @@ def initialize_test_directory(clean=True):
 
 def generate_simple_csv_file():
     """
-    Create csv file containing parameters for the creation of multiple AnDO structures
+    Create csv file containing parameters for the creation of multiple BEP032 structures
 
     Returns
     -------

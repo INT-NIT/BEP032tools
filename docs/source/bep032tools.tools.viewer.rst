@@ -1,13 +1,13 @@
-ando.tools.viewer package
+bep032tools.tools.viewer package
 =========================
 
 Submodules
 ----------
 
-ando.tools.viewer.AnDOViewer module
+bep032tools.tools.viewer.BEP032Viewer module
 -----------------------------------
 
-.. automodule:: ando.tools.viewer.AnDOViewer
+.. automodule:: bep032tools.tools.viewer.BEP032Viewer
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ ando.tools.viewer.AnDOViewer module
 Module contents
 ---------------
 
-.. automodule:: ando.tools.viewer
+.. automodule:: bep032tools.tools.viewer
    :members:
    :undoc-members:
    :show-inheritance:

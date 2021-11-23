@@ -5,12 +5,12 @@ from setuptools import setup, find_packages
 import os
 
 # Extract central version information
-with open(os.path.join(os.path.dirname(__file__), "ando", "VERSION")) as version_file:
+with open(os.path.join(os.path.dirname(__file__), "bep032tools", "VERSION")) as version_file:
     version = version_file.read().strip()
 
 
 setup(
-    name="AnDO",
+    name="BEP032tools",
     version=version,
     packages=find_packages(),
     include_package_data=True,
@@ -19,14 +19,14 @@ setup(
             "": ["*.json", '*.csv', '*.tsv'],
     },
     author="Jeremy Garcia, Sylvain Takerkart , Julia Sprenger",
-    description="Checks the validity of a directory with respect to the ANimal Data Organization (ANDO) specifications ",
+    description="Checks the validity of a directory with respect to the BEP032 specifications ",
     license='MIT',
     install_requires=[],
     entry_points={
-        'console_scripts': ['AnDOChecker=ando.AnDOChecker:main',
-                            'AnDOGenerator=ando.tools.generator.AnDOGenerator:main',
+        'console_scripts': ['BEP032Validator=bep032tools.BEP032Validator:main',
+                            'BEP032Generator=bep032tools.tools.generator.BEP032Generator:main',
                             'BEP032Templater=ando.tools.generator.BEP032Templater:main',
-                            'AnDOViewer=ando.tools.viewer.AnDOViewer:main'],
+                            'BEP032Viewer=bep032tools.tools.viewer.BEP032Viewer:main'],
     },
     python_requires='>=3.6',
     extras_require={

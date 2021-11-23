@@ -9,7 +9,7 @@ from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 from tqdm import tqdm
 
-from ando.AnDOChecker import is_valid
+from bep032tools.BEP032Validator import is_valid
 from .bidsconverter import BidsConverter
 
 

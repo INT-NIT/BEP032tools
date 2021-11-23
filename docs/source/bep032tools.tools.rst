@@ -1,4 +1,4 @@
-ando.tools package
+bep032tools.tools package
 ==================
 
 Subpackages
@@ -7,13 +7,13 @@ Subpackages
 .. toctree::
    :maxdepth: 10
 
-   ando.tools.generator
-   ando.tools.viewer
+   bep032tools.tools.generator
+   bep032tools.tools.viewer
 
 Module contents
 ---------------
 
-.. automodule:: ando.tools
+.. automodule:: bep032tools.tools
    :members:
    :undoc-members:
    :show-inheritance:
