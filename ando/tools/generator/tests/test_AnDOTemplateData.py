@@ -5,6 +5,7 @@ from ando.tools.generator.tests.utils import *
 
 class Test_AnDOTemplateData(unittest.TestCase):
 
+
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
         self.sub_id = 'sub5'
@@ -19,7 +20,6 @@ class Test_AnDOTemplateData(unittest.TestCase):
         self.basedir = project
 
         d = AnDOTemplateData(self.sub_id, self.ses_id)
-        #d = AnDOData(self.sub_id, self.ses_id)
         d.basedir = project
 
         self.ando_data = d

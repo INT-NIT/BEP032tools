@@ -59,7 +59,7 @@ class AnDOTemplateData(AnDOData):
 
     def generate_metadata_file_participants(self, output):
         participant_df = pd.DataFrame([
-                            ['sub-P001',	'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00'],
+                            ['sub-P001', 'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00'],
                             ['sub-P002', 'rattus norvegicus', 'p25', 'M', '2005-11-01T00:00:00'],
                             ['sub-P002', 'rattus norvegicus', 'p30', 'F', '2006-01-01T00:00:00']],
                             columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
@@ -84,17 +84,17 @@ class AnDOTemplateData(AnDOData):
 
     def generate_metadata_file_sessions(self, output):
         session_df = pd.DataFrame([
-                     ['session_id', 'acq_time', 'systolic_blood_pressure'],
-                     ['ses - 01', '2009 - 06 - 15T13: 45:30', 120]],
+                    ['session_id', 'acq_time', 'systolic_blood_pressure'],
+                    ['ses - 01', '2009 - 06 - 15T13: 45:30', 120]],
                     columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
         save_tsv(session_df, output)
 
     def generate_metadata_file_probes(self, output):
-        probes_df = pd.DataFrame(
-                    [['e380a', 'multi - shank', 0,  'iridium - oxide', 0, 0, 0, 'circle', 20],
-                    ['e380b', 'multi - shank', 1.5, 'iridium - oxide', 0, 100, 0, 'circle', 20],
-                    ['t420a', 'tetrode', 3.6, 'iridium - oxide', 0, 200, 0, 'circle', 20],
-                    ['t420b', 'tetrode', 7, 'iridium - oxide', 500, 0, 0, 'circle', 20]],
+        probes_df = pd.DataFrame([
+                    ['e380a', 'multi-shank', 0, 'iridium-oxide', 0, 0, 0, 'circle', 20],
+                    ['e380b', 'multi-shank', 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
+                    ['t420a', 'tetrode', 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
+                    ['t420b', 'tetrode', 7, 'iridium-oxide', 500, 0, 0, 'circle', 20]],
                     columns=['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
         save_tsv(probes_df, output)
 
