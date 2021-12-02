@@ -1,9 +1,9 @@
 import unittest
-from ando.tools.generator.AnDOGenerator import *
+from ando.tools.generator.AnDOTemplateData import *
 
 from ando.tools.generator.tests.utils import *
 
-class Test_AnDOData(unittest.TestCase):
+class Test_AnDOTemplateData(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -18,7 +18,8 @@ class Test_AnDOData(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = AnDOData(self.sub_id, self.ses_id)
+        d = AnDOTemplateData(self.sub_id, self.ses_id)
+        #d = AnDOData(self.sub_id, self.ses_id)
         d.basedir = project
 
         self.ando_data = d
@@ -117,26 +118,13 @@ class Test_AnDOData(unittest.TestCase):
 
     def test_implemented_error_raised(self):
         path = ""
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_sessions(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_tasks(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_dataset_description(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_participants(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_probes(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_channels(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_contacts(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_all_metadata_files()
+        self.test_generate_structure()
+        self.ando_data.register_data_files(*self.test_data_files)
+        self.ando_data.organize_data_files()
+        self.ando_data.generate_all_metadata_files()
 
     def tearDown(self):
         initialize_test_directory(clean=True)
-
 
 class Test_ReadCsv(unittest.TestCase):
 
