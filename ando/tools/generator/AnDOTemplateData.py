@@ -55,13 +55,14 @@ class AnDOTemplateData(AnDOData):
 
     """
     def __init__(self, sub_id, ses_id):
-        super().__init__(sub_id,ses_id,modality='ephys')
+        super().__init__(sub_id, ses_id, modality='ephys')
 
     def generate_metadata_file_participants(self, output):
-        participant_df = pd.DataFrame([['sub-P001',	'rattus norvegicus',	'p20', 'M', '2001-01-01T00:00:00'],
-                            ['sub-P002',	'rattus norvegicus',	'p25',	'M', '2005-11-01T00:00:00'],
-                            ['sub-P002',	'rattus norvegicus',	'p30',	'F', '2006-01-01T00:00:00']],
-                            columns=['participant_id', 'species', 'age','sex','birthday'])
+        participant_df = pd.DataFrame([
+                            ['sub-P001',	'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00'],
+                            ['sub-P002', 'rattus norvegicus', 'p25', 'M', '2005-11-01T00:00:00'],
+                            ['sub-P002', 'rattus norvegicus', 'p30', 'F', '2006-01-01T00:00:00']],
+                            columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
         save_tsv(participant_df, output)
 
     def generate_metadata_file_tasks(self, output):
@@ -85,7 +86,7 @@ class AnDOTemplateData(AnDOData):
         session_df = pd.DataFrame([
                      ['session_id', 'acq_time', 'systolic_blood_pressure'],
                      ['ses - 01', '2009 - 06 - 15T13: 45:30', 120]],
-                    columns= ['session_id', 'acq_time', 'systolic_blood_preassure'])
+                    columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
         save_tsv(session_df, output)
 
     def generate_metadata_file_probes(self, output):
@@ -94,26 +95,27 @@ class AnDOTemplateData(AnDOData):
                     ['e380b', 'multi - shank', 1.5, 'iridium - oxide', 0, 100, 0, 'circle', 20],
                     ['t420a', 'tetrode', 3.6, 'iridium - oxide', 0, 200, 0, 'circle', 20],
                     ['t420b', 'tetrode', 7, 'iridium - oxide', 500, 0, 0, 'circle', 20]],
-                    columns = ['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
+                    columns=['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
         save_tsv(probes_df, output)
 
     def generate_metadata_file_channels(self, output):
-        channels_df = pd.DataFrame(
-                [[129, 1, 'neuronal', 'mV', 30000, 30, 'good'],
+        channels_df = pd.DataFrame([
+                [129, 1, 'neuronal', 'mV', 30000, 30, 'good'],
                 [130, 3, 'neuronal', 'mV', 30000, 30, 'good'],
                 [131, 5, 'neuronal', 'mV', 30000, 30, 'bad'],
                 [132, 'n/a', 'sync_pulse', 'V', 1000, 1, 'n/a']],
                 columns=['channel_id', 'contact_id', 'type', 'units', 'sampling_frequency', 'gain', 'status'])
-        save_tsv(channels_df,output)
+        save_tsv(channels_df, output)
 
     def generate_metadata_file_contacts(self, output):
-        contact_df = pd.DataFrame([[1 , 'e380a' ,0, 1.1, 'iridium-oxide', 0, 0, 0, 'circle', 20],
-                                [2 , 'e380a' ,0, 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
-                                [3 , 'e380a' ,0, 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
-                                [4 , 'e380a' ,1, 7, 'iridium-oxide', 500, 0, 0, 'circle', 20],
-                                [5 , 'e380a' ,1, 7, 'iridium-oxide', 500, 100, 0, 'circle', 20],
-                                [6 , 'e380a', 1, 7, 'iridium-oxide', 500, 200, 0, 'circle', 20]],
-                                columns = ['contact_id', 'probe_id', 'shank_id', 'impedance', 'material', 'x', 'y', 'z','shape','contact_size'])
+        contact_df = pd.DataFrame([
+                                [1, 'e380a', 0, 1.1, 'iridium-oxide', 0, 0, 0, 'circle', 20],
+                                [2, 'e380a', 0, 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
+                                [3, 'e380a', 0, 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
+                                [4, 'e380a', 1, 7, 'iridium-oxide', 500, 0, 0, 'circle', 20],
+                                [5, 'e380a', 1, 7, 'iridium-oxide', 500, 100, 0, 'circle', 20],
+                                [6, 'e380a', 1, 7, 'iridium-oxide', 500, 200, 0, 'circle', 20]],
+                                columns=['contact_id', 'probe_id', 'shank_id', 'impedance', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
         save_tsv(contact_df, output)
 
     def generate_metadata_file_ephys(self, output):
@@ -272,13 +274,7 @@ def generate_struct(csv_file, pathToDir):
     df = extract_structure_from_csv(csv_file)
 
     df = df[ESSENTIAL_CSV_COLUMNS]
-    print(csv_file)
 
-    #Test csv file extractor panda edition
-    read = pd.read_csv(csv_file)
-    data_array = np.array(read)
-    for elem in data_array:
-        print(elem[0])
     for session_kwargs in df.to_dict('index').values():
         session = AnDOData(**session_kwargs)
         session.basedir = pathToDir

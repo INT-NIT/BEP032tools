@@ -69,7 +69,7 @@ class AnDOData:
 
         # initialize data and metadata structures
         self.data = {}
-        self.mdata= {}
+        self.mdata = {}
 
         self._basedir = None
 
@@ -205,7 +205,7 @@ class AnDOData:
         raise NotImplementedError()
 
     def generate_metadata_file_tasks(self, output):
-        #here we want to call save_json and save_tsv()
+        # here we want to call save_json and save_tsv()
         raise NotImplementedError()
 
     def generate_metadata_file_dataset_description(self, output):
@@ -350,13 +350,7 @@ def generate_struct(csv_file, pathToDir):
     df = extract_structure_from_csv(csv_file)
 
     df = df[ESSENTIAL_CSV_COLUMNS]
-    print(csv_file)
 
-    #Test csv file extractor panda edition
-    read = pd.read_csv(csv_file)
-    data_array = np.array(read)
-    for elem in data_array:
-        print(elem[0])
     for session_kwargs in df.to_dict('index').values():
         session = AnDOData(**session_kwargs)
         session.basedir = pathToDir
