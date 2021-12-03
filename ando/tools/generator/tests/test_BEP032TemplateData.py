@@ -1,9 +1,9 @@
 import unittest
-from ando.tools.generator.AnDOTemplateData import *
+from ando.tools.generator.BEP032TemplateData import *
 
 from ando.tools.generator.tests.utils import *
 
-class Test_AnDOTemplateData(unittest.TestCase):
+class Test_BEP032TemplateData(unittest.TestCase):
 
 
     def setUp(self):
@@ -19,7 +19,7 @@ class Test_AnDOTemplateData(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = AnDOTemplateData(self.sub_id, self.ses_id)
+        d = BEP032TemplateData(self.sub_id, self.ses_id)
         d.basedir = project
 
         self.ando_data = d

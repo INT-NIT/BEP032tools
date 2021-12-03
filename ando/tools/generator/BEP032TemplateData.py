@@ -33,7 +33,7 @@ ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
 OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 
-class AnDOTemplateData(AnDOData):
+class BEP032TemplateData(AnDOData):
     """
     Representation of a AnDO Data, as specified by in the [ephys BEP](https://bids.neuroimaging.io/bep032)
 
@@ -63,7 +63,8 @@ class AnDOTemplateData(AnDOData):
         participant_df = pd.DataFrame([
             ['sub-'+ self.sub_id, 'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00']],
             columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
-        save_tsv(participant_df, output)
+        if not output.with_suffix('.tsv').exists():
+            save_tsv(participant_df, output)
 
     def generate_metadata_file_tasks(self, output):
         # here we want to call save_json and save_tsv()
@@ -87,7 +88,8 @@ class AnDOTemplateData(AnDOData):
             ['session_id', 'acq_time', 'systolic_blood_pressure'],
             ['ses-'+self.ses_id, '2009-06-15T13:45:30', '120']],
             columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
-        save_tsv(session_df, output)
+        if  not output.with_suffix('.tsv').exists():
+            save_tsv(session_df, output)
 
     def generate_metadata_file_probes(self, output):
         probes_df = pd.DataFrame([
@@ -280,7 +282,7 @@ def generate_struct(csv_file, pathToDir):
         f.touch()
 
     for session_kwargs in df.to_dict('index').values():
-        session = AnDOTemplateData(**session_kwargs)
+        session = BEP032TemplateData(**session_kwargs)
         session.basedir = pathToDir
         session.generate_structure()
         session.register_data_files(*test_data_files)
