@@ -11,6 +11,7 @@ import ando.AnDOChecker
 
 try:
     import pandas as pd
+
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
@@ -23,7 +24,7 @@ from ando.tools.generator.utils import *
 from ando.rulesStructured import METADATA_EXTENSIONS
 from ando.tools.generator.AnDOGenerator import AnDOData
 
-METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
+METADATA_LEVELS = {i: r['authorized_metadata_files'] for i, r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
 
 # TODO: These can be extracted from the AnDOData init definition. Check out the
@@ -54,15 +55,14 @@ class AnDOTemplateData(AnDOData):
 
 
     """
+
     def __init__(self, sub_id, ses_id):
         super().__init__(sub_id, ses_id, modality='ephys')
 
     def generate_metadata_file_participants(self, output):
         participant_df = pd.DataFrame([
-                            ['sub-P001', 'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00'],
-                            ['sub-P002', 'rattus norvegicus', 'p25', 'M', '2005-11-01T00:00:00'],
-                            ['sub-P002', 'rattus norvegicus', 'p30', 'F', '2006-01-01T00:00:00']],
-                            columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
+            ['sub-'+ self.sub_id, 'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00']],
+            columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
         save_tsv(participant_df, output)
 
     def generate_metadata_file_tasks(self, output):
@@ -84,68 +84,69 @@ class AnDOTemplateData(AnDOData):
 
     def generate_metadata_file_sessions(self, output):
         session_df = pd.DataFrame([
-                    ['session_id', 'acq_time', 'systolic_blood_pressure'],
-                    ['ses - 01', '2009 - 06 - 15T13: 45:30', 120]],
-                    columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
+            ['session_id', 'acq_time', 'systolic_blood_pressure'],
+            ['ses-'+self.ses_id, '2009-06-15T13:45:30', '120']],
+            columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
         save_tsv(session_df, output)
 
     def generate_metadata_file_probes(self, output):
         probes_df = pd.DataFrame([
-                    ['e380a', 'multi-shank', 0, 'iridium-oxide', 0, 0, 0, 'circle', 20],
-                    ['e380b', 'multi-shank', 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
-                    ['t420a', 'tetrode', 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
-                    ['t420b', 'tetrode', 7, 'iridium-oxide', 500, 0, 0, 'circle', 20]],
-                    columns=['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
+            ['e380a', 'multi-shank', 0, 'iridium-oxide', 0, 0, 0, 'circle', 20],
+            ['e380b', 'multi-shank', 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
+            ['t420a', 'tetrode', 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
+            ['t420b', 'tetrode', 7, 'iridium-oxide', 500, 0, 0, 'circle', 20]],
+            columns=['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
         save_tsv(probes_df, output)
 
     def generate_metadata_file_channels(self, output):
         channels_df = pd.DataFrame([
-                [129, 1, 'neuronal', 'mV', 30000, 30, 'good'],
-                [130, 3, 'neuronal', 'mV', 30000, 30, 'good'],
-                [131, 5, 'neuronal', 'mV', 30000, 30, 'bad'],
-                [132, 'n/a', 'sync_pulse', 'V', 1000, 1, 'n/a']],
-                columns=['channel_id', 'contact_id', 'type', 'units', 'sampling_frequency', 'gain', 'status'])
+            [129, 1, 'neuronal', 'mV', 30000, 30, 'good'],
+            [130, 3, 'neuronal', 'mV', 30000, 30, 'good'],
+            [131, 5, 'neuronal', 'mV', 30000, 30, 'bad'],
+            [132, 'n/a', 'sync_pulse', 'V', 1000, 1, 'n/a']],
+            columns=['channel_id', 'contact_id', 'type', 'units', 'sampling_frequency', 'gain', 'status'])
         save_tsv(channels_df, output)
 
     def generate_metadata_file_contacts(self, output):
         contact_df = pd.DataFrame([
-                                [1, 'e380a', 0, 1.1, 'iridium-oxide', 0, 0, 0, 'circle', 20],
-                                [2, 'e380a', 0, 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
-                                [3, 'e380a', 0, 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
-                                [4, 'e380a', 1, 7, 'iridium-oxide', 500, 0, 0, 'circle', 20],
-                                [5, 'e380a', 1, 7, 'iridium-oxide', 500, 100, 0, 'circle', 20],
-                                [6, 'e380a', 1, 7, 'iridium-oxide', 500, 200, 0, 'circle', 20]],
-                                columns=['contact_id', 'probe_id', 'shank_id', 'impedance', 'material', 'x', 'y', 'z', 'shape', 'contact_size'])
+            [1, 'e380a', 0, 1.1, 'iridium-oxide', 0, 0, 0, 'circle', 20],
+            [2, 'e380a', 0, 1.5, 'iridium-oxide', 0, 100, 0, 'circle', 20],
+            [3, 'e380a', 0, 3.6, 'iridium-oxide', 0, 200, 0, 'circle', 20],
+            [4, 'e380a', 1, 7, 'iridium-oxide', 500, 0, 0, 'circle', 20],
+            [5, 'e380a', 1, 7, 'iridium-oxide', 500, 100, 0, 'circle', 20],
+            [6, 'e380a', 1, 7, 'iridium-oxide', 500, 200, 0, 'circle', 20]],
+            columns=['contact_id', 'probe_id', 'shank_id', 'impedance', 'material', 'x', 'y', 'z', 'shape',
+                     'contact_size'])
         save_tsv(contact_df, output)
 
     def generate_metadata_file_ephys(self, output):
         ephys_dict = {
-                        "PowerLineFrequency": 50,
-                        "PowerLineFrequencyUnit": "Hz",
-                        "Manufacturer": "OpenEphys",
-                        "ManufacturerModelName": "OpenEphys Starter Kit",
-                        "ManufacturerModelVersion": "",
-                        "SamplingFrequency": 30000,
-                        "SamplingFrequencyUnit": "Hz",
-                        "Location": "Institut de Neurosciences de la Timone, Faculté de Médecine, 27, boulevard Jean Moulin, 13005 Marseille - France",
-                        "Software": "Cerebus",
-                        "SoftwareVersion": "1.5.1",
-                        "Creator": "John Doe",
-                        "Maintainer": "John Doe jr.",
-                        "Procedure": {
-                            "Pharmaceuticals": {
-                                "isoflurane": {
-                                    "PharmaceuticalName": "isoflurane",
-                                    "PharmaceuticalDoseAmount": 50,
-                                    "PharmaceuticalDoseUnit": "ug/kg/min",
-                                },
-                                "ketamine": {
-                                    "PharmaceuticalName": "ketamine",
-                                    "PharmaceuticalDoseAmount": 0.1,
-                                    "PharmaceuticalDoseUnit": "ug/kg/min",
-                                },
-                            },
-                        },
+            "PowerLineFrequency": 50,
+            "PowerLineFrequencyUnit": "Hz",
+            "Manufacturer": "OpenEphys",
+            "ManufacturerModelName": "OpenEphys Starter Kit",
+            "ManufacturerModelVersion": "",
+            "SamplingFrequency": 30000,
+            "SamplingFrequencyUnit": "Hz",
+            "Location": "Institut de Neurosciences de la Timone, Faculté de Médecine, 27, boulevard Jean Moulin, 13005 Marseille - France",
+            "Software": "Cerebus",
+            "SoftwareVersion": "1.5.1",
+            "Creator": "John Doe",
+            "Maintainer": "John Doe jr.",
+            "Procedure": {
+                "Pharmaceuticals": {
+                    "isoflurane": {
+                        "PharmaceuticalName": "isoflurane",
+                        "PharmaceuticalDoseAmount": 50,
+                        "PharmaceuticalDoseUnit": "ug/kg/min",
+                    },
+                    "ketamine": {
+                        "PharmaceuticalName": "ketamine",
+                        "PharmaceuticalDoseAmount": 0.1,
+                        "PharmaceuticalDoseUnit": "ug/kg/min",
+                    },
+                },
+            },
         }
         save_json(ephys_dict, output)
 
@@ -274,11 +275,17 @@ def generate_struct(csv_file, pathToDir):
     df = extract_structure_from_csv(csv_file)
 
     df = df[ESSENTIAL_CSV_COLUMNS]
+    test_data_files = [Path('empty_ephy.nix'), Path('empty_ephy.nwb')]
+    for f in test_data_files:
+        f.touch()
 
     for session_kwargs in df.to_dict('index').values():
-        session = AnDOData(**session_kwargs)
+        session = AnDOTemplateData(**session_kwargs)
         session.basedir = pathToDir
         session.generate_structure()
+        session.register_data_files(*test_data_files)
+        session.organize_data_files(mode='copy')
+        session.generate_all_metadata_files()
 
 
 def main():

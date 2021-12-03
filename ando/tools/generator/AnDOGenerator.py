@@ -122,7 +122,7 @@ class AnDOData:
         """
         if not Path(basedir).exists():
             raise ValueError('Base directory does not exist')
-        self._basedir = basedir
+        self._basedir = Path(basedir)
 
     def get_data_folder(self, mode='absolute'):
         """
