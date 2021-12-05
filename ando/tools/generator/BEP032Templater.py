@@ -36,7 +36,8 @@ OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 class BEP032TemplateData(AnDOData):
     """
-    Representation of a AnDO Data, as specified by in the [ephys BEP](https://bids.neuroimaging.io/bep032)
+    Representation of a AnDO Data, as specified by in the
+    [ephys BEP](https://bids.neuroimaging.io/bep032)
 
     The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
     realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
@@ -77,8 +78,10 @@ class BEP032TemplateData(AnDOData):
             "BIDSVersion": "1.6.0",
             "License": "CC BY 4.0",
             "Authors": ["James Bond", "Santa Claus"],
-            "Acknowledgements": " We thank the Rudolf the reindeer, the christmas gnomes and Miss Moneypenny.",
-            "HowToAcknowledge": "Bond J, Claus S (2000) How to deliver 1 Million parcel in one night. https://doi.org/007/007 ",
+            "Acknowledgements": " We thank the Rudolf the reindeer, the christmas gnomes and "
+                                "Miss Moneypenny.",
+            "HowToAcknowledge": "Bond J, Claus S (2000) How to deliver 1 Million parcel in one "
+                                "night. https://doi.org/007/007 ",
             "Funding": ["The north pole fund 007"],
             "ReferencesAndLinks": "https://doi.org/007/007",
         }
@@ -133,7 +136,8 @@ class BEP032TemplateData(AnDOData):
             "ManufacturerModelVersion": "",
             "SamplingFrequency": 30000,
             "SamplingFrequencyUnit": "Hz",
-            "Location": "Institut de Neurosciences de la Timone, Faculté de Médecine, 27, boulevard Jean Moulin, 13005 Marseille - France",
+            "Location": "Institut de Neurosciences de la Timone, Faculté de Médecine, 27, "
+                        "Boulevard Jean Moulin, 13005 Marseille - France",
             "Software": "Cerebus",
             "SoftwareVersion": "1.5.1",
             "Creator": "John Doe",
@@ -167,8 +171,8 @@ class BEP032TemplateData(AnDOData):
         self.generate_metadata_file_participants(self.basedir / f"participants")
 
         self.generate_metadata_file_tasks(self.basedir / f"tasks")
-        self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
-                                             f'sub-{self.sub_id}_sessions')
+        self.generate_metadata_file_sessions(
+            self.get_data_folder().parents[1] / f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
             stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
             if key:
@@ -211,7 +215,7 @@ def create_file(source, destination, mode):
         Destination location of the file.
     mode: str
         File creation mode. Valid parameters are 'copy', 'link' and 'move'.
-        
+
     Raises
     ----------
     ValueError
@@ -230,7 +234,7 @@ def create_file(source, destination, mode):
 def extract_structure_from_csv(csv_file):
     """
     Load csv file that contains folder structure information and return it as pandas.datafram.
-    
+
     Parameters
     ----------
     csv_file: str
@@ -256,7 +260,8 @@ def extract_structure_from_csv(csv_file):
     # Check is the header contains all required names
     if not set(ESSENTIAL_CSV_COLUMNS).issubset(df.columns):
         raise ValueError(f'Csv file ({csv_file}) does not contain required information '
-                         f'({ESSENTIAL_CSV_COLUMNS}). Accepted column names are specified in the BEP.')
+                         f'({ESSENTIAL_CSV_COLUMNS}). '
+                         f'Accepted column names are specified in the BEP.')
 
     return df
 
