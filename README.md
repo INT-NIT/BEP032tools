@@ -25,11 +25,12 @@ AnDOChecker requires:
 
 ### User installation
 
+To include all packages required for the BEP032 & AnDO tools download the repository from https://github.com/INT-NIT/AnDO and run the following in the unpacked version of the repository
 ```bash
->  pip install AnDOChecker
+>  pip install AnDOChecker[tools]
 ```
 
-By installing AnDOChecker all three of the scripts will be installed
+By installing AnDOChecker all four of the scripts will be installed
 
 ### General usage for the AnDOChecker script
 
@@ -85,6 +86,27 @@ OR, in an equivalent manner, you can use the command line interface (CLI) provid
 ```
 -----------
 
+### General usage for the Templater script 
+
+```term
+usage: BEP032Temlater.py [-h] pathToCsv pathToDir
+
+positional arguments:
+  pathToCsv   Path to your folder
+  pathToDir   Path to your csv file
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+
+OR, in an equivalent manner, you can use the command line interface (CLI) provided with the package:
+
+```bash
+> BEP032Templater data.csv data/
+
+```
+-----------
+
 ### General usage for the viewer script
 
 ```term
@@ -108,6 +130,10 @@ OR, in an equivalent manner, you can use the command line interface (CLI) provid
 > AnDOViewer data/
 
 ```
+
+### Installation issues
+
+In some cases pandas might not be properly installed via pip. In this case we recommend installing pandas via conda.
 
 # Development
 
