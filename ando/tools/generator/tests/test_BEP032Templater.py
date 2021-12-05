@@ -1,5 +1,5 @@
 import unittest
-from ando.tools.generator.BEP032TemplateData import *
+from ando.tools.generator.BEP032Templater import *
 
 from ando.tools.generator.tests.utils import *
 

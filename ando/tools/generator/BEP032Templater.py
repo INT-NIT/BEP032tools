@@ -85,10 +85,9 @@ class BEP032TemplateData(AnDOData):
 
     def generate_metadata_file_sessions(self, output):
         session_df = pd.DataFrame([
-            ['session_id', 'acq_time', 'systolic_blood_pressure'],
             ['ses-'+self.ses_id, '2009-06-15T13:45:30', '120']],
-            columns=['session_id', 'acq_time', 'systolic_blood_preassure'])
-        if  not output.with_suffix('.tsv').exists():
+            columns=['session_id', 'acq_time', 'systolic_blood_pressure'])
+        if not output.with_suffix('.tsv').exists():
             save_tsv(session_df, output)
 
     def generate_metadata_file_probes(self, output):
@@ -277,7 +276,7 @@ def generate_struct(csv_file, pathToDir):
     df = extract_structure_from_csv(csv_file)
 
     df = df[ESSENTIAL_CSV_COLUMNS]
-    test_data_files = [Path('empty_ephy.nix'), Path('empty_ephy.nwb')]
+    test_data_files = [Path('empty_ephy.nix')]
     for f in test_data_files:
         f.touch()
 
@@ -288,6 +287,10 @@ def generate_struct(csv_file, pathToDir):
         session.register_data_files(*test_data_files)
         session.organize_data_files(mode='copy')
         session.generate_all_metadata_files()
+
+    # cleanup
+    for f in test_data_files:
+        f.unlink(missing_ok=True)
 
 
 def main():
