@@ -3,8 +3,8 @@ from ando.tools.generator.BEP032Templater import *
 
 from ando.tools.generator.tests.utils import *
 
-class Test_BEP032TemplateData(unittest.TestCase):
 
+class Test_BEP032TemplateData(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -12,7 +12,7 @@ class Test_BEP032TemplateData(unittest.TestCase):
         self.ses_id = 'ses1'
         self.tasks = None
         self.runs = None
-        
+
         sources = test_dir / 'sources'
         sources.mkdir()
         project = test_dir / 'project-A'
@@ -126,6 +126,7 @@ class Test_BEP032TemplateData(unittest.TestCase):
     def tearDown(self):
         initialize_test_directory(clean=True)
 
+
 class Test_ReadCsv(unittest.TestCase):
 
     def setUp(self):
@@ -171,4 +172,3 @@ class Test_GenerateStruct(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
