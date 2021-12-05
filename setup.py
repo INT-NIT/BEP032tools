@@ -25,6 +25,7 @@ setup(
     entry_points={
         'console_scripts': ['AnDOChecker=ando.AnDOChecker:main',
                             'AnDOGenerator=ando.tools.generator.AnDOGenerator:main',
+                            'BEP032Templater=ando.tools.generator.BEP032Templater:main',
                             'AnDOViewer=ando.tools.viewer.AnDOViewer:main'],
     },
     python_requires='>=3.6',

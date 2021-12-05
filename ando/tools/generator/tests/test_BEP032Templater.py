@@ -1,9 +1,10 @@
 import unittest
-from ando.tools.generator.AnDOGenerator import *
+from ando.tools.generator.BEP032Templater import *
 
 from ando.tools.generator.tests.utils import *
 
-class Test_AnDOData(unittest.TestCase):
+
+class Test_BEP032TemplateData(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -11,14 +12,14 @@ class Test_AnDOData(unittest.TestCase):
         self.ses_id = 'ses1'
         self.tasks = None
         self.runs = None
-        
+
         sources = test_dir / 'sources'
         sources.mkdir()
         project = test_dir / 'project-A'
         project.mkdir()
         self.basedir = project
 
-        d = AnDOData(self.sub_id, self.ses_id)
+        d = BEP032TemplateData(self.sub_id, self.ses_id)
         d.basedir = project
 
         self.ando_data = d
@@ -117,22 +118,10 @@ class Test_AnDOData(unittest.TestCase):
 
     def test_implemented_error_raised(self):
         path = ""
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_sessions(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_tasks(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_dataset_description(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_participants(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_probes(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_channels(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_metadata_file_contacts(path)
-        with self.assertRaises(NotImplementedError):
-            self.ando_data.generate_all_metadata_files()
+        self.test_generate_structure()
+        self.ando_data.register_data_files(*self.test_data_files)
+        self.ando_data.organize_data_files()
+        self.ando_data.generate_all_metadata_files()
 
     def tearDown(self):
         initialize_test_directory(clean=True)
@@ -183,4 +172,3 @@ class Test_GenerateStruct(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
