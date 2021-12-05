@@ -166,8 +166,8 @@ class BEP032TemplateData(AnDOData):
         dest_path = self.get_data_folder(mode='absolute')
 
         self.generate_structure()
-        self.generate_metadata_file_dataset_description(self.basedir
-                                                        / "dataset_description")
+        self.generate_metadata_file_dataset_description(
+            self.basedir / "dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
 
         self.generate_metadata_file_tasks(self.basedir / f"tasks")
