@@ -1,0 +1,6 @@
+{
+    "ephys_file": "sub-{subject}/[ses-{session}]/ephys/sub-{subject}[_ses-{session}]_sample-{sample}_task-{task}[_run-{run}]_{suffix}.{extension}",
+    "ephys_file_rel_path": "ephys/sub-{subject}[_ses-{session}]_sample-{sample}_task-{task}[_run-{run}]_{suffix}.{extension}",
+    "scans_tsv": "sub-{subject}/[ses-{session}]/sub-{subject}[_ses-{session}]_scans.tsv",
+    "sessions_tsv": "sub-{subject}/sub-{subject}_sessions.tsv"
+}
