@@ -3,7 +3,7 @@ import os
 from ..bidsname import get_bidsname_config, init_layout, get_ephys_filename
 
 
-def test_get_bidsname_config():
+def test_get_bidsname_config_smoke_test():
     bidsname_config = get_bidsname_config()
     assert list(bidsname_config.keys()) == [
         "ephys_file",
