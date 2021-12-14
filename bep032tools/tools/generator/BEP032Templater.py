@@ -299,7 +299,8 @@ def generate_struct(csv_file, pathToDir):
 
     # cleanup
     for f in test_data_files:
-        f.unlink(missing_ok=True)
+        if f.exists():
+            f.unlink()
 
 
 def main():
