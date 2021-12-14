@@ -22,7 +22,7 @@ from numpy import genfromtxt
 import numpy as np
 from bep032tools.tools.generator.utils import *
 from bep032tools.rulesStructured import METADATA_EXTENSIONS
-from bep032tools.tools.generator.BEP032Generator import  BEP032Data
+from bep032tools.tools.generator.BEP032Generator import BEP032Data
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i, r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v
@@ -39,9 +39,9 @@ class BEP032TemplateData(BEP032Data):
     Representation of a BEP032 Data, as specified by in the
     [ephys BEP](https://bids.neuroimaging.io/bep032)
 
-    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a single
-    realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
-    BEP032Data objects are required. To include multiple realizations of tasks
+    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
+    single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
+    multiple BEP032Data objects are required. To include multiple realizations of tasks
     or runs, call the `register_data` method for each set of parameters separately.
 
     Parameters
