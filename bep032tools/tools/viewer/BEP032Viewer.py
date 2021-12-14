@@ -49,7 +49,7 @@ def show_sessions(directory):
 
 def main():
     """
-    usage: AnDOViewer.py [-h] [-S] [-Se] [-Su] [-Ss] pathToDir
+    usage: BEP032Viewer.py [-h] [-S] [-Se] [-Su] [-Ss] pathToDir
 
     positional arguments:
     pathToDir             Path to the folder to show

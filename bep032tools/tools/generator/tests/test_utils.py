@@ -5,9 +5,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from ando.tools.generator.tests.utils import (initialize_test_directory,
+from bep032tools.tools.generator.tests.utils import (initialize_test_directory,
                                               test_directory)
-from ando.tools.generator.utils import (save_tsv, save_json,
+from bep032tools.tools.generator.utils import (save_tsv, save_json,
                                         merge_dfs_by_index, merge_dict)
 
 

@@ -3,13 +3,13 @@ import subprocess as sp
 import unittest
 from unittest import TestCase
 from pathlib import Path
-from ando import AnDOChecker as CHK
+from bep032tools import BEP032Validator as CHK
 
 try:
-    sp.run(['AnDOChecker', '-h'], stdout=sp.PIPE)
-    HASANDO = True
+    sp.run(['BEP032Validator', '-h'], stdout=sp.PIPE)
+    HASBEP032tools = True
 except:
-    HASANDO = False
+    HASBEP032tools = False
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -142,33 +142,33 @@ class TestCLI(TestCase):
     def setUp(self):
         self.valid_dir = Path(dir_path) / "dataset" / "exp-valid"
 
-    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
-    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASBEP032tools, reason="requires BEP032tools to be installed")
+    # @pytest.mark.skipif(HASBEP032tools, reason="requires BEP032tools to be installed")
     def test_simple_api(self):
-        res = sp.run(['AnDOChecker', '-v', str(self.valid_dir)], stdout=sp.PIPE)
+        res = sp.run(['BEP032Validator', '-v', str(self.valid_dir)], stdout=sp.PIPE)
         self.assertEqual(res.returncode, 0)
         self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
-    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
-    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASBEP032tools, reason="requires BEP032tools to be installed")
+    # @pytest.mark.skipif(HASBEP032tools, reason="requires BEP032tools to be installed")
     def test_current_dir(self):
         self.switch_dir(self.valid_dir)
-        res = sp.run(['AnDOChecker', '-v', '.'], stdout=sp.PIPE)
+        res = sp.run(['BEP032Validator', '-v', '.'], stdout=sp.PIPE)
         self.assertEqual(res.returncode, 0)
         self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
-    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
-    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASBEP032tools, reason="requires BEP032tools to be installed")
+    # @pytest.mark.skipif(HASBEP032tools, reason="requires BEP032tools to be installed")
     def test_current_dir_slash(self):
         self.switch_dir(self.valid_dir)
-        res = sp.run(['AnDOChecker', '-v', './'], stdout=sp.PIPE)
+        res = sp.run(['BEP032Validator', '-v', './'], stdout=sp.PIPE)
         self.assertEqual(res.returncode, 0)
         self.assertTrue(res.stdout.decode().startswith('Congratulations!'))
 
-    @unittest.skipIf(not HASANDO, reason="requires AnDO to be installed")
-    # @pytest.mark.skipif(HASANDO, reason="requires AnDO to be installed")
+    @unittest.skipIf(not HASBEP032tools, reason="requires BEP032tools to be installed")
+    # @pytest.mark.skipif(HASBEP032tools, reason="requires BEP032tools to be installed")
     def test_high_level_dir(self):
         self.switch_dir(self.valid_dir / "sub-enya")
-        res = sp.run(['AnDOChecker', '-v', '..'], stdout=sp.PIPE)
+        res = sp.run(['BEP032Validator', '-v', '..'], stdout=sp.PIPE)
         self.assertEqual(res.returncode, 0)
         self.assertTrue(res.stdout.decode().startswith('Congratulations!'))

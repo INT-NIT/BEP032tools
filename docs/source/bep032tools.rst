@@ -1,4 +1,4 @@
-AnDO package
+BEP032tools package
 ============
 Packages
 -----------
@@ -6,14 +6,14 @@ Packages
 .. toctree::
    :maxdepth: 10
 
-   ando.tools
+   bep032tools.tools
 
 .. _to_checker:
 
-ando.AnDOChecker module
+bep032tools.BEP032Validator module
 -----------------------
 
-.. automodule:: ando.AnDOChecker
+.. automodule:: bep032tools.BEP032Validator
    :members:
    :undoc-members:
    :show-inheritance:

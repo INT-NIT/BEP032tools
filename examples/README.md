@@ -17,7 +17,7 @@ import os
 import random
 import string
 from random import randint
-# create random numbre of N digits
+# create random number of N digits
 def random_with_N_digits(n):
 	range_start =  10**(n-1)
 	range_end = (10**n)-1

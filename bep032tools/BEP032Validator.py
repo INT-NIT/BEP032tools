@@ -3,7 +3,7 @@ import os.path as op
 import re
 import argparse
 import pathlib
-from ando.rulesStructured import RULES_SET
+from bep032tools.rulesStructured import RULES_SET
 
 
 def is_valid(input_directory):
@@ -176,14 +176,14 @@ def build_rule_regexp(rules):
 
 def main():
     """
-    Main file of the AnDOChecker.
+    Main file of the BEP032Validator.
 
     Examples
     ----------
 
     Usage via command line:
 
-    AnDOChecker.py [-h] [-v] path
+    BEP032Validator.py [-h] [-v] path
 
     positional arguments:
     path
