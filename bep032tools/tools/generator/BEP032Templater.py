@@ -7,7 +7,7 @@ import os
 import re
 import json
 
-import ando.AnDOChecker
+import bep032tools.BEP032Validator
 
 try:
     import pandas as pd
@@ -15,33 +15,33 @@ try:
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
-from ando.AnDOChecker import build_rule_regexp
-from ando.rulesStructured import RULES_SET
-from ando.rulesStructured import DATA_EXTENSIONS
+from bep032tools.BEP032Validator import build_rule_regexp
+from bep032tools.rulesStructured import RULES_SET
+from bep032tools.rulesStructured import DATA_EXTENSIONS
 from numpy import genfromtxt
 import numpy as np
-from ando.tools.generator.utils import *
-from ando.rulesStructured import METADATA_EXTENSIONS
-from ando.tools.generator.AnDOGenerator import AnDOData
+from bep032tools.tools.generator.utils import *
+from bep032tools.rulesStructured import METADATA_EXTENSIONS
+from bep032tools.tools.generator.BEP032Generator import  BEP032Data
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i, r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v
                           in values}
 
-# TODO: These can be extracted from the AnDOData init definition. Check out the
+# TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
 OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 
-class BEP032TemplateData(AnDOData):
+class BEP032TemplateData(BEP032Data):
     """
-    Representation of a AnDO Data, as specified by in the
+    Representation of a BEP032 Data, as specified by in the
     [ephys BEP](https://bids.neuroimaging.io/bep032)
 
-    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
+    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a single
     realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
-    AnDOData objects are required. To include multiple realizations of tasks
+    BEP032Data objects are required. To include multiple realizations of tasks
     or runs, call the `register_data` method for each set of parameters separately.
 
     Parameters
@@ -188,7 +188,7 @@ class BEP032TemplateData(AnDOData):
 
     def validate(self):
         """
-        Validate the generated structure using the AnDO validator
+        Validate the generated structure using the BEP032 validator
 
         Parameters
         ----------
@@ -200,7 +200,7 @@ class BEP032TemplateData(AnDOData):
         bool
             True if validation was successful. False if it failed.
         """
-        ando.AnDOChecker.is_valid(self.basedir)
+        bep032tools.BEP032Validator.is_valid(self.basedir)
 
 
 def create_file(source, destination, mode):
@@ -243,10 +243,10 @@ def extract_structure_from_csv(csv_file):
     Returns
     -------
     pandas.dataframe
-        A dataframe containing the essential columns for creating an AnDO structure
+        A dataframe containing the essential columns for creating an BEP032 structure
     """
     if not HAVE_PANDAS:
-        raise ImportError('Extraction of ando structure from csv requires pandas.')
+        raise ImportError('Extraction of bep032 structure from csv requires pandas.')
 
     df = pd.read_csv(csv_file, dtype=str)
 
@@ -308,7 +308,7 @@ def main():
     Notes
     ----------
 
-    Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
+    Usage via command line: BEP032Generator.py [-h] pathToCsv pathToDir
 
     positional arguments:
         pathToCsv   Path to your csv file

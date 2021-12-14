@@ -25,7 +25,7 @@ setup(
     entry_points={
         'console_scripts': ['BEP032Validator=bep032tools.BEP032Validator:main',
                             'BEP032Generator=bep032tools.tools.generator.BEP032Generator:main',
-                            'BEP032Templater=ando.tools.generator.BEP032Templater:main',
+                            'BEP032Templater=bep032tools.tools.generator.BEP032Templater:main',
                             'BEP032Viewer=bep032tools.tools.viewer.BEP032Viewer:main'],
     },
     python_requires='>=3.6',

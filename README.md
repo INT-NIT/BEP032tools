@@ -25,7 +25,7 @@ BEP032Validator requires:
 
 ### User installation
 
-To include all packages required for the BEP032 & AnDO tools download the repository from https://github.com/INT-NIT/AnDO and run the following in the unpacked version of the repository
+To include all packages required for the BEP032 tools download the repository from https://github.com/INT-NIT/BEP032tools and run the following in the unpacked version of the repository
 ```bash
 >  pip install BEP032Validator
 ```
