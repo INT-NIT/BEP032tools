@@ -136,7 +136,7 @@ class TestInputLevels(TestCase):
 
 class TestCLI(TestCase):
     @classmethod
-    def switch_dir(self, directory):
+    def switch_dir(cls, directory):
         os.chdir(directory)
 
     def setUp(self):
