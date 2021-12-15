@@ -1,7 +1,11 @@
+import os
 import unittest
-from bep032tools.tools.generator.BEP032Generator import *
+from pathlib import Path
 
-from bep032tools.tools.generator.tests.utils import *
+from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
+                                               generate_simple_csv_file)
+from bep032tools.generator.BEP032Generator import (BEP032Data, extract_structure_from_csv,
+                                                   generate_struct)
 
 
 class Test_BEP032Data(unittest.TestCase):

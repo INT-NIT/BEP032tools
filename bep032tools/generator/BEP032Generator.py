@@ -1,12 +1,10 @@
-import glob
 from pathlib import Path
 import shutil
-import warnings
 import argparse
 import os
 import re
 
-import bep032tools.BEP032Validator
+import bep032tools.validator.BEP032Validator
 
 try:
     import pandas as pd
@@ -14,13 +12,9 @@ try:
 except ImportError:
     HAVE_PANDAS = False
 
-from numpy import genfromtxt
-import numpy as np
-
-from bep032tools.BEP032Validator import build_rule_regexp
+from bep032tools.validator.BEP032Validator import build_rule_regexp
 from bep032tools.rulesStructured import RULES_SET
 from bep032tools.rulesStructured import DATA_EXTENSIONS
-from bep032tools.rulesStructured import METADATA_EXTENSIONS
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
@@ -269,7 +263,7 @@ class BEP032Data:
         bool
             True if validation was successful. False if it failed.
         """
-        bep032tools.BEP032Validator.is_valid(self.basedir)
+        bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
 
 def create_file(source, destination, mode):
