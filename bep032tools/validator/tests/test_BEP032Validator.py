@@ -130,7 +130,7 @@ class TestInputLevels(TestCase):
         self.assertEqual(CHK.is_valid(path)[0], True)
 
     def test_wrong_dir_trailing_slash(self):
-        path = str(self.valid_dir) + '..' + os.path.sep
+        path = os.path.join(str(self.valid_dir), '..') + os.path.sep
         self.assertEqual(CHK.is_valid(path)[0], False)
 
 
