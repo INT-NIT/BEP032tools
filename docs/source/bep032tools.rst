@@ -1,19 +1,21 @@
-BEP032tools package
-============
-Packages
+bep032tools package
+=========================
+
+Subpackages
 -----------
 
 .. toctree::
    :maxdepth: 10
 
-   bep032tools.tools
+    bep032tools.validator
+    bep032tools.generator
+    bep032tools.viewer
 
-.. _to_checker:
 
-bep032tools.BEP032Validator module
------------------------
+Module contents
+---------------
 
-.. automodule:: bep032tools.BEP032Validator
+.. automodule:: bep032tools
    :members:
    :undoc-members:
    :show-inheritance:

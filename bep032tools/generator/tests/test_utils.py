@@ -5,10 +5,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from bep032tools.tools.generator.tests.utils import (initialize_test_directory,
-                                              test_directory)
-from bep032tools.tools.generator.utils import (save_tsv, save_json,
-                                        merge_dfs_by_index, merge_dict)
+from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory)
+from bep032tools.generator.utils import (save_tsv, save_json, merge_dfs_by_index, merge_dict)
 
 
 class TestUtils(unittest.TestCase):

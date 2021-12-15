@@ -6,7 +6,7 @@
 The BEP032 project: a repository for tools related to the BIDS-animal-ephys Extension Proposal (BEP032)
 =======================================================================================================
 
-April 2021
+December 2021
 
 The BEP032tools project (previously called Animal Data Organization; AnDO) is a project initiated at the Institut de Neurosciences de la Timone, in Marseille, France, in order to set up a standardization of the experimental data recorded in animal models. Since its launch in early 2020, its aims have significantly evolved following these axes:
 
@@ -14,7 +14,7 @@ The BEP032tools project (previously called Animal Data Organization; AnDO) is a 
 
  - second, after discussions within the group, we have initiated a specific standardization effort for electrophysiology, as a BIDS Extension Proposal ; we are actively looking for feedback from the community on this proposal, so feel free to directly comment in the document that details the data and metadata organization: https://bids.neuroimaging.io/bep032.
 
-At this moment, this repository provides several tools, amongst them a validator (:ref:`the BEP032Validator <to_checker>`) and generator functions for user-friendly setup of an BEP032 structure. The validator complies with the latest specifications described in the BEP032 document. Please note that this validator is a temporary tool and to be used until BEP032 is officially included in BIDS. From then on the official BIDS validator will replace the BEP032Validator. We are committed to keeping the BEP032tools up to date to follow the latest modifications of the BEP032 that will occur to cope with the feedback from the community.
+At this moment, this repository provides several tools, amongst them a validator (:ref:`the BEP032Validator <to_validator>`) and generator functions for user-friendly setup of an BEP032 structure. The validator complies with the latest specifications described in the BEP032 document. Please note that this validator is a temporary tool and to be used until BEP032 is officially included in BIDS. From then on the official BIDS validator will replace the BEP032Validator. We are committed to keeping the BEP032tools up to date to follow the latest modifications of the BEP032 that will occur to cope with the feedback from the community.
 
 Example datasets
 ================
@@ -31,12 +31,15 @@ Real examples of datasets that are organized following the BEP032 rules are avai
 Available tools
 ===============
 
-:ref:`BEP032Validator <to_checker>`:
+:ref:`BEP032Validator <to_validator>`:
    - Checks the validity of a dataset with respect to the BIDS-animal-ephys BEP specifications. The specifications that define what is checked by this function is available in the following document: https://bids.neuroimaging.io/bep032
 
 
 :ref:`BEP032Generator <to_generator>`:
-   - Generates a BIDS-animal-ephys folder structure that follows the BEP03 specifications with a overview CSV files and optional metadata files as input.
+   - Generates a BIDS-animal-ephys folder structure that follows the BEP03 specifications with a overview CSV files and optional metadata files as input. The provided framework requires project specific extension for production.
+
+:ref:`BEP032Templater <to_templater>`:
+   - Generates a dummy BEP032 structure to be manually adjusted to a project.
 
 -----------
 

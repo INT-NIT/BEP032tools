@@ -3,7 +3,7 @@ import subprocess as sp
 import unittest
 from unittest import TestCase
 from pathlib import Path
-from bep032tools import BEP032Validator as CHK
+from bep032tools.validator import BEP032Validator as CHK
 
 try:
     sp.run(['BEP032Validator', '-h'], stdout=sp.PIPE)
@@ -121,7 +121,7 @@ class TestInputLevels(TestCase):
 
     def test_current_dir_input(self):
         self.switch_dir(self.valid_dir)
-        path = Path('.')
+        path = Path('')
         self.assertEqual(CHK.is_valid(path)[0], True)
 
     def test_lower_input_dir(self):
@@ -130,13 +130,13 @@ class TestInputLevels(TestCase):
         self.assertEqual(CHK.is_valid(path)[0], True)
 
     def test_wrong_dir_trailing_slash(self):
-        path = Path('./')
+        path = os.path.join(str(self.valid_dir), '..') + os.path.sep
         self.assertEqual(CHK.is_valid(path)[0], False)
 
 
 class TestCLI(TestCase):
     @classmethod
-    def switch_dir(self, directory):
+    def switch_dir(cls, directory):
         os.chdir(directory)
 
     def setUp(self):

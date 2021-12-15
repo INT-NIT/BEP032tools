@@ -1,7 +1,6 @@
 import json
 import re
 import shutil
-from collections import defaultdict
 from pathlib import Path
 
 import pandas as pd
@@ -9,7 +8,7 @@ from pynwb import NWBHDF5IO
 from pynwb.ecephys import ElectricalSeries
 from tqdm import tqdm
 
-from bep032tools.BEP032Validator import is_valid
+from bep032tools.validator.BEP032Validator import is_valid
 from .bidsconverter import BidsConverter
 
 
