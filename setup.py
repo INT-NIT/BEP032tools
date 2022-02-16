@@ -36,7 +36,7 @@ setup(
                             'BEP032Templater=bep032tools.generator.BEP032Templater:main',
                             'BEP032Viewer=bep032tools.viewer.BEP032Viewer:main'],
     },
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     extras_require={
         'tools': ['pandas', 'pynwb'],
         'test': ['pytest', 'datalad']
