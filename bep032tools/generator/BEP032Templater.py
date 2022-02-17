@@ -256,43 +256,6 @@ def extract_structure_from_csv(csv_file):
 
     return df
 
-#
-# def generate_struct(csv_file, pathToDir):
-#     """
-#     Create structure with csv file given in argument
-#     This file must contain a header row specifying the provided data. Accepted titles are
-#     defined in the BEP.
-#     Essential information of the following attributes needs to be present.
-#     Essential columns are 'sub_id' and 'ses_id'.
-#
-#     Parameters
-#     ----------
-#     csv_file: str
-#         Csv file that contains a list of directories to create.
-#     pathToDir: str
-#         Path to directory where the directories will be created.
-#     """
-#
-#     df = extract_structure_from_csv(csv_file)
-#
-#     df = df[ESSENTIAL_CSV_COLUMNS]
-#     test_data_files = [Path('empty_ephy.nix')]
-#     for f in test_data_files:
-#         f.touch()
-#
-#     for session_kwargs in df.to_dict('index').values():
-#         session = BEP032TemplateData(**session_kwargs)
-#         session.basedir = pathToDir
-#         session.generate_structure()
-#         session.register_data_files(*test_data_files)
-#         session.organize_data_files(mode='copy')
-#         session.generate_all_metadata_files()
-#
-#     # cleanup
-#     for f in test_data_files:
-#         if f.exists():
-#             f.unlink()
-
 
 def main():
     """

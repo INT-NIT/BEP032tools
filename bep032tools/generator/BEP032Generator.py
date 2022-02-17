@@ -22,7 +22,7 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_file']
 
 
 class BEP032Data:
@@ -273,23 +273,31 @@ class BEP032Data:
         defined in the BEP.
         Essential information of the following attributes needs to be present.
         Essential columns are 'sub_id' and 'ses_id'.
+        Optional columns are 'runs', 'tasks' and 'data_file' (only single file per sub_id, ses_id
+        combination supported). 'data_file' needs to be a valid path to a nix or nwb file.
 
         Parameters
         ----------
         csv_file: str
-            Csv file that contains a list of directories to create.
+            Csv file that contains sub_id and ses_id and optional columns
         pathToDir: str
             Path to directory where the directories will be created.
         """
 
         df = extract_structure_from_csv(csv_file)
-
         df = df[ESSENTIAL_CSV_COLUMNS]
 
+        organize_data = 'data_file' in df
+
         for session_kwargs in df.to_dict('index').values():
+            if organize_data:
+                data_file = session_kwargs.pop('data_file')
             session = cls(**session_kwargs)
             session.basedir = pathToDir
             session.generate_structure()
+            if organize_data:
+                session.register_data_files([data_file])
+                session.organize_data_files(mode='copy')
             try:
                 session.generate_all_metadata_files()
             except NotImplementedError:
