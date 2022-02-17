@@ -265,6 +265,36 @@ class BEP032Data:
         """
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
+    @classmethod
+    def generate_struct(cls, csv_file, pathToDir):
+        """
+        Create structure with csv file given in argument
+        This file must contain a header row specifying the provided data. Accepted titles are
+        defined in the BEP.
+        Essential information of the following attributes needs to be present.
+        Essential columns are 'sub_id' and 'ses_id'.
+
+        Parameters
+        ----------
+        csv_file: str
+            Csv file that contains a list of directories to create.
+        pathToDir: str
+            Path to directory where the directories will be created.
+        """
+
+        df = extract_structure_from_csv(csv_file)
+
+        df = df[ESSENTIAL_CSV_COLUMNS]
+
+        for session_kwargs in df.to_dict('index').values():
+            session = cls(**session_kwargs)
+            session.basedir = pathToDir
+            session.generate_structure()
+            try:
+                session.generate_all_metadata_files()
+            except NotImplementedError:
+                pass
+
 
 def create_file(source, destination, mode):
     """
@@ -328,32 +358,6 @@ def extract_structure_from_csv(csv_file):
     return df
 
 
-def generate_struct(csv_file, pathToDir):
-    """
-    Create structure with csv file given in argument
-    This file must contain a header row specifying the provided data. Accepted titles are
-    defined in the BEP.
-    Essential information of the following attributes needs to be present.
-    Essential columns are 'sub_id' and 'ses_id'.
-
-    Parameters
-    ----------
-    csv_file: str
-        Csv file that contains a list of directories to create.
-    pathToDir: str
-        Path to directory where the directories will be created.
-    """
-
-    df = extract_structure_from_csv(csv_file)
-
-    df = df[ESSENTIAL_CSV_COLUMNS]
-
-    for session_kwargs in df.to_dict('index').values():
-        session = BEP032Data(**session_kwargs)
-        session.basedir = pathToDir
-        session.generate_structure()
-
-
 def main():
     """
 
@@ -383,7 +387,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032Data.generate_struct(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':

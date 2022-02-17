@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
                                                generate_simple_csv_file)
-from bep032tools.generator.BEP032Generator import (extract_structure_from_csv, generate_struct)
+from bep032tools.generator.BEP032Generator import extract_structure_from_csv
 from bep032tools.generator.BEP032Templater import BEP032TemplateData
 
 
@@ -150,7 +150,7 @@ class Test_GenerateStruct(unittest.TestCase):
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
-        generate_struct(self.csv_file, test_directory)
+        BEP032TemplateData.generate_struct(self.csv_file, test_directory)
         # extract all paths that exist in the test directory
         existing_paths = [p[0] for p in os.walk(test_directory)]
 
