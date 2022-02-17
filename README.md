@@ -6,9 +6,9 @@ The provided tools integrating with BEP032 are :
 
 - BEP032Validator script to check if your dataset follows the current BEP032 rules
 
-- BEP032Generator script to create a BEP032 compatible structure for a given set of data files. These files need to be listed in an input CSV file.
+- BEP032Generator script to create a BEP032 compatible folder structure **without** metadata files for a given set of subjects and sessions. These files need to be listed in an input CSV file.
 
-- BEP032Templater script to generate a dummy set of BEP032 compatible files to be extended manually, e.g. using Excel or a text editor
+- BEP032Templater script to generate a BEP032 compatible folder structure **including** dummy files to be extended manually, e.g. using Excel or a text editor
 
 - _BEP032Viewer script to display your dataset directory in a convenient way. (deprecated)_
 
@@ -66,6 +66,8 @@ or from within Python
 -----------
 ### General usage for the Generator script 
 
+The generator can be used to create a BEP032 compatible folder structure (**without metadata files**) based on a list of sessions and subject. This list of sessions and subject has to be provided in form of a CSV file:
+
 ```term
 usage: BEP032Generator.py [-h] pathToCsv pathToDir
 
@@ -83,6 +85,8 @@ The generator can be directly used from the command line interface (CLI)
 > BEP032Generator data.csv data/
 
 ```
+
+
 -----------
 
 ### General usage for the Templater script 
@@ -104,6 +108,24 @@ The templater can be directly used from the command line interface (CLI)
 > BEP032Templater data.csv data/
 
 ```
+
+## How to create a BEP032 structure **including** custom metadata
+
+There are two options to add custom metadata (files) to a BEP032 structure
+
+1) Generation of the structure including dummy metadata files using the `BEP032Templator` and manual entry of the metadata in those files.
+2) Programmatic extension of the `BEP032Generator`. For this you need to create a Python class that inherits from `bep032tools.generator.BE032Generator` and implements the missing metadata methods:
+    - `generate_metadata_file_sessions`
+    - `generate_metadata_file_tasks`
+    - `generate_metadata_file_dataset_description`
+    - `generate_metadata_file_participants`
+    - `generate_metadata_file_probes`
+    - `generate_metadata_file_probes`
+    - `generate_metadata_file_channels`
+    - `generate_metadata_file_contacts`
+    - `generate_metadata_file_scans`
+    
+  These methods should fetch the corresponding metadata information from your project specific location and create the corresponding CSV or JSON file using the `generator.utils.save_json` and `generator.utils.save_tsv` functions correspondingly. When all missing methods are implemented `generator.BEP032Generator.generate_struct()` will not only create the corresponding folder structure, but also all metadata files with the metadata provided.
 
 ### Installation issues
 
