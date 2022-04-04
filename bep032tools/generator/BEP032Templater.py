@@ -150,7 +150,7 @@ class BEP032TemplateData(BEP032Data):
         }
         save_json(ephys_dict, output)
 
-    def generate_metadata_file_runs(self, output):
+    def generate_metadata_file_scans(self, output):
         pass
 
     def generate_all_metadata_files(self):
@@ -173,9 +173,9 @@ class BEP032TemplateData(BEP032Data):
             self.generate_metadata_file_channels(dest_path / (stem + '_channels'))
             self.generate_metadata_file_ephys(dest_path / (stem + '_ephys'))
             if re.search('run-\\d+', key):
-                runs_dest = stem.split('run')[0] + 'runs'
+                runs_dest = stem.split('run')[0] + 'scans'
                 runs_path = dest_path / runs_dest
-                self.generate_metadata_file_runs(runs_path)
+                self.generate_metadata_file_scans(runs_path)
 
     def validate(self):
         """

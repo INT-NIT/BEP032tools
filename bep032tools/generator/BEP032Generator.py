@@ -1,4 +1,5 @@
 from pathlib import Path
+import filecmp
 import shutil
 import argparse
 import os
@@ -196,7 +197,7 @@ class BEP032Data:
 
                 new_filename = filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
-                create_file(file, destination, mode)
+                create_file(file, destination, mode, exist_ok=True)
 
     def generate_metadata_file_participants(self, output):
         raise NotImplementedError()
@@ -223,7 +224,7 @@ class BEP032Data:
     def generate_metadata_file_ephys(self, output):
         raise NotImplementedError()
 
-    def generate_metadata_file_runs(self, output):
+    def generate_metadata_file_scans(self, output):
         raise NotImplementedError()
 
     def generate_all_metadata_files(self):
@@ -245,9 +246,9 @@ class BEP032Data:
             self.generate_metadata_file_channels(dest_path / (stem + '_channels'))
             self.generate_metadata_file_ephys(dest_path / (stem + '_ephys'))
             if re.search('run-\\d+', key):
-                runs_dest = stem.split('run')[0] + 'runs'
+                runs_dest = stem.split('run')[0] + 'scans'
                 runs_path = dest_path / runs_dest
-                self.generate_metadata_file_runs(runs_path)
+                self.generate_metadata_file_scans(runs_path)
 
     def validate(self):
         """
@@ -304,7 +305,7 @@ class BEP032Data:
                 pass
 
 
-def create_file(source, destination, mode):
+def create_file(source, destination, mode, exist_ok=False):
     """
     Create a file at a destination location
 
@@ -316,12 +317,24 @@ def create_file(source, destination, mode):
         Destination location of the file.
     mode: str
         File creation mode. Valid parameters are 'copy', 'link' and 'move'.
+    exist_ok: bool
+        If False, raise an Error if the destination already exist. Default: False
         
     Raises
     ----------
     ValueError
         In case of invalid creation mode.
     """
+    if Path(destination).exists():
+        if not exist_ok:
+            raise ValueError(f'Destination already exists: {destination}')
+        # ensure file content is the same
+        elif not filecmp.cmp(source, destination, shallow=True):
+            raise ValueError(f'File content of source ({source}) and destination ({destination}) '
+                             f'differs.')
+        # remove current version to create new version with new mode
+        Path(destination).unlink()
+
     if mode == 'copy':
         shutil.copy(source, destination)
     elif mode == 'link':
