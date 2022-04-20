@@ -188,23 +188,22 @@ class Test_GenerateStruct(unittest.TestCase):
 class Test_FolderGeneration(unittest.TestCase):
 
     def setUp(self):
-        initialize_test_directory(clean=True)
+        self.test_dir = Path(initialize_test_directory(clean=True))
         csv_filename = generate_simple_csv_file()
         self.csv_file = csv_filename
 
     def test_generate_folder(self):
-        test_directory = "/var/folders/hy/9r0d_c294998b5k18fk2t55r0000gn/T/bep032tools_testfiles"
-        temporary_path = "/Users/killianrochet/Desktop/testAndo/test"
+        #test_directory = "/var/folders/hy/9r0d_c294998b5k18fk2t55r0000gn/T/bep032tools_testfiles/"
         exist_path = False
         create_folder = False
-        if Path(temporary_path).exists():
-            BEP032Data.generate_struct(self.csv_file, temporary_path)
+        if Path(self.test_dir).exists():
+            BEP032Data.generate_struct(self.csv_file, self.test_dir)
             exist_path = True
         else:
             #Create folder, maybe with parent if doesn't exist ?
-            os.mkdir('/Users/killianrochet/Desktop/testAndo/test')
+            os.mkdir(self.test_dir)
             create_folder = True
-            BEP032Data.generate_struct(self.csv_file, temporary_path)
+            BEP032Data.generate_struct(self.csv_file, self.test_dir)
             exist_path = True
         print(f" folder created ? {create_folder}")
         self.assertTrue(exist_path)
