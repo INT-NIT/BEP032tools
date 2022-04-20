@@ -267,7 +267,7 @@ class BEP032Data:
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
     @classmethod
-    def generate_struct(cls, csv_file, pathToDir):
+    def generate_struct(cls, csv_file, pathToDir):  
         """
         Create structure with csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
