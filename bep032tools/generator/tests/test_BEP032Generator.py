@@ -1,5 +1,4 @@
 import os
-import pathlib
 import unittest
 from pathlib import Path
 
@@ -195,23 +194,38 @@ class Test_FolderGeneration(unittest.TestCase):
 
     def test_generate_folder(self):
         """
-        Test if the Path exists. After generation, check that the folder exists and display the list of sub-folders.
+        When the file did not exist, the generation did not work properly.
+        Now if the folder does not exist, the function creates the folder before the generation function is launched
         Parameters
         ----------
         Returns
         ----------
         bool
-            True if validation was successful. False if it failed.
+            True if the generation is well done. False if it failed.
         """
         self.test_dir = self.test_dir / 'test'
-        generation = False
-        if Path(self.test_dir).exists():
+        test_generate = False
+        if os.path.isdir(self.test_dir):
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
+            test_generate = True
         else:
             os.mkdir(self.test_dir)
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
+            test_generate = True
+        self.assertTrue(test_generate)
 
     def test_no_duplicate_folder_generated(self):
+        """
+        Checks that there are no duplicates when generating folders.
+        If a duplicate exists and has the same name as the parent folder, the function returns an error
+        Parameters
+        ----------
+        Returns
+        ----------
+        bool
+            True if there are no duplicates. False if a duplicate exists
+        """
+        generation = False
         if os.path.isdir(self.test_dir) and os.path.dirname(self.test_dir) not in os.listdir(self.test_dir):
             generation = True
         self.assertTrue(generation)
