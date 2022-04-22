@@ -211,6 +211,7 @@ class Test_FolderGeneration(unittest.TestCase):
             os.mkdir(self.test_dir)
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
 
+    def test_no_duplicate_folder_generated(self):
         if os.path.isdir(self.test_dir) and os.path.dirname(self.test_dir) not in os.listdir(self.test_dir):
             generation = True
         self.assertTrue(generation)
