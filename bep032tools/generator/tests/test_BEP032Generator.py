@@ -189,24 +189,34 @@ class Test_FolderGeneration(unittest.TestCase):
 
     def setUp(self):
         self.test_dir = Path(initialize_test_directory(clean=True))
+        os.mkdir(self.test_dir / 'generateTest')
         csv_filename = generate_simple_csv_file()
         self.csv_file = csv_filename
 
     def test_generate_folder(self):
-        #test_directory = "/var/folders/hy/9r0d_c294998b5k18fk2t55r0000gn/T/bep032tools_testfiles/"
-        exist_path = False
-        create_folder = False
+        """
+        Test if the Path exists. After generation, check that the folder exists and display the list of sub-folders.
+        Parameters
+        ----------
+        Returns
+        ----------
+        bool
+            True if validation was successful. False if it failed.
+        """
+        self.test_dir = self.test_dir / 'test'
+        generation = False
         if Path(self.test_dir).exists():
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
-            exist_path = True
         else:
-            #Create folder, maybe with parent if doesn't exist ?
             os.mkdir(self.test_dir)
-            create_folder = True
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
-            exist_path = True
-        print(f" folder created ? {create_folder}")
-        self.assertTrue(exist_path)
+
+        if os.path.isdir(self.test_dir):
+            generation = True
+        self.assertTrue(generation)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
