@@ -188,18 +188,18 @@ class Test_FolderGeneration(unittest.TestCase):
 
     def setUp(self):
         self.test_dir = Path(initialize_test_directory(clean=True))
-        os.mkdir(self.test_dir / 'generateTest')
+        self.test_dir = self.test_dir / 'generateTest'
         csv_filename = generate_simple_csv_file()
         self.csv_file = csv_filename
 
     def test_generate_folder(self):
         """
-        When the file did not exist, the generation did not work properly.
+        When the folder did not exist, the generation did not work properly.
         Now if the folder does not exist, the function creates the folder before the generation function is launched
         """
         test_generate = False
+        BEP032Data.generate_struct(self.csv_file, self.test_dir)
         if os.path.isdir(self.test_dir):
-            BEP032Data.generate_struct(self.csv_file, self.test_dir)
             test_generate = True
         self.assertTrue(test_generate)
 
@@ -207,10 +207,6 @@ class Test_FolderGeneration(unittest.TestCase):
         """
         Checks that there are no duplicates when generating folders.
         If a duplicate exists and has the same name as the parent folder, the function returns an error
-        Returns
-        ----------
-        bool
-            True if there are no duplicates. False if a duplicate exists
         """
         BEP032Data.generate_struct(self.csv_file, self.test_dir)
         generation = False
