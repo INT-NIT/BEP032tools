@@ -197,7 +197,6 @@ class Test_FolderGeneration(unittest.TestCase):
         When the file did not exist, the generation did not work properly.
         Now if the folder does not exist, the function creates the folder before the generation function is launched
         """
-        self.test_dir = self.test_dir / 'test'
         test_generate = False
         if os.path.isdir(self.test_dir):
             BEP032Data.generate_struct(self.csv_file, self.test_dir)
