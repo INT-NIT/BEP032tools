@@ -290,6 +290,9 @@ class BEP032Data:
 
         organize_data = 'data_file' in df
 
+        if not os.path.isdir(pathToDir):
+            os.makedirs(pathToDir)
+
         for session_kwargs in df.to_dict('index').values():
             if organize_data:
                 data_file = session_kwargs.pop('data_file')
