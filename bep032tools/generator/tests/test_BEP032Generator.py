@@ -184,6 +184,7 @@ class Test_GenerateStruct(unittest.TestCase):
     def doCleanups(self):
         initialize_test_directory(clean=True)
 
+
 class Test_FolderGeneration(unittest.TestCase):
 
     def setUp(self):
@@ -205,7 +206,6 @@ class Test_FolderGeneration(unittest.TestCase):
     def test_no_duplicate_folder_generated(self):
         """
         Checks that there are no duplicates when generating folders.
-        If a duplicate exists and has the same name as the parent folder, the function returns an error
         """
         BEP032Data.generate_struct(self.csv_file, self.test_dir)
         generation = False
