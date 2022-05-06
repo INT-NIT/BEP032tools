@@ -73,4 +73,4 @@ def get_ephys_filename(layout, entities: dict, bidsname_config=""):
     return output_file
 
 
-# TODO function to generate scans and sessoins TSV filenames
+# TODO function to generate scans and sessions TSV filenames
