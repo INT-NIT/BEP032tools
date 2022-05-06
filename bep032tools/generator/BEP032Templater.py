@@ -1,13 +1,8 @@
-import glob
-from pathlib import Path
 import shutil
-import warnings
 import argparse
-import os
 import re
-import json
 
-import ando.AnDOChecker
+import bep032tools.validator.BEP032Validator
 
 try:
     import pandas as pd
@@ -15,33 +10,29 @@ try:
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
-from ando.AnDOChecker import build_rule_regexp
-from ando.rulesStructured import RULES_SET
-from ando.rulesStructured import DATA_EXTENSIONS
-from numpy import genfromtxt
-import numpy as np
-from ando.tools.generator.utils import *
-from ando.rulesStructured import METADATA_EXTENSIONS
-from ando.tools.generator.AnDOGenerator import AnDOData
+from bep032tools.validator.BEP032Validator import build_rule_regexp
+from bep032tools.rulesStructured import RULES_SET
+from bep032tools.generator.utils import *
+from bep032tools.generator.BEP032Generator import BEP032Data
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i, r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v
                           in values}
 
-# TODO: These can be extracted from the AnDOData init definition. Check out the
+# TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
 OPTIONAL_CSV_COLUMNS = ['tasks', 'runs']
 
 
-class BEP032TemplateData(AnDOData):
+class BEP032TemplateData(BEP032Data):
     """
-    Representation of a AnDO Data, as specified by in the
+    Representation of a BEP032 Data, as specified by in the
     [ephys BEP](https://bids.neuroimaging.io/bep032)
 
-    The AnDOData object can track multiple realizations of `split`, `run`, `task` but only a single
-    realization of `session` and `subject`, i.e. to represent multiple `session` folders, multiple
-    AnDOData objects are required. To include multiple realizations of tasks
+    The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
+    single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
+    multiple BEP032Data objects are required. To include multiple realizations of tasks
     or runs, call the `register_data` method for each set of parameters separately.
 
     Parameters
@@ -159,7 +150,7 @@ class BEP032TemplateData(AnDOData):
         }
         save_json(ephys_dict, output)
 
-    def generate_metadata_file_runs(self, output):
+    def generate_metadata_file_scans(self, output):
         pass
 
     def generate_all_metadata_files(self):
@@ -182,13 +173,13 @@ class BEP032TemplateData(AnDOData):
             self.generate_metadata_file_channels(dest_path / (stem + '_channels'))
             self.generate_metadata_file_ephys(dest_path / (stem + '_ephys'))
             if re.search('run-\\d+', key):
-                runs_dest = stem.split('run')[0] + 'runs'
+                runs_dest = stem.split('run')[0] + 'scans'
                 runs_path = dest_path / runs_dest
-                self.generate_metadata_file_runs(runs_path)
+                self.generate_metadata_file_scans(runs_path)
 
     def validate(self):
         """
-        Validate the generated structure using the AnDO validator
+        Validate the generated structure using the BEP032 validator
 
         Parameters
         ----------
@@ -200,7 +191,7 @@ class BEP032TemplateData(AnDOData):
         bool
             True if validation was successful. False if it failed.
         """
-        ando.AnDOChecker.is_valid(self.basedir)
+        bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
 
 def create_file(source, destination, mode):
@@ -243,10 +234,10 @@ def extract_structure_from_csv(csv_file):
     Returns
     -------
     pandas.dataframe
-        A dataframe containing the essential columns for creating an AnDO structure
+        A dataframe containing the essential columns for creating an BEP032 structure
     """
     if not HAVE_PANDAS:
-        raise ImportError('Extraction of ando structure from csv requires pandas.')
+        raise ImportError('Extraction of bep032 structure from csv requires pandas.')
 
     df = pd.read_csv(csv_file, dtype=str)
 
@@ -266,49 +257,13 @@ def extract_structure_from_csv(csv_file):
     return df
 
 
-def generate_struct(csv_file, pathToDir):
-    """
-    Create structure with csv file given in argument
-    This file must contain a header row specifying the provided data. Accepted titles are
-    defined in the BEP.
-    Essential information of the following attributes needs to be present.
-    Essential columns are 'sub_id' and 'ses_id'.
-
-    Parameters
-    ----------
-    csv_file: str
-        Csv file that contains a list of directories to create.
-    pathToDir: str
-        Path to directory where the directories will be created.
-    """
-
-    df = extract_structure_from_csv(csv_file)
-
-    df = df[ESSENTIAL_CSV_COLUMNS]
-    test_data_files = [Path('empty_ephy.nix')]
-    for f in test_data_files:
-        f.touch()
-
-    for session_kwargs in df.to_dict('index').values():
-        session = BEP032TemplateData(**session_kwargs)
-        session.basedir = pathToDir
-        session.generate_structure()
-        session.register_data_files(*test_data_files)
-        session.organize_data_files(mode='copy')
-        session.generate_all_metadata_files()
-
-    # cleanup
-    for f in test_data_files:
-        f.unlink(missing_ok=True)
-
-
 def main():
     """
 
     Notes
     ----------
 
-    Usage via command line: AnDOGenerator.py [-h] pathToCsv pathToDir
+    Usage via command line: BEP032Generator.py [-h] pathToCsv pathToDir
 
     positional arguments:
         pathToCsv   Path to your csv file
@@ -331,7 +286,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032TemplateData.generate_struct(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':

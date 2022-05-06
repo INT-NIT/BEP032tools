@@ -1,17 +1,16 @@
 *.pyc
-ando/*.pyc
+bep032tools/*.pyc
 *egg*
 .idea/
 .vscode/
-Ando_web/
 dist/*
 build/*
 
-ando/tools/generator/dist/*
-ando/tools/generator/build/*
-ando/tools/viewer/build/*
-ando/tools/viewer/dist/*
-ando/tools/generator/tests/BEP032-examples
+bep032tools/generator/dist/*
+bep032tools/generator/build/*
+bep032tools/viewer/build/*
+bep032tools/viewer/dist/*
+bep032tools/generator/tests/BEP032-examples
 
 # sphinx build folder
 build

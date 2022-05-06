@@ -1,10 +1,13 @@
+import os
 import unittest
-from ando.tools.generator.BEP032Templater import *
+from pathlib import Path
 
-from ando.tools.generator.tests.utils import *
+from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
+                                               generate_simple_csv_file)
+from bep032tools.generator.BEP032Generator import BEP032Data, extract_structure_from_csv
 
 
-class Test_BEP032TemplateData(unittest.TestCase):
+class Test_BEP032Data(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -12,17 +15,17 @@ class Test_BEP032TemplateData(unittest.TestCase):
         self.ses_id = 'ses1'
         self.tasks = None
         self.runs = None
-
+        
         sources = test_dir / 'sources'
         sources.mkdir()
         project = test_dir / 'project-A'
         project.mkdir()
         self.basedir = project
 
-        d = BEP032TemplateData(self.sub_id, self.ses_id)
+        d = BEP032Data(self.sub_id, self.ses_id)
         d.basedir = project
 
-        self.ando_data = d
+        self.bep032tools_data = d
         prefix = f'sub-{self.sub_id}_ses-{self.ses_id}'
         self.test_data_files = [sources / (prefix + '_ephy.nix'),
                                 sources / (prefix + '_ephy.nwb')]
@@ -34,26 +37,26 @@ class Test_BEP032TemplateData(unittest.TestCase):
             f.touch()
 
     def test_get_data_folder(self):
-        df = self.ando_data.get_data_folder()
+        df = self.bep032tools_data.get_data_folder()
         self.assertTrue(df)
 
-        df_abs = self.ando_data.get_data_folder('absolute')
-        df_local = self.ando_data.get_data_folder('local')
+        df_abs = self.bep032tools_data.get_data_folder('absolute')
+        df_local = self.bep032tools_data.get_data_folder('local')
 
         self.assertTrue(df_local)
         self.assertTrue(str(df_abs).endswith(str(df_local)))
 
     def test_generate_structure(self):
-        self.ando_data.generate_structure()
-        df = self.ando_data.get_data_folder()
+        self.bep032tools_data.generate_structure()
+        df = self.bep032tools_data.get_data_folder()
         self.assertTrue(df.exists())
 
     def test_data_files(self):
-        self.ando_data.generate_structure()
-        self.ando_data.register_data_files(*self.test_data_files)
-        self.ando_data.organize_data_files()
+        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.register_data_files(*self.test_data_files)
+        self.bep032tools_data.organize_data_files()
 
-        session_folder = self.ando_data.get_data_folder()
+        session_folder = self.bep032tools_data.get_data_folder()
         self.assertTrue(session_folder.exists())
         data_files = list(session_folder.glob('*.nix'))
         data_files += list(session_folder.glob('*.nwb'))
@@ -62,18 +65,18 @@ class Test_BEP032TemplateData(unittest.TestCase):
             self.assertTrue(data_file.name.find("_ephys"))
 
     def test_data_files_complex(self):
-        self.ando_data.generate_structure()
+        self.bep032tools_data.generate_structure()
         nix_files = [self.test_data_files[0]] * 3
         runs = ['run1', 'run2']
         tasks = ['task1', 'task2']
         for run in runs:
             for task in tasks:
-                self.ando_data.register_data_files(*nix_files,
+                self.bep032tools_data.register_data_files(*nix_files,
                                                    run=run, task=task)
 
-        self.ando_data.organize_data_files()
+        self.bep032tools_data.organize_data_files()
 
-        session_folder = self.ando_data.get_data_folder()
+        session_folder = self.bep032tools_data.get_data_folder()
         self.assertTrue(session_folder.exists())
         data_files = list(session_folder.glob('*.nix'))
         self.assertEqual(len(data_files), len(runs) * len(tasks) * len(nix_files))
@@ -97,18 +100,18 @@ class Test_BEP032TemplateData(unittest.TestCase):
             self.assertEqual(len(files), exp)
 
     def test_data_files_same_key(self):
-        self.ando_data.generate_structure()
+        self.bep032tools_data.generate_structure()
         nix_files = [self.test_data_files[0]]
         run = 'run1'
         task = 'task1'
 
-        self.ando_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
         # register more data files in a second step
-        self.ando_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
 
-        self.ando_data.organize_data_files()
+        self.bep032tools_data.organize_data_files()
 
-        session_folder = self.ando_data.get_data_folder()
+        session_folder = self.bep032tools_data.get_data_folder()
         self.assertTrue(session_folder.exists())
         data_files = list(session_folder.glob('*.nix'))
         self.assertEqual(len(data_files), 2)
@@ -118,10 +121,22 @@ class Test_BEP032TemplateData(unittest.TestCase):
 
     def test_implemented_error_raised(self):
         path = ""
-        self.test_generate_structure()
-        self.ando_data.register_data_files(*self.test_data_files)
-        self.ando_data.organize_data_files()
-        self.ando_data.generate_all_metadata_files()
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_sessions(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_tasks(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_dataset_description(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_participants(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_probes(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_channels(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_contacts(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_all_metadata_files()
 
     def tearDown(self):
         initialize_test_directory(clean=True)
@@ -147,7 +162,7 @@ class Test_GenerateStruct(unittest.TestCase):
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
-        generate_struct(self.csv_file, test_directory)
+        BEP032Data.generate_struct(self.csv_file, test_directory)
         # extract all paths that exist in the test directory
         existing_paths = [p[0] for p in os.walk(test_directory)]
 
@@ -168,6 +183,36 @@ class Test_GenerateStruct(unittest.TestCase):
 
     def doCleanups(self):
         initialize_test_directory(clean=True)
+
+
+class Test_FolderGeneration(unittest.TestCase):
+
+    def setUp(self):
+        test_dir = Path(initialize_test_directory(clean=True))
+        self.test_dir = test_dir / 'generateTest'  # this folder will not exist yet
+        csv_filename = generate_simple_csv_file()
+        self.csv_file = csv_filename
+
+    def test_generate_folder(self):
+        """
+        Check that generation also works on non existing folders.
+        """
+        test_generate = False
+        BEP032Data.generate_struct(self.csv_file, self.test_dir)
+        if os.path.isdir(self.test_dir):
+            test_generate = True
+        self.assertTrue(test_generate)
+
+    def test_no_duplicate_folder_generated(self):
+        """
+        Checks that there are no duplicates when generating folders.
+        """
+        BEP032Data.generate_struct(self.csv_file, self.test_dir)
+        generation = False
+        root_name = self.test_dir.name
+        if not (self.test_dir / root_name).exists():
+            generation = True
+        self.assertTrue(generation)
 
 
 if __name__ == '__main__':
