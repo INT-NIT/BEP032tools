@@ -16,7 +16,7 @@ class NwbToBIDS(BidsConverter):
 
     def __init__(self, dataset_path, **kwargs):
         super().__init__(dataset_path, **kwargs)
-        self.datafiles_list = list(self.dataset_path.glob('**/*.nwb'))
+        self.datafiles_list = [path for path in self.dataset_path.glob('**/*.nwb') if '.git' not in str(path)]
         assert len(self.datafiles_list) > 0, 'no nwb files found'
         self._extract_metadata()
 
