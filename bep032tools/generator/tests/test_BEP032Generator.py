@@ -39,8 +39,8 @@ class Test_BEP032Data(unittest.TestCase):
 
         # create fake ascii dataset
         sample_data = np.random.uniform(size=(200, 3))
-        self.ascii_data_filename = "test_ascii_data.txt"
-        np.savetxt(self.ascii_data_filename, sample_data, delimiter='\t')
+        self.ascii_data_filename = sources / "test_ascii_data.txt"
+        np.savetxt(str(self.ascii_data_filename), sample_data, delimiter='\t')
 
     def test_get_data_folder(self):
         df = self.bep032tools_data.get_data_folder()
