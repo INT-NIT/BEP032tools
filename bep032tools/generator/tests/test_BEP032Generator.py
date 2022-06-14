@@ -1,6 +1,7 @@
 import os
 import unittest
 from pathlib import Path
+import numpy as np
 
 from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
                                                generate_simple_csv_file)
@@ -36,6 +37,11 @@ class Test_BEP032Data(unittest.TestCase):
         for f in self.test_mdata_files + self.test_data_files:
             f.touch()
 
+        # create fake ascii dataset
+        sample_data = np.random.uniform(size=(200, 3))
+        self.ascii_data_filename = "test_ascii_data.txt"
+        np.savetxt(self.ascii_data_filename, sample_data, delimiter='\t')
+
     def test_get_data_folder(self):
         df = self.bep032tools_data.get_data_folder()
         self.assertTrue(df)
@@ -63,6 +69,19 @@ class Test_BEP032Data(unittest.TestCase):
         self.assertEqual(len(self.test_data_files), len(data_files))
         for data_file in data_files:
             self.assertTrue(data_file.name.find("_ephys"))
+
+    def test_data_file_conversion(self):
+        self.bep032tools_data.generate_structure()
+
+        for format in ['nix', 'nwb']:
+            # testing conversion to nix
+            self.bep032tools_data.register_data_files(self.ascii_data_filename, autoconvert=format)
+            self.bep032tools_data.organize_data_files()
+
+            observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
+            self.assertTrue(len(observed_files) == 1)
+            os.remove(observed_files[0])
+
 
     def test_data_files_complex(self):
         self.bep032tools_data.generate_structure()
