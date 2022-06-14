@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 import filecmp
 import shutil
 import argparse
@@ -12,6 +13,12 @@ try:
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
+
+try:
+    import neo
+    HAVE_NEO = True
+except ImportError:
+    HAVE_NEO = False
 
 from bep032tools.validator.BEP032Validator import build_rule_regexp
 from bep032tools.rulesStructured import RULES_SET
@@ -71,7 +78,7 @@ class BEP032Data:
 
         self._basedir = None
 
-    def register_data_files(self, *files, task=None, run=None):
+    def register_data_files(self, *files, task=None, run=None, autoconvert=None):
         """
         Register data with the BEP032 data structure.
 
@@ -85,13 +92,24 @@ class BEP032Data:
             task name used
         run: str
             run name used
+        autoconvert: str
+            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
+            Warning: Using this feature can require extensive compute resources. Default: None
         """
 
         files = [Path(f) for f in files]
-        for file in files:
-            if file.suffix not in DATA_EXTENSIONS:
-                raise ValueError(f'Wrong file format of data {file.suffix}. '
-                                 f'Valid formats are {DATA_EXTENSIONS}')
+        for file_idx in range(len(files)):
+            if files[file_idx].suffix not in DATA_EXTENSIONS:
+                if autoconvert is None:
+                    raise ValueError(f'Wrong file format of data {files[file_idx].suffix}. '
+                                     f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
+                                     f'parameter for automatic conversion.')
+                elif autoconvert not in ['nwb', 'nix']:
+                    raise ValueError(f'`autoconvert` only accepts `nix` and `nwb` as values, '
+                                     f'received {autoconvert}.')
+
+                print(f'Converting data file to {autoconvert} format.')
+                files[file_idx] = convert_data(files[file_idx], autoconvert)
 
         key = ''
         if task is not None:
@@ -306,6 +324,36 @@ class BEP032Data:
                 session.generate_all_metadata_files()
             except NotImplementedError:
                 pass
+
+
+def convert_data(source_file, output_format):
+    if not HAVE_NEO:
+        raise ValueError('Conversion of data required neo package to be installed. '
+                         'Use `pip install neo`')
+
+    io = neo.io.get_io(source_file)
+    block = io.read_block()
+
+    output_file = Path(source_file).with_suffix('.' + output_format)
+
+    if output_format == 'nix':
+        io_write = neo.NixIO(output_file, mode='rw')
+    elif output_format == 'nwb':
+        io_write = neo.NWBIO(str(output_file), mode='w')
+    else:
+        raise ValueError(f'Supported formats are `nwb` and `nix`, not {output_format}')
+
+    # ensure all required annotations are present for nwb file generation
+    start_time = datetime.fromtimestamp(int(block.segments[0].t_start.rescale('s')))
+    block.annotations.setdefault('session_start_time', start_time)
+    block.annotations.setdefault('session_description', block.file_origin)
+    block.annotations['session_description'] = str(block.annotations['session_description'])
+    block.annotations.setdefault('identifier', block.file_origin)
+    block.annotations['identifier'] = str(block.annotations['identifier'])
+
+    io_write.write_all_blocks([block])
+
+    return output_file
 
 
 def create_file(source, destination, mode, exist_ok=False):
