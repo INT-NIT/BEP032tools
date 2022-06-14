@@ -77,7 +77,7 @@ class TestUtils(unittest.TestCase):
         # read merged version of b
         merged_read = pd.read_csv(test_directory / 'test_files' / 'a.tsv',
                                   sep='\t', index_col=0)
-        merged_read = merged_read.set_index(merged_read.index.astype(str))
+        merged_read.set_index(merged_read.index.astype(str), inplace=True)
 
         self.assertTrue(expected.equals(merged_read))
 
