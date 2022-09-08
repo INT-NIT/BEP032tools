@@ -140,15 +140,19 @@ class BEP032Data:
             raise ValueError('Base directory does not exist')
         self._basedir = Path(basedir)
 
-    def get_data_folder(self, mode='absolute'):
+    def get_data_folder(self, mode='absolute', ephys_type='extra'):
         """
-        Generate the relative path to the folder of the data files
+        Generates the path to the folder of the data files
 
         Parameters
         ----------
         mode : str
-            Return the absolute or local path to the data folder.
+            Returns an absolute or relative path
             Valid values: 'absolute', 'local'
+        ephys_type : str
+            Type of electrophysiological data. This decides whether or not to create a session level in the BIDS
+            hierarchy (yes for 'extra', no for 'intra')
+            Valid values: 'extra', 'intra'
 
         Returns
         ----------
@@ -156,7 +160,12 @@ class BEP032Data:
             Path of the data folder
         """
 
-        path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
+        if ephys_type == 'extra':
+            path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
+        elif ephys_type == 'intra':
+            path = Path(f'sub-{self.sub_id}', self.modality)
+        else:
+            raise ValueError('The ephys_type option should take the value extra or intra')
 
         if mode == 'absolute':
             if self.basedir is None:
