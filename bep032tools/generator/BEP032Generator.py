@@ -151,8 +151,8 @@ class BEP032Data:
             Valid values: 'absolute', 'local'
         ephys_type : str
             Type of electrophysiological data. This decides whether or not to create a session level in the BIDS
-            hierarchy (yes for 'extra', no for 'intra')
-            Valid values: 'extra', 'intra'
+            hierarchy (yes for extra-cellular recordings, no for intra-cellular recordings)
+            Valid values: 'ece', 'ice' (respectively for extra- and intra-cellular electrophysiology)
 
         Returns
         ----------
@@ -160,9 +160,9 @@ class BEP032Data:
             Path of the data folder
         """
 
-        if ephys_type == 'extra':
+        if ephys_type == 'ece':
             path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
-        elif ephys_type == 'intra':
+        elif ephys_type == 'ice':
             path = Path(f'sub-{self.sub_id}', self.modality)
         else:
             raise ValueError('The ephys_type option should take the value extra or intra')
