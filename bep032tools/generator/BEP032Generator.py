@@ -53,10 +53,13 @@ class BEP032Data:
         task identifier of data files
     runs : str
         run identifier of data files
-
+    ephys_type : str
+        type of electrophysiological data (valid values: 'ece', 'ice', respectively for extra- and intra-cellular
+        electrophysiology); this decides whether or not to create a session level in the BIDS hierarchy (yes for ece,
+        no for ice)
 
     """
-    def __init__(self, sub_id, ses_id, modality='ephys'):
+    def __init__(self, sub_id, ses_id, modality='ephys', ephys_type='ece'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
@@ -68,6 +71,8 @@ class BEP032Data:
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
 
+
+        self.ephys_type = ephys_type
         self.sub_id = sub_id
         self.ses_id = ses_id
         self.modality = modality
@@ -140,7 +145,7 @@ class BEP032Data:
             raise ValueError('Base directory does not exist')
         self._basedir = Path(basedir)
 
-    def get_data_folder(self, mode='absolute', ephys_type='extra'):
+    def get_data_folder(self, mode='absolute'):
         """
         Generates the path to the folder of the data files
 
@@ -149,10 +154,6 @@ class BEP032Data:
         mode : str
             Returns an absolute or relative path
             Valid values: 'absolute', 'local'
-        ephys_type : str
-            Type of electrophysiological data. This decides whether or not to create a session level in the BIDS
-            hierarchy (yes for extra-cellular recordings, no for intra-cellular recordings)
-            Valid values: 'ece', 'ice' (respectively for extra- and intra-cellular electrophysiology)
 
         Returns
         ----------
@@ -160,12 +161,15 @@ class BEP032Data:
             Path of the data folder
         """
 
-        if ephys_type == 'ece':
+        if self.ephys_type == 'ece':
+            # for extra-cellular ephys, a session-level directory is used in the BIDS hierarchy
             path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
-        elif ephys_type == 'ice':
+        elif self.ephys_type == 'ice':
+            # for intra-cellular ephys, there is no session-level directory in the BIDS hierarchy
             path = Path(f'sub-{self.sub_id}', self.modality)
         else:
-            raise ValueError('The ephys_type option should take the value extra or intra')
+            raise ValueError('The ephys_type option should take the value ece or ice to designate extra- or intra-'
+                             'cellular electrophysiology')
 
         if mode == 'absolute':
             if self.basedir is None:
