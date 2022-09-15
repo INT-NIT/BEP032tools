@@ -8,7 +8,7 @@ from bep032tools.generator.tests.utils import (initialize_test_directory, test_d
 from bep032tools.generator.BEP032Generator import BEP032Data, extract_structure_from_csv
 
 
-class Test_BEP032Data(unittest.TestCase):
+class Test_BEP032Data_ece(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -23,7 +23,7 @@ class Test_BEP032Data(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = BEP032Data(self.sub_id, self.ses_id)
+        d = BEP032Data(self.sub_id, self.ses_id, ephys_type='ece')
         d.basedir = project
 
         self.bep032tools_data = d
@@ -92,6 +92,158 @@ class Test_BEP032Data(unittest.TestCase):
             for task in tasks:
                 self.bep032tools_data.register_data_files(*nix_files,
                                                    run=run, task=task)
+
+        self.bep032tools_data.organize_data_files()
+
+        session_folder = self.bep032tools_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        self.assertEqual(len(data_files), len(runs) * len(tasks) * len(nix_files))
+
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find("_ephys"))
+
+        for run in runs:
+            exp = len(tasks) * len(nix_files)
+            files = list(session_folder.glob(f'*_run-{run}*.nix'))
+            self.assertEqual(len(files), exp)
+
+        for task in tasks:
+            exp = len(runs) * len(nix_files)
+            files = list(session_folder.glob(f'*_task-{task}*.nix'))
+            self.assertEqual(len(files), exp)
+
+        for split in range(len(nix_files)):
+            exp = len(runs) * len(tasks)
+            files = list(session_folder.glob(f'*_split-{split}*.nix'))
+            self.assertEqual(len(files), exp)
+
+    def test_data_files_same_key(self):
+        self.bep032tools_data.generate_structure()
+        nix_files = [self.test_data_files[0]]
+        run = 'run1'
+        task = 'task1'
+
+        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+        # register more data files in a second step
+        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+
+        self.bep032tools_data.organize_data_files()
+
+        session_folder = self.bep032tools_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        self.assertEqual(len(data_files), 2)
+
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find(f"_task-{task}_run-{run}_split-"))
+
+    def test_implemented_error_raised(self):
+        path = ""
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_sessions(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_tasks(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_dataset_description(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_participants(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_probes(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_channels(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_metadata_file_contacts(path)
+        with self.assertRaises(NotImplementedError):
+            self.bep032tools_data.generate_all_metadata_files()
+
+    def tearDown(self):
+        initialize_test_directory(clean=True)
+
+
+class Test_BEP032Data_ice(unittest.TestCase):
+
+    def setUp(self):
+        test_dir = Path(initialize_test_directory(clean=True))
+        self.sub_id = 'sub5'
+        self.ses_id = 'ses1'
+        self.tasks = None
+        self.runs = None
+
+        sources = test_dir / 'sources'
+        sources.mkdir()
+        project = test_dir / 'project-A'
+        project.mkdir()
+        self.basedir = project
+
+        d = BEP032Data(self.sub_id, self.ses_id, ephys_type='ice')
+        d.basedir = project
+
+        self.bep032tools_data = d
+        prefix = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        self.test_data_files = [sources / (prefix + '_ephy.nix'),
+                                sources / (prefix + '_ephy.nwb')]
+        self.test_mdata_files = [sources / 'dataset_description.json',
+                                 sources / (prefix + '_probes.tsv'),
+                                 sources / (prefix + '_contacts.json')]
+
+        for f in self.test_mdata_files + self.test_data_files:
+            f.touch()
+
+        # create fake ascii dataset
+        sample_data = np.random.uniform(size=(200, 3))
+        self.ascii_data_filename = sources / "test_ascii_data.txt"
+        np.savetxt(str(self.ascii_data_filename), sample_data, delimiter='\t')
+
+    def test_get_data_folder(self):
+        df = self.bep032tools_data.get_data_folder()
+        self.assertTrue(df)
+
+        df_abs = self.bep032tools_data.get_data_folder('absolute')
+        df_local = self.bep032tools_data.get_data_folder('local')
+
+        self.assertTrue(df_local)
+        self.assertTrue(str(df_abs).endswith(str(df_local)))
+
+    def test_generate_structure(self):
+        self.bep032tools_data.generate_structure()
+        df = self.bep032tools_data.get_data_folder()
+        self.assertTrue(df.exists())
+
+    def test_data_files(self):
+        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.register_data_files(*self.test_data_files)
+        self.bep032tools_data.organize_data_files()
+
+        session_folder = self.bep032tools_data.get_data_folder()
+        self.assertTrue(session_folder.exists())
+        data_files = list(session_folder.glob('*.nix'))
+        data_files += list(session_folder.glob('*.nwb'))
+        self.assertEqual(len(self.test_data_files), len(data_files))
+        for data_file in data_files:
+            self.assertTrue(data_file.name.find("_ephys"))
+
+    def test_data_file_conversion(self):
+        self.bep032tools_data.generate_structure()
+
+        for format in ['nix', 'nwb']:
+            # testing conversion to nix
+            self.bep032tools_data.register_data_files(self.ascii_data_filename, autoconvert=format)
+            self.bep032tools_data.organize_data_files()
+
+            observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
+            self.assertTrue(len(observed_files) == 1)
+            os.remove(observed_files[0])
+
+    def test_data_files_complex(self):
+        self.bep032tools_data.generate_structure()
+        nix_files = [self.test_data_files[0]] * 3
+        runs = ['run1', 'run2']
+        tasks = ['task1', 'task2']
+        for run in runs:
+            for task in tasks:
+                self.bep032tools_data.register_data_files(*nix_files,
+                                                          run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
