@@ -81,6 +81,7 @@ class BEP032Data:
         self.data = {}
         self.mdata = {}
 
+        self.filename_stem = None
         self._basedir = None
 
     def register_data_files(self, *files, task=None, run=None, autoconvert=None):
@@ -194,6 +195,13 @@ class BEP032Data:
         data_folder = Path(self.basedir).joinpath(self.get_data_folder())
         data_folder.mkdir(parents=True, exist_ok=True)
 
+        if self.ephys_type == 'ece':
+            self.filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        elif self.ephys_type == 'ice':
+            self.filename_stem = f'sub-{self.sub_id}'
+        else:
+            raise ValueError('The ephys type should be take the value ece or ice')
+
         return data_folder
 
     def organize_data_files(self, mode='link'):
@@ -209,10 +217,10 @@ class BEP032Data:
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
-        data_folder = self.get_data_folder(mode='absolute')
+        if self.filename_stem is None:
+            raise ValueError('No filename stem set.')
 
-        # compose BIDS data filenames
-        filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        data_folder = self.get_data_folder(mode='absolute')
 
         for key, files in self.data.items():
             # add '_' prefix for filename concatenation
@@ -226,7 +234,7 @@ class BEP032Data:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + postfix + suffix
+                new_filename = self.filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode, exist_ok=True)
 
@@ -269,7 +277,10 @@ class BEP032Data:
         self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
                                              f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
-            stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+            if self.filename_stem is None:
+                raise ValueError('No filename stem set.')
+            else:
+                stem = self.filename_stem
             if key:
                 stem += f'_{key}'
             self.generate_metadata_file_probes(dest_path / (stem + '_probes'))
