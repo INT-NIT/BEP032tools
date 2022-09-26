@@ -54,19 +54,19 @@ class BEP032Data:
     runs : str
         run identifier of data files
 
-
     """
-    def __init__(self, sub_id, ses_id, modality='ephys'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
 
         # check for invalid arguments
-        for arg in [sub_id, ses_id]:
+        for arg in [sub_id]:
             invalid_characters = r'\/_'  # TODO: Should this be part of the BEP032tools core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
+
 
         self.sub_id = sub_id
         self.ses_id = ses_id
@@ -76,6 +76,7 @@ class BEP032Data:
         self.data = {}
         self.mdata = {}
 
+        self.filename_stem = None
         self._basedir = None
 
     def register_data_files(self, *files, task=None, run=None, autoconvert=None):
@@ -142,12 +143,12 @@ class BEP032Data:
 
     def get_data_folder(self, mode='absolute'):
         """
-        Generate the relative path to the folder of the data files
+        Generates the path to the folder of the data files
 
         Parameters
         ----------
         mode : str
-            Return the absolute or local path to the data folder.
+            Returns an absolute or relative path
             Valid values: 'absolute', 'local'
 
         Returns
@@ -156,7 +157,14 @@ class BEP032Data:
             Path of the data folder
         """
 
-        path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
+        if self.ses_id is None:
+            # if no session id is given as input (e.g in most cases for intra-cellular ephys), there is no
+            # session-level directory in the BIDS hierarchy
+            path = Path(f'sub-{self.sub_id}', self.modality)
+        else:
+            # if a session id exists, a session-level directory is used in the BIDS hierarchy
+            # as in most cases for extra-cellular ephys
+            path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
 
         if mode == 'absolute':
             if self.basedir is None:
@@ -181,6 +189,11 @@ class BEP032Data:
         data_folder = Path(self.basedir).joinpath(self.get_data_folder())
         data_folder.mkdir(parents=True, exist_ok=True)
 
+        if self.ses_id is None:
+            self.filename_stem = f'sub-{self.sub_id}'
+        else:
+            self.filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+
         return data_folder
 
     def organize_data_files(self, mode='link'):
@@ -196,10 +209,10 @@ class BEP032Data:
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
-        data_folder = self.get_data_folder(mode='absolute')
+        if self.filename_stem is None:
+            raise ValueError('No filename stem set.')
 
-        # compose BIDS data filenames
-        filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        data_folder = self.get_data_folder(mode='absolute')
 
         for key, files in self.data.items():
             # add '_' prefix for filename concatenation
@@ -213,7 +226,7 @@ class BEP032Data:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + postfix + suffix
+                new_filename = self.filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode, exist_ok=True)
 
@@ -256,7 +269,10 @@ class BEP032Data:
         self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
                                              f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
-            stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+            if self.filename_stem is None:
+                raise ValueError('No filename stem set.')
+            else:
+                stem = self.filename_stem
             if key:
                 stem += f'_{key}'
             self.generate_metadata_file_probes(dest_path / (stem + '_probes'))
