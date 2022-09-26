@@ -59,7 +59,7 @@ class BEP032Data:
         no for ice)
 
     """
-    def __init__(self, sub_id, ses_id='None', modality='ephys', ephys_type='ece'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys', ephys_type='ece'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
