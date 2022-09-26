@@ -166,7 +166,6 @@ class Test_BEP032Data_ice(unittest.TestCase):
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
         self.sub_id = 'sub5'
-        self.ses_id = 'ses1'
         self.tasks = None
         self.runs = None
 
@@ -176,11 +175,11 @@ class Test_BEP032Data_ice(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = BEP032Data(self.sub_id, self.ses_id, ephys_type='ice')
+        d = BEP032Data(self.sub_id, ephys_type='ice')
         d.basedir = project
 
         self.bep032tools_data = d
-        prefix = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        prefix = f'sub-{self.sub_id}'
         self.test_data_files = [sources / (prefix + '_ephy.nix'),
                                 sources / (prefix + '_ephy.nwb')]
         self.test_mdata_files = [sources / 'dataset_description.json',

@@ -59,7 +59,7 @@ class BEP032Data:
         no for ice)
 
     """
-    def __init__(self, sub_id, ses_id, modality='ephys', ephys_type='ece'):
+    def __init__(self, sub_id, ses_id='None', modality='ephys', ephys_type='ece'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
@@ -162,15 +162,14 @@ class BEP032Data:
             Path of the data folder
         """
 
-        if self.ephys_type == 'ece':
-            # for extra-cellular ephys, a session-level directory is used in the BIDS hierarchy
-            path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
-        elif self.ephys_type == 'ice':
-            # for intra-cellular ephys, there is no session-level directory in the BIDS hierarchy
+        if self.ses_id is None:
+            # if no session id is given as input (e.g in most cases for intra-cellular ephys), there is no
+            # session-level directory in the BIDS hierarchy
             path = Path(f'sub-{self.sub_id}', self.modality)
         else:
-            raise ValueError('The ephys_type option should take the value ece or ice to designate extra- or intra-'
-                             'cellular electrophysiology')
+            # if a session id exists, a session-level directory is used in the BIDS hierarchy
+            # as in most cases for extra-cellular ephys
+            path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
 
         if mode == 'absolute':
             if self.basedir is None:
@@ -195,12 +194,10 @@ class BEP032Data:
         data_folder = Path(self.basedir).joinpath(self.get_data_folder())
         data_folder.mkdir(parents=True, exist_ok=True)
 
-        if self.ephys_type == 'ece':
-            self.filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
-        elif self.ephys_type == 'ice':
+        if self.ses_id is None:
             self.filename_stem = f'sub-{self.sub_id}'
         else:
-            raise ValueError('The ephys type should be take the value ece or ice')
+            self.filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
 
         return data_folder
 
