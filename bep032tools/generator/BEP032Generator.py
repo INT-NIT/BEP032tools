@@ -53,26 +53,21 @@ class BEP032Data:
         task identifier of data files
     runs : str
         run identifier of data files
-    ephys_type : str
-        type of electrophysiological data (valid values: 'ece', 'ice', respectively for extra- and intra-cellular
-        electrophysiology); this decides whether or not to create a session level in the BIDS hierarchy (yes for ece,
-        no for ice)
 
     """
-    def __init__(self, sub_id, ses_id=None, modality='ephys', ephys_type='ece'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
 
         # check for invalid arguments
-        for arg in [sub_id, ses_id]:
+        for arg in [sub_id]:
             invalid_characters = r'\/_'  # TODO: Should this be part of the BEP032tools core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
 
 
-        self.ephys_type = ephys_type
         self.sub_id = sub_id
         self.ses_id = ses_id
         self.modality = modality

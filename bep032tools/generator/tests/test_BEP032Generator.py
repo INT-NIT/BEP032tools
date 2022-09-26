@@ -9,6 +9,10 @@ from bep032tools.generator.BEP032Generator import BEP032Data, extract_structure_
 
 
 class Test_BEP032Data_ece(unittest.TestCase):
+    '''
+    Test class for a typical extra-cellular ephys (ece) data set.
+    In particular, ses_id is defined, and a session-level directory is used in the BIDS hierarchy
+    '''
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
@@ -23,7 +27,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = BEP032Data(self.sub_id, self.ses_id, ephys_type='ece')
+        d = BEP032Data(self.sub_id, self.ses_id)
         d.basedir = project
 
         self.bep032tools_data = d
@@ -162,7 +166,10 @@ class Test_BEP032Data_ece(unittest.TestCase):
 
 
 class Test_BEP032Data_ice(unittest.TestCase):
-
+    '''
+    Test class for a typical intra-cellular ephys (ice) data set.
+    In particular, ses_id is not defined, and there is no session-level directory in the BIDS hierarchy
+    '''
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
         self.sub_id = 'sub5'
@@ -175,7 +182,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
         project.mkdir()
         self.basedir = project
 
-        d = BEP032Data(self.sub_id, ephys_type='ice')
+        d = BEP032Data(self.sub_id)
         d.basedir = project
 
         self.bep032tools_data = d
