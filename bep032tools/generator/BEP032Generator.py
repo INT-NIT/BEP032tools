@@ -41,7 +41,7 @@ class BEP032Data:
     The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
     single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
     multiple BEP032Data objects are required. To include multiple realizations of tasks
-    or runs, call the `register_data` method for each set of parameters separately.
+    or runs, call the `register_data_files` method for each set of parameters separately.
 
     Parameters
     ----------
@@ -81,7 +81,7 @@ class BEP032Data:
 
     def register_data_files(self, *files, task=None, run=None, autoconvert=None):
         """
-        Register data with the BEP032 data structure.
+        Gather all the info about the data files that will be added to the BIDS data structure.
 
         Parameters
         ----------
@@ -173,9 +173,9 @@ class BEP032Data:
 
         return path
 
-    def generate_structure(self):
+    def generate_directory_structure(self):
         """
-        Generate the required folders for storing the dataset
+        Generate the hierarchy of folders that will host the data and metadata files
 
         Returns
         ----------
@@ -198,7 +198,7 @@ class BEP032Data:
 
     def organize_data_files(self, mode='link'):
         """
-        Add datafiles to BEP032 structure
+        Add all the data files for which info has been gathered in register_data_files to the BIDS data structure
         
         Parameters
         ----------
@@ -301,9 +301,9 @@ class BEP032Data:
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
     @classmethod
-    def generate_struct(cls, csv_file, pathToDir):
+    def generate_bids_dataset(cls, csv_file, pathToDir):
         """
-        Create structure with csv file given in argument
+        Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
         defined in the BEP.
         Essential information of the following attributes needs to be present.
@@ -332,7 +332,7 @@ class BEP032Data:
                 data_file = session_kwargs.pop('data_file')
             session = cls(**session_kwargs)
             session.basedir = pathToDir
-            session.generate_structure()
+            session.generate_directory_structure()
             if organize_data:
                 session.register_data_files([data_file])
                 session.organize_data_files(mode='copy')
@@ -475,7 +475,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    BEP032Data.generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032Data.generate_bids_dataset(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':

@@ -57,12 +57,12 @@ class Test_BEP032Data_ece(unittest.TestCase):
         self.assertTrue(str(df_abs).endswith(str(df_local)))
 
     def test_generate_structure(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         df = self.bep032tools_data.get_data_folder()
         self.assertTrue(df.exists())
 
     def test_data_files(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         self.bep032tools_data.register_data_files(*self.test_data_files)
         self.bep032tools_data.organize_data_files()
 
@@ -75,7 +75,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
             self.assertTrue(data_file.name.find("_ephys"))
 
     def test_data_file_conversion(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
 
         for format in ['nix', 'nwb']:
             # testing conversion to nix
@@ -88,7 +88,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
 
 
     def test_data_files_complex(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         nix_files = [self.test_data_files[0]] * 3
         runs = ['run1', 'run2']
         tasks = ['task1', 'task2']
@@ -123,7 +123,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
             self.assertEqual(len(files), exp)
 
     def test_data_files_same_key(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         nix_files = [self.test_data_files[0]]
         run = 'run1'
         task = 'task1'
@@ -212,12 +212,12 @@ class Test_BEP032Data_ice(unittest.TestCase):
         self.assertTrue(str(df_abs).endswith(str(df_local)))
 
     def test_generate_structure(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         df = self.bep032tools_data.get_data_folder()
         self.assertTrue(df.exists())
 
     def test_data_files(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         self.bep032tools_data.register_data_files(*self.test_data_files)
         self.bep032tools_data.organize_data_files()
 
@@ -230,7 +230,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
             self.assertTrue(data_file.name.find("_ephys"))
 
     def test_data_file_conversion(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
 
         for format in ['nix', 'nwb']:
             # testing conversion to nix
@@ -242,7 +242,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
             os.remove(observed_files[0])
 
     def test_data_files_complex(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         nix_files = [self.test_data_files[0]] * 3
         runs = ['run1', 'run2']
         tasks = ['task1', 'task2']
@@ -277,7 +277,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
             self.assertEqual(len(files), exp)
 
     def test_data_files_same_key(self):
-        self.bep032tools_data.generate_structure()
+        self.bep032tools_data.generate_directory_structure()
         nix_files = [self.test_data_files[0]]
         run = 'run1'
         task = 'task1'
@@ -339,7 +339,7 @@ class Test_GenerateStruct(unittest.TestCase):
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
-        BEP032Data.generate_struct(self.csv_file, test_directory)
+        BEP032Data.generate_bids_dataset(self.csv_file, test_directory)
         # extract all paths that exist in the test directory
         existing_paths = [p[0] for p in os.walk(test_directory)]
 
@@ -375,7 +375,7 @@ class Test_FolderGeneration(unittest.TestCase):
         Check that generation also works on non existing folders.
         """
         test_generate = False
-        BEP032Data.generate_struct(self.csv_file, self.test_dir)
+        BEP032Data.generate_bids_dataset(self.csv_file, self.test_dir)
         if os.path.isdir(self.test_dir):
             test_generate = True
         self.assertTrue(test_generate)
@@ -384,7 +384,7 @@ class Test_FolderGeneration(unittest.TestCase):
         """
         Checks that there are no duplicates when generating folders.
         """
-        BEP032Data.generate_struct(self.csv_file, self.test_dir)
+        BEP032Data.generate_bids_dataset(self.csv_file, self.test_dir)
         generation = False
         root_name = self.test_dir.name
         if not (self.test_dir / root_name).exists():

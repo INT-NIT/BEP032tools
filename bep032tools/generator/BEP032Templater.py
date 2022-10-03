@@ -161,7 +161,7 @@ class BEP032TemplateData(BEP032Data):
     def generate_all_metadata_files(self):
         dest_path = self.get_data_folder(mode='absolute')
 
-        self.generate_structure()
+        self.generate_directory_structure()
         self.generate_metadata_file_dataset_description(
             self.basedir / "dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
@@ -291,7 +291,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    BEP032TemplateData.generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032TemplateData.generate_bids_dataset(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':
