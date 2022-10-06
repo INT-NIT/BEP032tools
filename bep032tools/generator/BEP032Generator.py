@@ -306,10 +306,15 @@ class BEP032Data:
         Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
         defined in the BEP.
+        The general principle for this file is that each line will yield one data file in the outbut BIDS dataset.
         Essential information of the following attributes needs to be present.
         Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_file' (only single file per sub_id, ses_id
-        combination supported). 'data_file' needs to be a valid path to a nix or nwb file.
+        Optional columns are 'runs', 'tasks' and 'data_source' (only single file per sub_id, ses_id
+        combination supported).
+        'data_source' can be: i) an input file (in any raw data format) that needs to be converted to the BIDS-supported
+        file formats, ii) an input directory where several raw data files are present that need to be combined and
+        converted to a single file in a BIDS-supported format, iii) a file already in a BIDS-supported format that 
+        will be copied or linked into the BIDS dataset.
 
         Parameters
         ----------
@@ -327,17 +332,17 @@ class BEP032Data:
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
-        for session_kwargs in df.to_dict('index').values():
+        for data_kwargs in df.to_dict('index').values():
             if organize_data:
-                data_file = session_kwargs.pop('data_file')
-            session = cls(**session_kwargs)
-            session.basedir = pathToDir
-            session.generate_directory_structure()
+                data_source = data_kwargs.pop('data_source')
+            data_instance = cls(**data_kwargs)
+            data_instance.basedir = pathToDir
+            data_instance.generate_directory_structure()
             if organize_data:
-                session.register_data_files([data_file])
-                session.organize_data_files(mode='copy')
+                data_instance.register_data_files([data_file])
+                data_instance.organize_data_files(mode='copy')
             try:
-                session.generate_all_metadata_files()
+                data_instance.generate_all_metadata_files()
             except NotImplementedError:
                 pass
 
