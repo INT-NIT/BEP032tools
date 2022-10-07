@@ -94,8 +94,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
         tasks = ['task1', 'task2']
         for run in runs:
             for task in tasks:
-                self.bep032tools_data.register_data_sources(*nix_files,
-                                                            run=run, task=task)
+                self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
