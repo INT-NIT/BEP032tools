@@ -53,7 +53,7 @@ class Test_BEP032TemplateData(unittest.TestCase):
 
     def test_data_files(self):
         self.bep032_data.generate_directory_structure()
-        self.bep032_data.register_data_files(*self.test_data_files)
+        self.bep032_data.register_data_sources(*self.test_data_files)
         self.bep032_data.organize_data_files()
 
         session_folder = self.bep032_data.get_data_folder()
@@ -71,8 +71,8 @@ class Test_BEP032TemplateData(unittest.TestCase):
         tasks = ['task1', 'task2']
         for run in runs:
             for task in tasks:
-                self.bep032_data.register_data_files(*nix_files,
-                                                   run=run, task=task)
+                self.bep032_data.register_data_sources(*nix_files,
+                                                       run=run, task=task)
 
         self.bep032_data.organize_data_files()
 
@@ -105,9 +105,9 @@ class Test_BEP032TemplateData(unittest.TestCase):
         run = 'run1'
         task = 'task1'
 
-        self.bep032_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032_data.register_data_sources(*nix_files, run=run, task=task)
         # register more data files in a second step
-        self.bep032_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032_data.register_data_sources(*nix_files, run=run, task=task)
 
         self.bep032_data.organize_data_files()
 
@@ -122,7 +122,7 @@ class Test_BEP032TemplateData(unittest.TestCase):
     def test_implemented_error_raised(self):
         path = ""
         self.test_generate_structure()
-        self.bep032_data.register_data_files(*self.test_data_files)
+        self.bep032_data.register_data_sources(*self.test_data_files)
         self.bep032_data.organize_data_files()
         self.bep032_data.generate_all_metadata_files()
 

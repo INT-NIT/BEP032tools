@@ -30,7 +30,7 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_file']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_source']
 
 
 class BEP032Data:
@@ -41,7 +41,7 @@ class BEP032Data:
     The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
     single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
     multiple BEP032Data objects are required. To include multiple realizations of tasks
-    or runs, call the `register_data_files` method for each set of parameters separately.
+    or runs, call the `register_data_sources` method for each set of parameters separately.
 
     Parameters
     ----------
@@ -79,9 +79,12 @@ class BEP032Data:
         self.filename_stem = None
         self._basedir = None
 
-    def register_data_files(self, *files, task=None, run=None, autoconvert=None):
+    def register_data_sources(self, *files, task=None, run=None, autoconvert=None):
         """
-        Gather all the info about the data files that will be added to the BIDS data structure.
+        Gather all the info about the input data sources (files or directories) that will be
+        yield an output data file in the BIDS data structure.
+
+        TODO later: rename the files variable into sources and adapt the docstring
 
         Parameters
         ----------
@@ -198,7 +201,7 @@ class BEP032Data:
 
     def organize_data_files(self, mode='link'):
         """
-        Add all the data files for which info has been gathered in register_data_files to the BIDS data structure
+        Add all the data files for which info has been gathered in register_data_sources to the BIDS data structure
         
         Parameters
         ----------
@@ -327,7 +330,7 @@ class BEP032Data:
         df = extract_structure_from_csv(csv_file)
         df = df[ESSENTIAL_CSV_COLUMNS]
 
-        organize_data = 'data_file' in df
+        organize_data = 'data_source' in df
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
@@ -339,7 +342,7 @@ class BEP032Data:
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
             if organize_data:
-                data_instance.register_data_files([data_file])
+                data_instance.register_data_sources([data_source])
                 data_instance.organize_data_files(mode='copy')
             try:
                 data_instance.generate_all_metadata_files()
