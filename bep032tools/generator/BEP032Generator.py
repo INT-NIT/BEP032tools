@@ -30,7 +30,7 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_file']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_source']
 
 
 class BEP032Data:
@@ -41,7 +41,7 @@ class BEP032Data:
     The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
     single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
     multiple BEP032Data objects are required. To include multiple realizations of tasks
-    or runs, call the `register_data_files` method for each set of parameters separately.
+    or runs, call the `register_data_sources` method for each set of parameters separately.
 
     Parameters
     ----------
@@ -79,9 +79,12 @@ class BEP032Data:
         self.filename_stem = None
         self._basedir = None
 
-    def register_data_files(self, *files, task=None, run=None, autoconvert=None):
+    def register_data_sources(self, *files, task=None, run=None, autoconvert=None):
         """
-        Gather all the info about the data files that will be added to the BIDS data structure.
+        Gather all the info about the input data sources (files or directories) that will be
+        yield an output data file in the BIDS data structure.
+
+        TODO later: rename the files variable into sources and adapt the docstring
 
         Parameters
         ----------
@@ -198,7 +201,7 @@ class BEP032Data:
 
     def organize_data_files(self, mode='link'):
         """
-        Add all the data files for which info has been gathered in register_data_files to the BIDS data structure
+        Add all the data files for which info has been gathered in register_data_sources to the BIDS data structure
         
         Parameters
         ----------
@@ -306,10 +309,15 @@ class BEP032Data:
         Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
         defined in the BEP.
+        The general principle for this file is that each line will yield one data file in the outbut BIDS dataset.
         Essential information of the following attributes needs to be present.
         Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_file' (only single file per sub_id, ses_id
-        combination supported). 'data_file' needs to be a valid path to a nix or nwb file.
+        Optional columns are 'runs', 'tasks' and 'data_source' (only single file per sub_id, ses_id
+        combination supported).
+        'data_source' can be: i) an input file (in any raw data format) that needs to be converted to the BIDS-supported
+        file formats, ii) an input directory where several raw data files are present that need to be combined and
+        converted to a single file in a BIDS-supported format, iii) a file already in a BIDS-supported format that 
+        will be copied or linked into the BIDS dataset.
 
         Parameters
         ----------
@@ -322,22 +330,22 @@ class BEP032Data:
         df = extract_structure_from_csv(csv_file)
         df = df[ESSENTIAL_CSV_COLUMNS]
 
-        organize_data = 'data_file' in df
+        organize_data = 'data_source' in df
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
-        for session_kwargs in df.to_dict('index').values():
+        for data_kwargs in df.to_dict('index').values():
             if organize_data:
-                data_file = session_kwargs.pop('data_file')
-            session = cls(**session_kwargs)
-            session.basedir = pathToDir
-            session.generate_directory_structure()
+                data_source = data_kwargs.pop('data_source')
+            data_instance = cls(**data_kwargs)
+            data_instance.basedir = pathToDir
+            data_instance.generate_directory_structure()
             if organize_data:
-                session.register_data_files([data_file])
-                session.organize_data_files(mode='copy')
+                data_instance.register_data_sources([data_source])
+                data_instance.organize_data_files(mode='copy')
             try:
-                session.generate_all_metadata_files()
+                data_instance.generate_all_metadata_files()
             except NotImplementedError:
                 pass
 
