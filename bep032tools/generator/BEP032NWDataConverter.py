@@ -481,13 +481,40 @@ def main():
         print('Directory does not exist:', args.pathToBIDSOutputDir)
         exit(1)
 
-    # Construct the csv file that will be used as input to the generate_bids_dataset function
-    # Locate the excel file containing the metadata
-    pathToInputCsv, pathToXlsMetadataFile = generate_csv_file_nw(args.pathToRawInputDir)
-    # Read the set of metadata from the excel file
-    metadata = read_metadata_xls_file_nw(pathToXlsMetadataFile)
+    ###
+    # 1. browse the input directory to select the recording days (corresponding to one subject) that will be included
+    ###
+    recording_days_list = os.listdir(args.pathToRawInputDir)
+    # select recording days for which the excel file exists... those will give us the list of subjects, i.e of
+    # animals because we have one animal per day
+    sub_ids_list = []
+    metadata_file_list = []
+    for current_day in recording_days_list:
+        xls_file = os.path.join(raw_data_dir,current_day,current_day,'*.xls*')
+        xls_list = glob.glob(xls_file)
+        if len(xls_list) == 1:
+            sub_ids_list.append(str(current_day))
+            metadata_file_list.append(xls_list[0])
+            print('The following recording date has been selected: ' + current_day)
+        elif len(xls_list) == 0:
+            print('No excel file for this recording date: ' + current_day + '. Skipping...')
+        else:
+            print('Several excel files for this recording date: ' + current_day + '. Skipping...')
 
-    BEP032Data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
+
+    ###
+    # 2. loop over recording days / subjects to generate the BIDS dataset
+    ###
+    for sub_ind, sub_id in enumerate(sub_ids_list)):
+        # Construct the csv file that will be used as input to the generate_bids_dataset function
+        # Locate the excel file containing the metadata
+        pathToInputCsv = generate_csv_file_nw(args.pathToRawInputDir, sub_id)
+        # Read the set of metadata from the excel file
+        metadata = read_metadata_xls_file_nw(metadata_file_list[sub_id])
+        # the following needs to be rethought and checked to see whether it's adequate / possible
+        this_bep032data = BEP032Data(sub_id)
+        this_bep032data.md = metadata
+        this_bep032data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
 
 
 if __name__ == '__main__':
