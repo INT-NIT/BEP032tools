@@ -63,7 +63,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
 
     def test_data_files(self):
         self.bep032tools_data.generate_directory_structure()
-        self.bep032tools_data.register_data_files(*self.test_data_files)
+        self.bep032tools_data.register_data_sources(*self.test_data_files)
         self.bep032tools_data.organize_data_files()
 
         session_folder = self.bep032tools_data.get_data_folder()
@@ -79,7 +79,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
 
         for format in ['nix', 'nwb']:
             # testing conversion to nix
-            self.bep032tools_data.register_data_files(self.ascii_data_filename, autoconvert=format)
+            self.bep032tools_data.register_data_sources(self.ascii_data_filename, autoconvert=format)
             self.bep032tools_data.organize_data_files()
 
             observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
@@ -94,8 +94,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
         tasks = ['task1', 'task2']
         for run in runs:
             for task in tasks:
-                self.bep032tools_data.register_data_files(*nix_files,
-                                                   run=run, task=task)
+                self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
@@ -128,9 +127,9 @@ class Test_BEP032Data_ece(unittest.TestCase):
         run = 'run1'
         task = 'task1'
 
-        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
         # register more data files in a second step
-        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
@@ -218,7 +217,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
 
     def test_data_files(self):
         self.bep032tools_data.generate_directory_structure()
-        self.bep032tools_data.register_data_files(*self.test_data_files)
+        self.bep032tools_data.register_data_sources(*self.test_data_files)
         self.bep032tools_data.organize_data_files()
 
         session_folder = self.bep032tools_data.get_data_folder()
@@ -234,7 +233,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
 
         for format in ['nix', 'nwb']:
             # testing conversion to nix
-            self.bep032tools_data.register_data_files(self.ascii_data_filename, autoconvert=format)
+            self.bep032tools_data.register_data_sources(self.ascii_data_filename, autoconvert=format)
             self.bep032tools_data.organize_data_files()
 
             observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
@@ -248,8 +247,8 @@ class Test_BEP032Data_ice(unittest.TestCase):
         tasks = ['task1', 'task2']
         for run in runs:
             for task in tasks:
-                self.bep032tools_data.register_data_files(*nix_files,
-                                                          run=run, task=task)
+                self.bep032tools_data.register_data_sources(*nix_files,
+                                                            run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
@@ -282,9 +281,9 @@ class Test_BEP032Data_ice(unittest.TestCase):
         run = 'run1'
         task = 'task1'
 
-        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
         # register more data files in a second step
-        self.bep032tools_data.register_data_files(*nix_files, run=run, task=task)
+        self.bep032tools_data.register_data_sources(*nix_files, run=run, task=task)
 
         self.bep032tools_data.organize_data_files()
 
