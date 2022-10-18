@@ -5,6 +5,8 @@ import shutil
 import argparse
 import os
 import re
+import glob
+import numpy as np
 
 import bep032tools.validator.BEP032Validator
 
@@ -23,6 +25,7 @@ except ImportError:
 from bep032tools.validator.BEP032Validator import build_rule_regexp
 from bep032tools.rulesStructured import RULES_SET
 from bep032tools.rulesStructured import DATA_EXTENSIONS
+from bep032tools.generator.BEP032Generator import BEP032Data
 
 METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
 METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
@@ -450,6 +453,180 @@ def extract_structure_from_csv(csv_file):
 
     return df
 
+def generate_csv_file_nw(pathToRawInputDir, sub_id):
+    """
+    Generate a csv file that can be used as input to the generate_bids_dataset function, in the particular usecase
+    of the conversion of the existing patchclamp data of NW
+
+    Parameters
+    ----------
+    pathToRawInputDir: str
+        Path to the directory containing the raw patchclamp NW data
+
+    sub_id: str
+        ID of the animal, corresponding to a subdirectory within the raw patchclamp NW directory
+
+    Returns
+    -------
+    pathToInputCsv: str
+        Path of a csv file containing details about the data set to be converted
+    """
+
+    # identify the input ephys data files for this session, as the abf files available in the data directory
+    data_path_filter = os.path.join(pathToRawInputDir, sub_id, '*.abf')
+    data_files = glob.glob(data_path_filter)
+    print(data_files)
+
+    n_sources = len(data_files)
+    sources_df = pd.DataFrame(columns=['sub_id', 'ses_id', 'data_source'])
+    for source_ind in range(n_sources):
+        ses_id = sub_id
+        data_source = data_files[source_ind]
+        current_sample_df = pd.DataFrame([[sub_id, ses_id, data_source]],
+                                         columns=['sub_id', 'ses_id', 'data_source'])
+        sources_df = pd.concat([sources_df, current_sample_df])
+    sources_df.set_index('sub_id', inplace=True)
+
+    output = '/tmp/test.tsv'
+    if os.path.isfile(output):
+        # append data from new subject to existing csv file
+        ### BECAUSE it's a temp file, this should not happen, we should raise an error here!
+        sources_df.to_csv(output, mode='a', index=True, header=False, sep=',')
+    else:
+        # create csv file
+        sources_df.to_csv(output, mode='w', index=True, header=True, sep=',')
+
+    return output
+
+
+def read_metadata_xls_file_nw(metadata_xls_file):
+    """
+    Read the excel file containing the metadata associated with one recording day / one animal in the patchclamp NW
+    data set
+
+    Parameters
+    ----------
+    metadata_xls_file: str
+        Path to the excel file containing the metadata
+
+    Returns
+    -------
+    metadata:
+        badly formatted python directory accumulating all the info contained in the excel file
+    """
+    md = pd.read_excel(metadata_xls_file)
+
+    metadata = {}
+
+    participants_metadata = {}
+    samples_metadata_list = []
+
+    participants_metadata.update({'date': str(md.columns[1])})
+    participants_metadata.update({'sex': np.array(md.loc[(md[md.columns[1]]=='Sexe')][md.columns[2]])[0]})
+    participants_metadata.update({'strain': np.array(md.loc[(md[md.columns[1]]=='Mice Line')][md.columns[2]])[0]})
+    participants_metadata.update({'weight': np.array(md.loc[(md[md.columns[1]]=='Weight')][md.columns[2]])[0]})
+    participants_metadata.update({'age': np.array(md.loc[(md[md.columns[1]]=='Age')][md.columns[2]])[0]})
+    participants_metadata.update({'participant_id': 'sub-{}'.format(participants_metadata['date'][0:10])})
+
+    samples_inds_list = md.loc[(md[md.columns[1]]=='Slice')].index
+
+    all_filenames_list = []
+    for ind, sample_ind in enumerate(samples_inds_list):
+        # create sub data frame for the current sample / cell
+        start_ind = sample_ind
+        if ind < len(samples_inds_list) - 1:
+            end_ind = samples_inds_list[ind+1]
+        else:
+            end_ind = len(md)
+        sf = md[start_ind:end_ind]
+        slice_nbr = np.array(sf.loc[(sf[sf.columns[1]]=='Slice')][sf.columns[2]])[0]
+        cell_nbr = np.array(sf.loc[(sf[sf.columns[1]]=='Cell')][sf.columns[2]])[0]
+        sample_id = "slice{:02d}cell{:02d}".format(slice_nbr, cell_nbr)
+        current_sample_metadata = {}
+        current_sample_metadata.update({'sample_id': 'sample-{}'.format(sample_id)})
+        current_sample_metadata.update({'sample_type': 'in vitro differentiated cells'})
+        current_sample_metadata.update({'participant_id': participants_metadata['participant_id'] })
+
+        re_value = np.array(sf.loc[(sf[sf.columns[1]] == 'Re')][sf.columns[2]])[0]
+        current_sample_metadata.update({'re_value': re_value})
+        re_unit = np.array(sf.loc[(sf[sf.columns[1]] == 'Re')][sf.columns[3]])[0]
+        current_sample_metadata.update({'re_unit': re_unit})
+        # offset_value = np.array(sf.loc[(sf[sf.columns[1]] == 'Offset')][sf.columns[2]])[0]
+        # current_sample_metadata.update({})
+        # offset_unit = np.array(sf.loc[(sf[sf.columns[1]] == 'Offset')][sf.columns[3]])[0]
+        # current_sample_metadata.update({})
+        # rseal_value = np.array(sf.loc[(sf[sf.columns[1]] == 'Rseal')][sf.columns[2]])[0]
+        # current_sample_metadata.update({})
+        # rseal_unit = np.array(sf.loc[(sf[sf.columns[1]] == 'Rseal')][sf.columns[3]])[0]
+        # current_sample_metadata.update({})
+        # hc_value = np.array(sf.loc[(sf[sf.columns[1]] == 'hc')][sf.columns[2]])[0]
+        # current_sample_metadata.update({})
+        # hc_unit = np.array(sf.loc[(sf[sf.columns[1]] == 'hc')][sf.columns[3]])[0]
+        # current_sample_metadata.update({})
+        pipcap_valueunit = np.array(sf.loc[(sf[sf.columns[1]] == 'Pipette Capacitance')][sf.columns[3]])[0]
+        current_sample_metadata.update({'pipette_capacitance': pipcap_valueunit})
+        # vr_value = np.array(sf.loc[(sf[sf.columns[4]] == 'VR')][sf.columns[5]])[0]
+        # current_sample_metadata.update({})
+        # vr_unit = np.array(sf.loc[(sf[sf.columns[4]] == 'VR')][sf.columns[6]])[0]
+        # current_sample_metadata.update({})
+        # rm_value = np.array(sf.loc[(sf[sf.columns[4]] == 'Rm')][sf.columns[5]])[0]
+        # current_sample_metadata.update({})
+        # rm_unit = np.array(sf.loc[(sf[sf.columns[4]] == 'Rm')][sf.columns[6]])[0]
+        # current_sample_metadata.update({})
+        # hc70_value = np.array(sf.loc[(sf[sf.columns[4]] == 'hc at -70 mV')][sf.columns[5]])[0]
+        # current_sample_metadata.update({})
+        # hc70_unit = np.array(sf.loc[(sf[sf.columns[4]] == 'hc at -70 mV')][sf.columns[6]])[0]
+        # current_sample_metadata.update({})
+        # rs_value = np.array(sf.loc[(sf[sf.columns[4]] == 'Rs')][sf.columns[5]])
+        # current_sample_metadata.update({})
+        # rs_unit = np.array(sf.loc[(sf[sf.columns[4]] == 'Rs')][sf.columns[6]])
+        # current_sample_metadata.update({})
+        # cm_value = np.array(sf.loc[(sf[sf.columns[4]] == 'Cm')][sf.columns[5]])[0]
+        # current_sample_metadata.update({})
+        # cm_unit = np.array(sf.loc[(sf[sf.columns[4]] == 'Cm')][sf.columns[6]])[0]
+        # current_sample_metadata.update({})
+
+        c = np.array(sf)[:,3]
+        t = c[np.where(c=='File')[0][0]+1:]
+        # find strings in there... they correspond to the file names containing the ephys data for this sample/cell
+        files_inds = np.where(np.array([type(t[i]) for i in range(len(t))])==str)[0]
+        # extract all the filenames (all this to deal with the - indicating that several files
+        filenames_list = []
+        for f_ind in files_inds:
+            file_string = t[f_ind]
+            dash_ind = file_string.find('-')
+            if dash_ind == -1:
+                filenames_list.append(file_string)
+            else:
+                # compute length of what's after the dash in this string... this will give us the length of what
+                # we should extract before the string!
+                substring_length = len(file_string) - dash_ind - 1
+                start_file_number = int(file_string[dash_ind-substring_length:dash_ind])
+                end_file_number = int(file_string[dash_ind+1:dash_ind+1+substring_length])
+                for nbr in range(start_file_number,end_file_number+1):
+                    if substring_length == 3:
+                        this_file_string = file_string[0:dash_ind-substring_length] + '{:03d}'.format(nbr)
+                    elif substring_length == 2:
+                        this_file_string = file_string[0:dash_ind-substring_length] + '{:02d}'.format(nbr)
+                    elif substring_length == 1:
+                        this_file_string = file_string[0:dash_ind-substring_length] + '{:1d}'.format(nbr)
+                    filenames_list.append(this_file_string)
+        current_sample_metadata.update({'data_files': filenames_list})
+        all_filenames_list.extend(filenames_list)
+        samples_metadata_list.append(current_sample_metadata)
+
+
+    metadata.update({"participants_md":participants_metadata})
+    metadata.update({"samples_md":samples_metadata_list})
+
+    #print(metadata)
+
+    return metadata
+
+
+
+
+
 
 def main():
     """
@@ -466,6 +643,9 @@ def main():
 
     optional arguments:
         -h, --help  show this help message and exit
+
+    example usage:
+         python3 BEP032NWDataConverter.py ~/amubox/ShareElec/nw_data/sourcedata/2016-03/ ~/tmp/tmp_ando_data/
     """
 
     parser = argparse.ArgumentParser()
@@ -485,12 +665,12 @@ def main():
     # 1. browse the input directory to select the recording days (corresponding to one subject) that will be included
     ###
     recording_days_list = os.listdir(args.pathToRawInputDir)
-    # select recording days for which the excel file exists... those will give us the list of subjects, i.e of
-    # animals because we have one animal per day
+    # select recording days for which the excel file exists... those will give us the list of subjects we will include
+    # in the outbut BIDS dataset (i.e the list of animals because we have one animal per day)
     sub_ids_list = []
     metadata_file_list = []
     for current_day in recording_days_list:
-        xls_file = os.path.join(raw_data_dir,current_day,current_day,'*.xls*')
+        xls_file = os.path.join(args.pathToRawInputDir,current_day,current_day,'*.xls*')
         xls_list = glob.glob(xls_file)
         if len(xls_list) == 1:
             sub_ids_list.append(str(current_day))
@@ -501,19 +681,21 @@ def main():
         else:
             print('Several excel files for this recording date: ' + current_day + '. Skipping...')
 
+    print(sub_ids_list)
+    print(recording_days_list)
+
 
     ###
     # 2. loop over recording days / subjects to generate the BIDS dataset
     ###
-    for sub_ind, sub_id in enumerate(sub_ids_list)):
+    for sub_ind, sub_id in enumerate(sub_ids_list):
         # Construct the csv file that will be used as input to the generate_bids_dataset function
-        # Locate the excel file containing the metadata
         pathToInputCsv = generate_csv_file_nw(args.pathToRawInputDir, sub_id)
         # Read the set of metadata from the excel file
-        metadata = read_metadata_xls_file_nw(metadata_file_list[sub_id])
+        this_metadata = read_metadata_xls_file_nw(metadata_file_list[sub_ind])
         # the following needs to be rethought and checked to see whether it's adequate / possible
         this_bep032data = BEP032Data(sub_id)
-        this_bep032data.md = metadata
+        this_bep032data.md = this_metadata
         this_bep032data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
 
 
