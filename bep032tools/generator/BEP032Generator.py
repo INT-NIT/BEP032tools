@@ -79,7 +79,7 @@ class BEP032Data:
         self.filename_stem = None
         self._basedir = None
 
-    def register_data_sources(self, *files, task=None, run=None, autoconvert=None):
+    def register_data_sources(self, *files, task=None, run=None):
         """
         Gather all the info about the input data sources (files or directories) that will be
         yield an output data file in the BIDS data structure.
@@ -96,24 +96,9 @@ class BEP032Data:
             task name used
         run: str
             run name used
-        autoconvert: str
-            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
-            Warning: Using this feature can require extensive compute resources. Default: None
         """
 
         files = [Path(f) for f in files]
-        for file_idx in range(len(files)):
-            if files[file_idx].suffix not in DATA_EXTENSIONS:
-                if autoconvert is None:
-                    raise ValueError(f'Wrong file format of data {files[file_idx].suffix}. '
-                                     f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
-                                     f'parameter for automatic conversion.')
-                elif autoconvert not in ['nwb', 'nix']:
-                    raise ValueError(f'`autoconvert` only accepts `nix` and `nwb` as values, '
-                                     f'received {autoconvert}.')
-
-                print(f'Converting data file to {autoconvert} format.')
-                files[file_idx] = convert_data(files[file_idx], autoconvert)
 
         key = ''
         if task is not None:
@@ -199,7 +184,7 @@ class BEP032Data:
 
         return data_folder
 
-    def organize_data_files(self, mode='link'):
+    def organize_data_files(self, mode='link', autoconvert=None):
         """
         Add all the data files for which info has been gathered in register_data_sources to the BIDS data structure
         
@@ -207,6 +192,9 @@ class BEP032Data:
         ----------
         mode: str
             Can be either 'link', 'copy' or 'move'.
+        autoconvert: str
+            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
+            Warning: Using this feature can require extensive compute resources. Default: None
         """
         postfix = '_ephys'
         if self.basedir is None:
@@ -221,6 +209,22 @@ class BEP032Data:
             # add '_' prefix for filename concatenation
             if key:
                 key = '_' + key
+
+            for file_idx in range(len(files)):
+                if files[file_idx].suffix not in DATA_EXTENSIONS:
+                    if autoconvert is None:
+                        raise ValueError(
+                            f'Wrong file format of data {files[file_idx].suffix}. '
+                            f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
+                            f'parameter for automatic conversion.')
+                    elif autoconvert not in ['nwb', 'nix']:
+                        raise ValueError(
+                            f'`autoconvert` only accepts `nix` and `nwb` as values, '
+                            f'received {autoconvert}.')
+
+                    print(f'Converting data file to {autoconvert} format.')
+                    files[file_idx] = convert_data(files[file_idx], autoconvert)
+
             for i, file in enumerate(files):
                 # preserve the suffix
                 suffix = file.suffix
