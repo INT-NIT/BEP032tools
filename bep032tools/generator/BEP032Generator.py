@@ -308,7 +308,7 @@ class BEP032Data:
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
     @classmethod
-    def generate_bids_dataset(cls, csv_file, pathToDir):
+    def generate_bids_dataset(cls, csv_file, pathToDir, autoconvert=None):
         """
         Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
@@ -329,6 +329,8 @@ class BEP032Data:
             Csv file that contains sub_id and ses_id and optional columns
         pathToDir: str
             Path to directory where the directories will be created.
+        autoconvert: str
+            see `organize_data_files`
         """
 
         df = extract_structure_from_csv(csv_file)
@@ -347,7 +349,7 @@ class BEP032Data:
             data_instance.generate_directory_structure()
             if organize_data:
                 data_instance.register_data_sources([data_source])
-                data_instance.organize_data_files(mode='copy')
+                data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
                 data_instance.generate_all_metadata_files()
             except NotImplementedError:
