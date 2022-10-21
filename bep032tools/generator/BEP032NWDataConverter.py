@@ -239,7 +239,20 @@ class BEP032PatchClampNWData(BEP032Data):
                 create_file(file, destination, mode, exist_ok=True)
 
     def generate_metadata_file_participants(self, output):
-        raise NotImplementedError()
+        print("participaaaaaaaaaaaaaants")
+        age = self.md['participants_md']['age']
+        date = self.md['participants_md']['date']
+        participant_df = pd.DataFrame([
+            ['sub-' + self.sub_id, 'rattus norvegicus', age, 'M', '2001-01-01T00:00:00']],
+            columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
+        participant_df.set_index('participant_id', inplace=True)
+        if not output.with_suffix('.tsv').exists():
+            # create participants.tsv file
+            participant_df.to_csv(output.with_suffix('.tsv'), mode='w', index=True, header=True, sep='\t')
+            #save_tsv(participant_df, output)
+        else:
+            # append new subject to existing participants.tsv file
+            participant_df.to_csv(output.with_suffix('.tsv'), mode='a', index=True, header=False, sep='\t')
 
     def generate_metadata_file_tasks(self, output):
         # here we want to call save_json and save_tsv()
@@ -267,15 +280,14 @@ class BEP032PatchClampNWData(BEP032Data):
         raise NotImplementedError()
 
     def generate_all_metadata_files(self):
+        print("teeeeeeeeeeest")
         dest_path = self.get_data_folder(mode='absolute')
-
-        self.generate_metadata_file_dataset_description(self.basedir
-                                                        / "dataset_description")
+        print(self.basedir / f"dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
+        self.generate_metadata_file_dataset_description(self.basedir / f"dataset_description")
 
         self.generate_metadata_file_tasks(self.basedir / f"tasks")
-        self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
-                                             f'sub-{self.sub_id}_sessions')
+        self.generate_metadata_file_sessions(self.get_data_folder().parents[1] / f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
             if self.filename_stem is None:
                 raise ValueError('No filename stem set.')
@@ -307,48 +319,6 @@ class BEP032PatchClampNWData(BEP032Data):
             True if validation was successful. False if it failed.
         """
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
-
-    @classmethod
-    def generate_bids_dataset(cls, csv_file, pathToDir):
-        """
-        Create a bids dataset from a csv file given in argument
-        This file must contain a header row specifying the provided data. Accepted titles are
-        defined in the BEP.
-        Essential information of the following attributes needs to be present.
-        Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_file' (only single file per sub_id, ses_id
-        combination supported). 'data_file' needs to be a valid path to a nix or nwb file.
-
-        Parameters
-        ----------
-        csv_file: str
-            Csv file that contains sub_id and ses_id and optional columns
-        pathToDir: str
-            Path to directory where the directories will be created.
-        """
-
-        df = extract_structure_from_csv(csv_file)
-        df = df[ESSENTIAL_CSV_COLUMNS]
-
-        organize_data = 'data_file' in df
-
-        if not os.path.isdir(pathToDir):
-            os.makedirs(pathToDir)
-
-        for session_kwargs in df.to_dict('index').values():
-            if organize_data:
-                data_file = session_kwargs.pop('data_file')
-            session = cls(**session_kwargs)
-            session.basedir = pathToDir
-            session.generate_directory_structure()
-            if organize_data:
-                session.register_data_files([data_file])
-                session.organize_data_files(mode='copy')
-            try:
-                session.generate_all_metadata_files()
-            except NotImplementedError:
-                pass
-
 
 def convert_data(source_file, output_format):
     if not HAVE_NEO:
@@ -694,7 +664,7 @@ def main():
         # Read the set of metadata from the excel file
         this_metadata = read_metadata_xls_file_nw(metadata_file_list[sub_ind])
         # the following needs to be rethought and checked to see whether it's adequate / possible
-        this_bep032data = BEP032Data(sub_id)
+        this_bep032data = BEP032PatchClampNWData(sub_id)
         this_bep032data.md = this_metadata
         this_bep032data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
 
