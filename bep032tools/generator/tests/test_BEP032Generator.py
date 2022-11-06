@@ -104,6 +104,20 @@ class Test_BEP032Data_ece(unittest.TestCase):
                 self.assertEqual(channel[0].magnitude, expected_data[0, channel_idx])
             os.remove(observed_files[0])
 
+    def test_data_file_conversion_multi_split(self):
+        self.bep032tools_data.generate_directory_structure()
+
+        format = 'nix'
+        # testing conversion to nix
+        self.bep032tools_data.register_data_sources(*[self.ascii_data_filename]*3)
+        self.bep032tools_data.organize_data_files(autoconvert=format)
+
+        observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
+        self.assertTrue(len(observed_files) == 3)
+        for observed_file in observed_files:
+            os.remove(observed_file)
+
+
 
     def test_data_files_complex(self):
         self.bep032tools_data.generate_directory_structure()
