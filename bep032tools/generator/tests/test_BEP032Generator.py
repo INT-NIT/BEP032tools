@@ -117,7 +117,30 @@ class Test_BEP032Data_ece(unittest.TestCase):
         for observed_file in observed_files:
             os.remove(observed_file)
 
-
+    # This test currently fails due to https://github.com/NeuralEnsemble/python-neo/issues/1198'
+    # def test_data_file_conversion_source_folder(self):
+    #     self.bep032tools_data.generate_directory_structure()
+    #
+    #     format = 'nix'
+    #
+    #     # download example source folder
+    #     import requests
+    #     URL = 'https://gin.g-node.org/NeuralEnsemble/ephy_testing_data/raw/' \
+    #           '5dbd759ca6048ac89695c35a679c78c79f618d74/neuralynx/Cheetah_v6.4.1dev/' \
+    #           'original_data/CSC1_truncated.ncs'
+    #     neuralynx_folder = self.test_dir / "sources" / "neuralynx_recording_session"
+    #     neuralynx_folder.mkdir()
+    #     with open(neuralynx_folder / "CSC1_truncated.ncs", "wb") as f:
+    #         f.write(requests.get(URL).content)
+    #
+    #     # testing conversion to nix
+    #     self.bep032tools_data.register_data_sources(neuralynx_folder)
+    #     self.bep032tools_data.organize_data_files(autoconvert=format)
+    #
+    #     observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
+    #     self.assertTrue(len(observed_files) == 1)
+    #     for observed_file in observed_files:
+    #         os.remove(observed_file)
 
     def test_data_files_complex(self):
         self.bep032tools_data.generate_directory_structure()
