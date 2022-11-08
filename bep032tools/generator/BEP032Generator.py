@@ -361,8 +361,8 @@ def convert_data(source_file_or_folder, output_format):
         raise ValueError('Conversion of data required neo package to be installed. '
                          'Use `pip install neo`')
 
-    io = neo.io.get_io(source_file_or_folder)
-    block = io.read_block()
+    io_read = neo.io.get_io(source_file_or_folder)
+    block = io_read.read_block()
 
     output_file = Path(source_file_or_folder).with_suffix('.' + output_format)
 
@@ -382,6 +382,10 @@ def convert_data(source_file_or_folder, output_format):
     block.annotations['identifier'] = str(block.annotations['identifier'])
 
     io_write.write_all_blocks([block])
+
+    for io in (io_read, io_write):
+        if hasattr(io, 'close'):
+            io.close()
 
     return output_file
 
