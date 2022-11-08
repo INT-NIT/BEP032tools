@@ -39,6 +39,6 @@ setup(
     python_requires='>=3.7',
     extras_require={
         'tools': ['pandas', 'pynwb', 'neo', 'nixio'],
-        'test': ['pytest', 'datalad']
+        'test': ['pytest', 'datalad', 'parameterized']
     }
 )
