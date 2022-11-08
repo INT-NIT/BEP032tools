@@ -284,17 +284,35 @@ class Test_BEP032Data_ice(unittest.TestCase):
         for data_file in data_files:
             self.assertTrue(data_file.name.find("_ephys"))
 
-    def test_data_file_conversion(self):
+    @parameterized.expand([('nix'),('nwb')])
+    def test_data_file_conversion(self, format):
         self.bep032tools_data.generate_directory_structure()
+        self.bep032tools_data.register_data_sources(self.ascii_data_filename)
 
-        for format in ['nix', 'nwb']:
-            # testing conversion to nix
-            self.bep032tools_data.register_data_sources(self.ascii_data_filename)
-            self.bep032tools_data.organize_data_files(autoconvert=format)
+        # testing conversion to nix
+        self.bep032tools_data.organize_data_files(autoconvert=format)
 
-            observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
-            self.assertTrue(len(observed_files) == 1)
-            os.remove(observed_files[0])
+        observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
+        self.assertTrue(len(observed_files) == 1)
+
+        # check file content
+        import neo
+        if format == 'nix':
+            ioclass = neo.NixIOFr
+        else:
+            ioclass = neo.NWBIO
+        io = ioclass(str(observed_files[0]))
+        block = io.read_block()
+
+        expected_data = np.loadtxt(self.ascii_data_filename)
+        anasigs = block.segments[0].analogsignals
+        self.assertEqual(len(anasigs), expected_data.shape[-1])
+        # compare data of first channel
+        np.testing.assert_array_almost_equal(anasigs[0].magnitude, expected_data[:, 0:1])
+        # compare first samples across channels
+        for channel_idx, channel in enumerate(anasigs):
+            self.assertEqual(channel[0].magnitude, expected_data[0, channel_idx])
+        os.remove(observed_files[0])
 
     def test_data_files_complex(self):
         self.bep032tools_data.generate_directory_structure()
