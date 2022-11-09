@@ -21,10 +21,10 @@ setup(
     data_files=[('.', ['VERSION', 'README.md', 'requirements.txt'])],
     include_package_data=True,
     package_data={
-            # If any package contains *.json or *.csv files, include them:
-            "": ["*.json", '*.csv', '*.tsv'],
+        # If any package contains *.json or *.csv files, include them:
+        "": ["*.json", "*.csv", "*.tsv"],
     },
-    author="Jeremy Garcia, Sylvain Takerkart , Julia Sprenger",
+    author="Julia Sprenger, Jeremy Garcia, Killian Rochet, Sylvain Takerkart",
     description="Checks the validity of a directory with respect to the BEP032 specifications ",
     long_description_content_type="text/markdown",
     long_description=long_description,
@@ -38,7 +38,7 @@ setup(
     },
     python_requires='>=3.7',
     extras_require={
-        'tools': ['pandas', 'pynwb', 'neo', 'nixio'],
-        'test': ['pytest', 'datalad']
-    }
+        "tools": ["pandas", "pynwb", "neo", "nixio", "pybids"],
+        "test": ["pytest", "datalad"],
+    },
 )
