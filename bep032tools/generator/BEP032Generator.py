@@ -55,7 +55,7 @@ class BEP032Data:
         run identifier of data files
 
     """
-    def __init__(self, sub_id, ses_id=None, modality='ephys'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys', **custom_metadata_sources):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
@@ -71,6 +71,7 @@ class BEP032Data:
         self.sub_id = sub_id
         self.ses_id = ses_id
         self.modality = modality
+        self.custom_metadata_sources = custom_metadata_sources
 
         # initialize data and metadata structures
         self.data = {}
@@ -328,7 +329,7 @@ class BEP032Data:
         """
 
         df = extract_structure_from_csv(csv_file)
-        df = df[ESSENTIAL_CSV_COLUMNS]
+        #df = df[ESSENTIAL_CSV_COLUMNS]
 
         organize_data = 'data_source' in df
 
