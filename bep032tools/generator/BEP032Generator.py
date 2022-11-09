@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 import filecmp
 import shutil
 import argparse
@@ -13,6 +14,12 @@ try:
 except ImportError:
     HAVE_PANDAS = False
 
+try:
+    import neo
+    HAVE_NEO = True
+except ImportError:
+    HAVE_NEO = False
+
 from bep032tools.validator.BEP032Validator import build_rule_regexp
 from bep032tools.rulesStructured import RULES_SET
 from bep032tools.rulesStructured import DATA_EXTENSIONS
@@ -23,7 +30,7 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
 ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_file']
+OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_source']
 
 
 class BEP032Data:
@@ -34,7 +41,7 @@ class BEP032Data:
     The BEP032Data object can track multiple realizations of `split`, `run`, `task` but only a
     single realization of `session` and `subject`, i.e. to represent multiple `session` folders,
     multiple BEP032Data objects are required. To include multiple realizations of tasks
-    or runs, call the `register_data` method for each set of parameters separately.
+    or runs, call the `register_data_sources` method for each set of parameters separately.
 
     Parameters
     ----------
@@ -47,19 +54,19 @@ class BEP032Data:
     runs : str
         run identifier of data files
 
-
     """
-    def __init__(self, sub_id, ses_id, modality='ephys'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys'):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
 
         # check for invalid arguments
-        for arg in [sub_id, ses_id]:
+        for arg in [sub_id]:
             invalid_characters = r'\/_'  # TODO: Should this be part of the BEP032tools core?
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
+
 
         self.sub_id = sub_id
         self.ses_id = ses_id
@@ -69,11 +76,15 @@ class BEP032Data:
         self.data = {}
         self.mdata = {}
 
+        self.filename_stem = None
         self._basedir = None
 
-    def register_data_files(self, *files, task=None, run=None):
+    def register_data_sources(self, *files, task=None, run=None, autoconvert=None):
         """
-        Register data with the BEP032 data structure.
+        Gather all the info about the input data sources (files or directories) that will be
+        yield an output data file in the BIDS data structure.
+
+        TODO later: rename the files variable into sources and adapt the docstring
 
         Parameters
         ----------
@@ -85,13 +96,24 @@ class BEP032Data:
             task name used
         run: str
             run name used
+        autoconvert: str
+            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
+            Warning: Using this feature can require extensive compute resources. Default: None
         """
 
         files = [Path(f) for f in files]
-        for file in files:
-            if file.suffix not in DATA_EXTENSIONS:
-                raise ValueError(f'Wrong file format of data {file.suffix}. '
-                                 f'Valid formats are {DATA_EXTENSIONS}')
+        for file_idx in range(len(files)):
+            if files[file_idx].suffix not in DATA_EXTENSIONS:
+                if autoconvert is None:
+                    raise ValueError(f'Wrong file format of data {files[file_idx].suffix}. '
+                                     f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
+                                     f'parameter for automatic conversion.')
+                elif autoconvert not in ['nwb', 'nix']:
+                    raise ValueError(f'`autoconvert` only accepts `nix` and `nwb` as values, '
+                                     f'received {autoconvert}.')
+
+                print(f'Converting data file to {autoconvert} format.')
+                files[file_idx] = convert_data(files[file_idx], autoconvert)
 
         key = ''
         if task is not None:
@@ -124,12 +146,12 @@ class BEP032Data:
 
     def get_data_folder(self, mode='absolute'):
         """
-        Generate the relative path to the folder of the data files
+        Generates the path to the folder of the data files
 
         Parameters
         ----------
         mode : str
-            Return the absolute or local path to the data folder.
+            Returns an absolute or relative path
             Valid values: 'absolute', 'local'
 
         Returns
@@ -138,7 +160,14 @@ class BEP032Data:
             Path of the data folder
         """
 
-        path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
+        if self.ses_id is None:
+            # if no session id is given as input (e.g in most cases for intra-cellular ephys), there is no
+            # session-level directory in the BIDS hierarchy
+            path = Path(f'sub-{self.sub_id}', self.modality)
+        else:
+            # if a session id exists, a session-level directory is used in the BIDS hierarchy
+            # as in most cases for extra-cellular ephys
+            path = Path(f'sub-{self.sub_id}', f'ses-{self.ses_id}', self.modality)
 
         if mode == 'absolute':
             if self.basedir is None:
@@ -147,9 +176,9 @@ class BEP032Data:
 
         return path
 
-    def generate_structure(self):
+    def generate_directory_structure(self):
         """
-        Generate the required folders for storing the dataset
+        Generate the hierarchy of folders that will host the data and metadata files
 
         Returns
         ----------
@@ -163,11 +192,16 @@ class BEP032Data:
         data_folder = Path(self.basedir).joinpath(self.get_data_folder())
         data_folder.mkdir(parents=True, exist_ok=True)
 
+        if self.ses_id is None:
+            self.filename_stem = f'sub-{self.sub_id}'
+        else:
+            self.filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+
         return data_folder
 
     def organize_data_files(self, mode='link'):
         """
-        Add datafiles to BEP032 structure
+        Add all the data files for which info has been gathered in register_data_sources to the BIDS data structure
         
         Parameters
         ----------
@@ -178,10 +212,10 @@ class BEP032Data:
         if self.basedir is None:
             raise ValueError('No base directory set.')
 
-        data_folder = self.get_data_folder(mode='absolute')
+        if self.filename_stem is None:
+            raise ValueError('No filename stem set.')
 
-        # compose BIDS data filenames
-        filename_stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+        data_folder = self.get_data_folder(mode='absolute')
 
         for key, files in self.data.items():
             # add '_' prefix for filename concatenation
@@ -195,7 +229,7 @@ class BEP032Data:
                 if len(files) > 1:
                     split = f'_split-{i}'
 
-                new_filename = filename_stem + key + split + postfix + suffix
+                new_filename = self.filename_stem + key + split + postfix + suffix
                 destination = data_folder / new_filename
                 create_file(file, destination, mode, exist_ok=True)
 
@@ -238,7 +272,10 @@ class BEP032Data:
         self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
                                              f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
-            stem = f'sub-{self.sub_id}_ses-{self.ses_id}'
+            if self.filename_stem is None:
+                raise ValueError('No filename stem set.')
+            else:
+                stem = self.filename_stem
             if key:
                 stem += f'_{key}'
             self.generate_metadata_file_probes(dest_path / (stem + '_probes'))
@@ -267,15 +304,20 @@ class BEP032Data:
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
     @classmethod
-    def generate_struct(cls, csv_file, pathToDir):
+    def generate_bids_dataset(cls, csv_file, pathToDir):
         """
-        Create structure with csv file given in argument
+        Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
         defined in the BEP.
+        The general principle for this file is that each line will yield one data file in the outbut BIDS dataset.
         Essential information of the following attributes needs to be present.
         Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_file' (only single file per sub_id, ses_id
-        combination supported). 'data_file' needs to be a valid path to a nix or nwb file.
+        Optional columns are 'runs', 'tasks' and 'data_source' (only single file per sub_id, ses_id
+        combination supported).
+        'data_source' can be: i) an input file (in any raw data format) that needs to be converted to the BIDS-supported
+        file formats, ii) an input directory where several raw data files are present that need to be combined and
+        converted to a single file in a BIDS-supported format, iii) a file already in a BIDS-supported format that 
+        will be copied or linked into the BIDS dataset.
 
         Parameters
         ----------
@@ -288,24 +330,54 @@ class BEP032Data:
         df = extract_structure_from_csv(csv_file)
         df = df[ESSENTIAL_CSV_COLUMNS]
 
-        organize_data = 'data_file' in df
+        organize_data = 'data_source' in df
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
-        for session_kwargs in df.to_dict('index').values():
+        for data_kwargs in df.to_dict('index').values():
             if organize_data:
-                data_file = session_kwargs.pop('data_file')
-            session = cls(**session_kwargs)
-            session.basedir = pathToDir
-            session.generate_structure()
+                data_source = data_kwargs.pop('data_source')
+            data_instance = cls(**data_kwargs)
+            data_instance.basedir = pathToDir
+            data_instance.generate_directory_structure()
             if organize_data:
-                session.register_data_files([data_file])
-                session.organize_data_files(mode='copy')
+                data_instance.register_data_sources([data_source])
+                data_instance.organize_data_files(mode='copy')
             try:
-                session.generate_all_metadata_files()
+                data_instance.generate_all_metadata_files()
             except NotImplementedError:
                 pass
+
+
+def convert_data(source_file, output_format):
+    if not HAVE_NEO:
+        raise ValueError('Conversion of data required neo package to be installed. '
+                         'Use `pip install neo`')
+
+    io = neo.io.get_io(source_file)
+    block = io.read_block()
+
+    output_file = Path(source_file).with_suffix('.' + output_format)
+
+    if output_format == 'nix':
+        io_write = neo.NixIO(output_file, mode='rw')
+    elif output_format == 'nwb':
+        io_write = neo.NWBIO(str(output_file), mode='w')
+    else:
+        raise ValueError(f'Supported formats are `nwb` and `nix`, not {output_format}')
+
+    # ensure all required annotations are present for nwb file generation
+    start_time = datetime.fromtimestamp(int(block.segments[0].t_start.rescale('s')))
+    block.annotations.setdefault('session_start_time', start_time)
+    block.annotations.setdefault('session_description', block.file_origin)
+    block.annotations['session_description'] = str(block.annotations['session_description'])
+    block.annotations.setdefault('identifier', block.file_origin)
+    block.annotations['identifier'] = str(block.annotations['identifier'])
+
+    io_write.write_all_blocks([block])
+
+    return output_file
 
 
 def create_file(source, destination, mode, exist_ok=False):
@@ -411,7 +483,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    BEP032Data.generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032Data.generate_bids_dataset(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':

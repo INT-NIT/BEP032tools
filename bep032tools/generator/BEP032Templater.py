@@ -56,6 +56,7 @@ class BEP032TemplateData(BEP032Data):
         participant_df = pd.DataFrame([
             ['sub-' + self.sub_id, 'rattus norvegicus', 'p20', 'M', '2001-01-01T00:00:00']],
             columns=['participant_id', 'species', 'age', 'sex', 'birthday'])
+        participant_df.set_index('participant_id', inplace=True)
         if not output.with_suffix('.tsv').exists():
             save_tsv(participant_df, output)
 
@@ -82,6 +83,7 @@ class BEP032TemplateData(BEP032Data):
         session_df = pd.DataFrame([
             ['ses-' + self.ses_id, '2009-06-15T13:45:30', '120']],
             columns=['session_id', 'acq_time', 'systolic_blood_pressure'])
+        session_df.set_index('session_id', inplace=True)
         if not output.with_suffix('.tsv').exists():
             save_tsv(session_df, output)
 
@@ -93,6 +95,7 @@ class BEP032TemplateData(BEP032Data):
             ['t420b', 'tetrode', 7, 'iridium-oxide', 500, 0, 0, 'circle', 20]],
             columns=['probe_id', 'type', 'coordinate_space', 'material', 'x', 'y', 'z', 'shape',
                      'contact_size'])
+        probes_df.set_index('probe_id', inplace=True)
         save_tsv(probes_df, output)
 
     def generate_metadata_file_channels(self, output):
@@ -103,6 +106,7 @@ class BEP032TemplateData(BEP032Data):
             [132, 'n/a', 'sync_pulse', 'V', 1000, 1, 'n/a']],
             columns=['channel_id', 'contact_id', 'type', 'units', 'sampling_frequency', 'gain',
                      'status'])
+        channels_df.set_index('channel_id', inplace=True)
         save_tsv(channels_df, output)
 
     def generate_metadata_file_contacts(self, output):
@@ -116,6 +120,7 @@ class BEP032TemplateData(BEP032Data):
             columns=['contact_id', 'probe_id', 'shank_id', 'impedance', 'material', 'x', 'y', 'z',
                      'shape',
                      'contact_size'])
+        contact_df.set_index('contact_id', inplace=True)
         save_tsv(contact_df, output)
 
     def generate_metadata_file_ephys(self, output):
@@ -156,7 +161,7 @@ class BEP032TemplateData(BEP032Data):
     def generate_all_metadata_files(self):
         dest_path = self.get_data_folder(mode='absolute')
 
-        self.generate_structure()
+        self.generate_directory_structure()
         self.generate_metadata_file_dataset_description(
             self.basedir / "dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
@@ -286,7 +291,7 @@ def main():
     if not os.path.isdir(args.pathToDir):
         print('Directory does not exist:', args.pathToDir)
         exit(1)
-    BEP032TemplateData.generate_struct(args.pathToCsv, args.pathToDir)
+    BEP032TemplateData.generate_bids_dataset(args.pathToCsv, args.pathToDir)
 
 
 if __name__ == '__main__':

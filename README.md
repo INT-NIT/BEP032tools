@@ -14,6 +14,9 @@ The provided tools integrating with BEP032 are :
 
 [![PyPI license](https://img.shields.io/pypi/l/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)[![gh actions tests](https://github.com/INT-NIT/BEP032tools/actions/workflows/run_tests.yml/badge.svg?branch=master)](https://github.com/INT-NIT/BEP032tools/actions)[![Test coverage](https://coveralls.io/repos/github/INT-NIT/BEP032tools/badge.svg?branch=master)](https://coveralls.io/github/INT-NIT/BEP032tools?branch=master)
 
+
+The official documentation is hosted on [ReadTheDocs](https://bep032tools.readthedocs.io).
+
 ## Installation
 
 ### Dependencies
