@@ -49,7 +49,7 @@ jobs:
       - name: Install git and git-annex on Windows
         if: runner.os == 'Windows'
         run: |
-          wget https://downloads.kitenet.net/git-annex/windows/current/git-annex-installer.exe - O git-annex-installer.exe
+          curl https://downloads.kitenet.net/git-annex/windows/current/git-annex-installer.exe - O git-annex-installer.exe
           git-annex-installer.exe
 #          # check if git is already available
 #          echo git --help
