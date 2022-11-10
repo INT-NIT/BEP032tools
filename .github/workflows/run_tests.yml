@@ -50,7 +50,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           curl -o git-annex-installer.exe https://downloads.kitenet.net/git-annex/windows/current/git-annex-installer.exe
-          git-annex-installer.exe
+          start git-annex-installer.exe
 #          # check if git is already available
 #          echo git --help
 #          echo git --version
