@@ -41,26 +41,26 @@ jobs:
           which python
           conda --version
 
-#      - name: Install git-annex on OSX
-#        if: runner.os == 'macOS'
-#        run: |
-#          brew install git-annex
-#
-#      - name: Install git and git-annex on Windows
-#        if: runner.os == 'Windows'
-#        run: |
-#          # check if git is already available
-#          echo git --help
-#          echo git --version
-#          choco install git.install --debug
-#          choco install --ignore-checksums git-annex
+      - name: Install git-annex on OSX
+        if: runner.os == 'macOS'
+        run: |
+          brew install git-annex
+
+      - name: Install git and git-annex on Windows
+        if: runner.os == 'Windows'
+        run: |
+          # check if git is already available
+          echo git --help
+          echo git --version
+          choco install git.install --debug --force
+          choco install --ignore-checksums git-annex
 
       - name: Install other conda dependencies
         run: |
-          conda install -c conda-forge datalad git-annex
+          conda install -c conda-forge datalad
           conda install pip pytest
 
-      - name: Configure git-annex
+      - name: Configure git
         run: |
           git config --global user.email "BEP032toolsTest@githubactions.com"
           git config --global user.name "Github Actions"
