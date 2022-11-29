@@ -451,12 +451,12 @@ def generate_csv_file_nw(pathToRawInputDir, sub_id, metadata_source):
     print(data_files)
 
     n_sources = len(data_files)
-    sources_df = pd.DataFrame(columns=['sub_id', 'ses_id', 'data_source'])
+    sources_df = pd.DataFrame(columns=['sub_id', 'ses_id', 'run', 'data_source'])
     for source_ind in range(n_sources):
         ses_id = sub_id
         data_source = data_files[source_ind]
-        current_sample_df = pd.DataFrame([[sub_id, ses_id, data_source, metadata_source]],
-                                         columns=['sub_id', 'ses_id', 'data_source', 'custom_metadata_sources'])
+        current_sample_df = pd.DataFrame([[sub_id, ses_id, source_ind, data_source, metadata_source]],
+                                         columns=['sub_id', 'ses_id', 'run', 'data_source', 'custom_metadata_sources'])
         sources_df = pd.concat([sources_df, current_sample_df])
     sources_df.set_index('sub_id', inplace=True)
 
@@ -669,7 +669,7 @@ def main():
         # the following needs to be rethought and checked to see whether it's adequate / possible
         #this_bep032data = BEP032PatchClampNWData(sub_id)
         #this_bep032data.md = this_metadata
-        BEP032Data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
+        BEP032Data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir, autoconvert="nix")
 
 
 if __name__ == '__main__':

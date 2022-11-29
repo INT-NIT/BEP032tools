@@ -98,6 +98,10 @@ class BEP032Data:
 
         sources = [Path(f) for f in sources]
 
+        # the run info is in self.custom_metadata_sources{'run'}
+        # let's go get it!
+
+
         key = ''
         if task is not None:
             key += f'task-{task}'
@@ -352,7 +356,7 @@ class BEP032Data:
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
             if organize_data:
-                data_instance.register_data_sources([data_source])
+                data_instance.register_data_sources(data_source)
                 data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
                 data_instance.generate_all_metadata_files()
