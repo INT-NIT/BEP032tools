@@ -456,7 +456,7 @@ def generate_csv_file_nw(pathToRawInputDir, sub_id, metadata_source):
         ses_id = sub_id
         data_source = data_files[source_ind]
         current_sample_df = pd.DataFrame([[sub_id, ses_id, data_source, metadata_source]],
-                                         columns=['sub_id', 'ses_id', 'data_source', 'metadata_source'])
+                                         columns=['sub_id', 'ses_id', 'data_source', 'custom_metadata_sources'])
         sources_df = pd.concat([sources_df, current_sample_df])
     sources_df.set_index('sub_id', inplace=True)
 
@@ -663,13 +663,13 @@ def main():
     ###
     for sub_ind, sub_id in enumerate(sub_ids_list):
         # Construct the csv file that will be used as input to the generate_bids_dataset function
-        pathToInputCsv = generate_csv_file_nw(args.pathToRawInputDir, sub_id), metadata_file_list[sub_ind])
+        pathToInputCsv = generate_csv_file_nw(args.pathToRawInputDir, sub_id, metadata_file_list[sub_ind])
         # Read the set of metadata from the excel file
-        this_metadata = read_metadata_xls_file_nw(metadata_file_list[sub_ind])
+        #this_metadata = read_metadata_xls_file_nw(metadata_file_list[sub_ind])
         # the following needs to be rethought and checked to see whether it's adequate / possible
-        this_bep032data = BEP032PatchClampNWData(sub_id)
-        this_bep032data.md = this_metadata
-        this_bep032data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
+        #this_bep032data = BEP032PatchClampNWData(sub_id)
+        #this_bep032data.md = this_metadata
+        BEP032Data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir)
 
 
 if __name__ == '__main__':

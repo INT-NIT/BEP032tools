@@ -102,7 +102,10 @@ class BEP032Data:
             Warning: Using this feature can require extensive compute resources. Default: None
         """
 
+        print("bouuuuuuuuuuuuh")
+        print(files)
         files = [Path(f) for f in files]
+        print(files)
         for file_idx in range(len(files)):
             if files[file_idx].suffix not in DATA_EXTENSIONS:
                 if autoconvert is None:
@@ -336,14 +339,17 @@ class BEP032Data:
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
+        #print(df.to_dict('index').values())
         for data_kwargs in df.to_dict('index').values():
             if organize_data:
                 data_source = data_kwargs.pop('data_source')
+                print("data_source")
+                print(data_source)
             data_instance = cls(**data_kwargs)
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
             if organize_data:
-                data_instance.register_data_sources([data_source])
+                data_instance.register_data_sources(data_source)
                 data_instance.organize_data_files(mode='copy')
             try:
                 data_instance.generate_all_metadata_files()
