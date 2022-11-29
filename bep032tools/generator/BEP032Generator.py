@@ -80,44 +80,23 @@ class BEP032Data:
         self.filename_stem = None
         self._basedir = None
 
-    def register_data_sources(self, *files, task=None, run=None, autoconvert=None):
+    def register_data_sources(self, *sources, task=None, run=None):
         """
         Gather all the info about the input data sources (files or directories) that will be
         yield an output data file in the BIDS data structure.
 
-        TODO later: rename the files variable into sources and adapt the docstring
-
         Parameters
         ----------
-        *files : path to files to be added as data files.
-            If multiple files are provided they are treated as a single data files split into
-            multiple chunks and will be enumerated according to the order they are provided in.
-
+        *sources : path to recording files or folders to be added as data files.
+            If multiple sources are provided they are treated as multiple chunks
+            of the same recording and will be enumerated according to their order.
         task: str
             task name used
         run: str
             run name used
-        autoconvert: str
-            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
-            Warning: Using this feature can require extensive compute resources. Default: None
         """
 
-        print("bouuuuuuuuuuuuh")
-        print(files)
-        files = [Path(f) for f in files]
-        print(files)
-        for file_idx in range(len(files)):
-            if files[file_idx].suffix not in DATA_EXTENSIONS:
-                if autoconvert is None:
-                    raise ValueError(f'Wrong file format of data {files[file_idx].suffix}. '
-                                     f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
-                                     f'parameter for automatic conversion.')
-                elif autoconvert not in ['nwb', 'nix']:
-                    raise ValueError(f'`autoconvert` only accepts `nix` and `nwb` as values, '
-                                     f'received {autoconvert}.')
-
-                print(f'Converting data file to {autoconvert} format.')
-                files[file_idx] = convert_data(files[file_idx], autoconvert)
+        sources = [Path(f) for f in sources]
 
         key = ''
         if task is not None:
@@ -128,9 +107,9 @@ class BEP032Data:
             key += f'run-{run}'
 
         if key not in self.data:
-            self.data[key] = files
+            self.data[key] = sources
         else:
-            self.data[key].extend(files)
+            self.data[key].extend(sources)
 
     @property
     def basedir(self):
@@ -203,14 +182,18 @@ class BEP032Data:
 
         return data_folder
 
-    def organize_data_files(self, mode='link'):
+    def organize_data_files(self, mode='link', autoconvert=None):
         """
-        Add all the data files for which info has been gathered in register_data_sources to the BIDS data structure
+        Add all the data files for which info has been gathered in register_data_sources to the
+        BIDS data structure
         
         Parameters
         ----------
         mode: str
             Can be either 'link', 'copy' or 'move'.
+        autoconvert: str
+            accepted values: 'nix', 'nwb'. Automatically convert to the specified format.
+            Warning: Using this feature can require extensive compute resources. Default: None
         """
         postfix = '_ephys'
         if self.basedir is None:
@@ -221,16 +204,34 @@ class BEP032Data:
 
         data_folder = self.get_data_folder(mode='absolute')
 
-        for key, files in self.data.items():
+        for key, sources in self.data.items():
             # add '_' prefix for filename concatenation
             if key:
                 key = '_' + key
-            for i, file in enumerate(files):
+
+            # convert each source to single data of valid format if required
+            for source_idx, source in enumerate(sources):
+                if autoconvert is None:
+                    if source.suffix not in DATA_EXTENSIONS:
+                        raise ValueError(
+                            f'Wrong file format of data {source.suffix}. '
+                            f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
+                            f'parameter for automatic conversion.')
+                elif autoconvert not in ['nwb', 'nix']:
+                    raise ValueError(
+                        f'`autoconvert` only accepts `nix` and `nwb` as values, '
+                        f'received {autoconvert}.')
+
+                elif source.suffix != f'.{autoconvert}':
+                    print(f'Converting data file to {autoconvert} format.')
+                    sources[source_idx] = convert_data(source, autoconvert)
+
+            for i, file in enumerate(sources):
                 # preserve the suffix
                 suffix = file.suffix
                 # append split postfix if required
                 split = ''
-                if len(files) > 1:
+                if len(sources) > 1:
                     split = f'_split-{i}'
 
                 new_filename = self.filename_stem + key + split + postfix + suffix
@@ -308,7 +309,7 @@ class BEP032Data:
         bep032tools.validator.BEP032Validator.is_valid(self.basedir)
 
     @classmethod
-    def generate_bids_dataset(cls, csv_file, pathToDir):
+    def generate_bids_dataset(cls, csv_file, pathToDir, autoconvert=None):
         """
         Create a bids dataset from a csv file given in argument
         This file must contain a header row specifying the provided data. Accepted titles are
@@ -329,6 +330,8 @@ class BEP032Data:
             Csv file that contains sub_id and ses_id and optional columns
         pathToDir: str
             Path to directory where the directories will be created.
+        autoconvert: str
+            see `organize_data_files`
         """
 
         df = extract_structure_from_csv(csv_file)
@@ -350,22 +353,22 @@ class BEP032Data:
             data_instance.generate_directory_structure()
             if organize_data:
                 data_instance.register_data_sources([data_source])
-                data_instance.organize_data_files(mode='copy')
+                data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
                 data_instance.generate_all_metadata_files()
             except NotImplementedError:
                 pass
 
 
-def convert_data(source_file, output_format):
+def convert_data(source_file_or_folder, output_format):
     if not HAVE_NEO:
         raise ValueError('Conversion of data required neo package to be installed. '
                          'Use `pip install neo`')
 
-    io = neo.io.get_io(source_file)
-    block = io.read_block()
+    io_read = neo.io.get_io(source_file_or_folder)
+    block = io_read.read_block()
 
-    output_file = Path(source_file).with_suffix('.' + output_format)
+    output_file = Path(source_file_or_folder).with_suffix('.' + output_format)
 
     if output_format == 'nix':
         io_write = neo.NixIO(output_file, mode='rw')
@@ -383,6 +386,10 @@ def convert_data(source_file, output_format):
     block.annotations['identifier'] = str(block.annotations['identifier'])
 
     io_write.write_all_blocks([block])
+
+    for io in (io_read, io_write):
+        if hasattr(io, 'close'):
+            io.close()
 
     return output_file
 
