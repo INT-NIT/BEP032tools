@@ -208,6 +208,8 @@ class BEP032Data:
 
         data_folder = self.get_data_folder(mode='absolute')
 
+        converted_data_files = []
+
         for key, sources in self.data.items():
             # add '_' prefix for filename concatenation
             if key:
@@ -221,21 +223,23 @@ class BEP032Data:
                             f'Wrong file format of data {source.suffix}. '
                             f'Valid formats are {DATA_EXTENSIONS}. Use `autoconvert`'
                             f'parameter for automatic conversion.')
+                    converted_data_files.append(source)
                 elif autoconvert not in ['nwb', 'nix']:
                     raise ValueError(
                         f'`autoconvert` only accepts `nix` and `nwb` as values, '
                         f'received {autoconvert}.')
-
                 elif source.suffix != f'.{autoconvert}':
                     print(f'Converting data file to {autoconvert} format.')
-                    sources[source_idx] = convert_data(source, autoconvert)
+                    converted_data_files.append(convert_data(source, autoconvert))
 
-            for i, file in enumerate(sources):
+            for i, file in enumerate(converted_data_files):
                 # preserve the suffix
                 suffix = file.suffix
                 # append split postfix if required
                 split = ''
                 if len(sources) > 1:
+                    # this should be re-implemented... splits should be introduced only if several data files have
+                    # the same values for all their entities (sub, ses, task, run etc.)
                     split = f'_split-{i}'
 
                 new_filename = self.filename_stem + key + split + postfix + suffix
@@ -342,21 +346,36 @@ class BEP032Data:
         #df = df[ESSENTIAL_CSV_COLUMNS]
 
         organize_data = 'data_source' in df
+        # extract task and run information if present in the input csv file
+        organize_task = 'task' in df
+        organize_run = 'run' in df
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
         #print(df.to_dict('index').values())
         for data_kwargs in df.to_dict('index').values():
+            print(data_kwargs)
+
+        for data_kwargs in df.to_dict('index').values():
             if organize_data:
                 data_source = data_kwargs.pop('data_source')
                 print("data_source")
                 print(data_source)
+            if organize_task:
+                task = data_kwargs.pop('task')
+            else:
+                task = None
+            if organize_run:
+                run = data_kwargs.pop('run')
+            else:
+                run = None
             data_instance = cls(**data_kwargs)
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
             if organize_data:
-                data_instance.register_data_sources(data_source)
+                print(data_source)
+                data_instance.register_data_sources(data_source, task=task, run=run)
                 data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
                 data_instance.generate_all_metadata_files()
