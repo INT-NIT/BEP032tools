@@ -8,6 +8,8 @@ import re
 import glob
 import numpy as np
 
+import tempfile
+
 import bep032tools.validator.BEP032Validator
 
 try:
@@ -168,16 +170,10 @@ def generate_csv_file_nw(pathToRawInputDir, sub_id, metadata_source):
         sources_df = pd.concat([sources_df, current_sample_df])
     sources_df.set_index('sub_id', inplace=True)
 
-    output = '/tmp/test.tsv'
-    if os.path.isfile(output):
-        # append data from new subject to existing csv file
-        ### BECAUSE it's a temp file, this should not happen, we should raise an error here!
-        sources_df.to_csv(output, mode='a', index=True, header=False, sep=',')
-    else:
-        # create csv file
-        sources_df.to_csv(output, mode='w', index=True, header=True, sep=',')
+    f = tempfile.NamedTemporaryFile(suffix='.tsv', delete=False)
+    sources_df.to_csv(f.name, mode='w', index=True, header=True, sep=',')
 
-    return output
+    return f.name
 
 
 def read_metadata_xls_file_nw(metadata_xls_file):
