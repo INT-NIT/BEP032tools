@@ -81,7 +81,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
         self.bep032tools_data.register_data_sources(self.ascii_data_filename)
 
         # testing conversion to nix
-        self.bep032tools_data.organize_data_files(autoconvert=format)
+        self.bep032tools_data.organize_data_files(autoconvert=format, mode='copy')
 
         observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
         self.assertTrue(len(observed_files) == 1)
@@ -111,7 +111,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
         format = 'nix'
         # testing conversion to nix
         self.bep032tools_data.register_data_sources(*[self.ascii_data_filename]*3)
-        self.bep032tools_data.organize_data_files(autoconvert=format)
+        self.bep032tools_data.organize_data_files(autoconvert=format, mode='copy')
 
         observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
         self.assertTrue(len(observed_files) == 3)
@@ -136,7 +136,7 @@ class Test_BEP032Data_ece(unittest.TestCase):
     #
     #     # testing conversion to nix
     #     self.bep032tools_data.register_data_sources(neuralynx_folder)
-    #     self.bep032tools_data.organize_data_files(autoconvert=format)
+    #     self.bep032tools_data.organize_data_files(autoconvert=format, mode='copy')
     #
     #     observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
     #     self.assertTrue(len(observed_files) == 1)
@@ -290,7 +290,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
         self.bep032tools_data.register_data_sources(self.ascii_data_filename)
 
         # testing conversion to nix
-        self.bep032tools_data.organize_data_files(autoconvert=format)
+        self.bep032tools_data.organize_data_files(autoconvert=format, mode='copy')
 
         observed_files = list(self.bep032tools_data.get_data_folder().glob(f'*.{format}'))
         self.assertTrue(len(observed_files) == 1)
