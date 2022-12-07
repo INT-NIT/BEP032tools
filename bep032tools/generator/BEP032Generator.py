@@ -30,8 +30,8 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
-ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_source']
+ESSENTIAL_CSV_COLUMNS = ['sub_id']
+OPTIONAL_CSV_COLUMNS = ['ses_id', 'task', 'run', 'data_source']
 
 
 class BEP032Data:
@@ -308,7 +308,7 @@ class BEP032Data:
             path to the folder to validate
 
         Returns
-        ----------
+        -------
         bool
             True if validation was successful. False if it failed.
         """
@@ -317,18 +317,24 @@ class BEP032Data:
     @classmethod
     def generate_bids_dataset(cls, csv_file, pathToDir, autoconvert=None):
         """
-        Create a bids dataset from a csv file given in argument
-        This file must contain a header row specifying the provided data. Accepted titles are
-        defined in the BEP.
-        The general principle for this file is that each line will yield one data file in the outbut BIDS dataset.
-        Essential information of the following attributes needs to be present.
-        Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_source' (only single file per sub_id, ses_id
-        combination supported).
+        Create a bids dataset from specifications in a csv file.
+        One row of the csv file corresponds to one BEP032 data file in the output BIDS dataset.
+        The first row has to contain header labels for each row. Valid headers are:
+        Mandatory headers are 'sub_id' and 'ses_id'.
+        Optional headers are 'run', 'task' and 'data_source'.
+
         'data_source' can be: i) an input file (in any raw data format) that needs to be converted to the BIDS-supported
         file formats, ii) an input directory where several raw data files are present that need to be combined and
         converted to a single file in a BIDS-supported format, iii) a file already in a BIDS-supported format that 
         will be copied or linked into the BIDS dataset.
+
+        An example csv table could contain:
+
+        | sub_id  | ses_id     | data_source        | run | task    |
+        |---------|------------|--------------------|-----|---------|
+        | mouse-A | 2000-01-01 | my_data_file_1.abf | 1   | running |
+        | mouse-A | 2000-01-01 | my_data_file_2.abf | 2   | running |
+        | mouse-B | 2000-01-01 | my_data_folder_2   |     | rest    |
 
         Parameters
         ----------
