@@ -5,6 +5,7 @@ import shutil
 import argparse
 import os
 import re
+import numpy as np
 
 import bep032tools.validator.BEP032Validator
 
@@ -29,8 +30,8 @@ METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_L
 
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
-ESSENTIAL_CSV_COLUMNS = ['sub_id', 'ses_id']
-OPTIONAL_CSV_COLUMNS = ['tasks', 'runs', 'data_source']
+ESSENTIAL_CSV_COLUMNS = ['sub_id']
+OPTIONAL_CSV_COLUMNS = ['ses_id', 'task', 'run', 'data_source']
 
 
 class BEP032Data:
@@ -55,7 +56,7 @@ class BEP032Data:
         run identifier of data files
 
     """
-    def __init__(self, sub_id, ses_id=None, modality='ephys', **custom_metadata_sources):
+    def __init__(self, sub_id, ses_id=None, modality='ephys', custom_metadata_source=None):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
@@ -71,7 +72,7 @@ class BEP032Data:
         self.sub_id = sub_id
         self.ses_id = ses_id
         self.modality = modality
-        self.custom_metadata_sources = custom_metadata_sources
+        self.custom_metadata_sources = custom_metadata_source
 
         # initialize data and metadata structures
         self.data = {}
@@ -211,6 +212,8 @@ class BEP032Data:
         converted_data_files = []
 
         for key, sources in self.data.items():
+            converted_data_files = []
+
             # add '_' prefix for filename concatenation
             if key:
                 key = '_' + key
@@ -237,8 +240,9 @@ class BEP032Data:
                 suffix = file.suffix
                 # append split postfix if required
                 split = ''
-                if len(sources) > 1:
-                    # this should be re-implemented... splits should be introduced only if several data files have
+                if len(converted_data_files) > 1:
+                    # note JS & ST 2022/11/30: this test is incorrect and should be reimplemented
+                    # splits should be introduced only if several data files have
                     # the same values for all their entities (sub, ses, task, run etc.)
                     split = f'_split-{i}'
 
@@ -310,7 +314,7 @@ class BEP032Data:
             path to the folder to validate
 
         Returns
-        ----------
+        -------
         bool
             True if validation was successful. False if it failed.
         """
@@ -319,18 +323,24 @@ class BEP032Data:
     @classmethod
     def generate_bids_dataset(cls, csv_file, pathToDir, autoconvert=None):
         """
-        Create a bids dataset from a csv file given in argument
-        This file must contain a header row specifying the provided data. Accepted titles are
-        defined in the BEP.
-        The general principle for this file is that each line will yield one data file in the outbut BIDS dataset.
-        Essential information of the following attributes needs to be present.
-        Essential columns are 'sub_id' and 'ses_id'.
-        Optional columns are 'runs', 'tasks' and 'data_source' (only single file per sub_id, ses_id
-        combination supported).
+        Create a bids dataset from specifications in a csv file.
+        One row of the csv file corresponds to one BEP032 data file in the output BIDS dataset.
+        The first row has to contain header labels for each row. Valid headers are:
+        Mandatory headers are 'sub_id' and 'ses_id'.
+        Optional headers are 'run', 'task' and 'data_source'.
+
         'data_source' can be: i) an input file (in any raw data format) that needs to be converted to the BIDS-supported
         file formats, ii) an input directory where several raw data files are present that need to be combined and
         converted to a single file in a BIDS-supported format, iii) a file already in a BIDS-supported format that 
         will be copied or linked into the BIDS dataset.
+
+        An example csv table could contain:
+
+        | sub_id  | ses_id     | data_source        | run | task    |
+        |---------|------------|--------------------|-----|---------|
+        | mouse-A | 2000-01-01 | my_data_file_1.abf | 1   | running |
+        | mouse-A | 2000-01-01 | my_data_file_2.abf | 2   | running |
+        | mouse-B | 2000-01-01 | my_data_folder_2   |     | rest    |
 
         Parameters
         ----------
@@ -343,12 +353,6 @@ class BEP032Data:
         """
 
         df = extract_structure_from_csv(csv_file)
-        #df = df[ESSENTIAL_CSV_COLUMNS]
-
-        organize_data = 'data_source' in df
-        # extract task and run information if present in the input csv file
-        organize_task = 'task' in df
-        organize_run = 'run' in df
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
@@ -358,23 +362,21 @@ class BEP032Data:
             print(data_kwargs)
 
         for data_kwargs in df.to_dict('index').values():
-            if organize_data:
-                data_source = data_kwargs.pop('data_source')
-                print("data_source")
-                print(data_source)
-            if organize_task:
-                task = data_kwargs.pop('task')
-            else:
+            data_source = data_kwargs.pop('data_source', None)
+
+            # extract task and run information if present in the input csf file
+            # this should probably be extended to support all BIDS-supported entities
+            task = data_kwargs.pop('task', None)
+            if task is not None and np.isnan(task):
                 task = None
-            if organize_run:
-                run = data_kwargs.pop('run')
-            else:
+            run = data_kwargs.pop('run', None)
+            if run is not None and np.isnan(run):
                 run = None
+
             data_instance = cls(**data_kwargs)
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
-            if organize_data:
-                print(data_source)
+            if data_source is not None:
                 data_instance.register_data_sources(data_source, task=task, run=run)
                 data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
@@ -476,10 +478,6 @@ def extract_structure_from_csv(csv_file):
 
     df = pd.read_csv(csv_file, dtype=str)
 
-    # ensure all fields contain information
-    if df.isnull().values.any():
-        raise ValueError(f'Csv file contains empty cells.')
-
     # standardizing column labels
     # df = df.rename(columns=LABEL_MAPPING)
 
@@ -487,6 +485,10 @@ def extract_structure_from_csv(csv_file):
     if not set(ESSENTIAL_CSV_COLUMNS).issubset(df.columns):
         raise ValueError(f'Csv file ({csv_file}) does not contain required information '
                          f'({ESSENTIAL_CSV_COLUMNS}). Accepted column names are specified in the BEP.')
+
+    # ensure all fields contain information
+    if df[ESSENTIAL_CSV_COLUMNS].isnull().values.any():
+        raise ValueError(f'Csv file contains empty cells for mandatory fields.')
 
     return df
 
