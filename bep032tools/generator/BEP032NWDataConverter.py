@@ -108,7 +108,9 @@ class BEP032PatchClampNWData(BEP032Data):
         raise NotImplementedError()
 
     def generate_all_metadata_files(self):
-        print("teeeeeeeeeeest")
+        print("reading metadata xls file")
+        metadata = read_metadata_xls_file_nw(self.custom_metadata_sources)
+        self.md = metadata
         dest_path = self.get_data_folder(mode='absolute')
         print(self.basedir / f"dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
@@ -166,7 +168,7 @@ def generate_csv_file_nw(pathToRawInputDir, sub_id, metadata_source):
         ses_id = sub_id
         data_source = data_files[source_ind]
         current_sample_df = pd.DataFrame([[sub_id, ses_id, source_ind, data_source, metadata_source]],
-                                         columns=['sub_id', 'ses_id', 'run', 'data_source', 'custom_metadata_sources'])
+                                         columns=['sub_id', 'ses_id', 'run', 'data_source', 'custom_metadata_source'])
         sources_df = pd.concat([sources_df, current_sample_df])
     sources_df.set_index('sub_id', inplace=True)
 

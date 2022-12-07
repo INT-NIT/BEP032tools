@@ -369,7 +369,7 @@ class BEP032Data:
             task = data_kwargs.pop('task', None)
             if task is not None and np.isnan(task):
                 task = None
-            run = data_kwargs.pop('run', None)
+            run = int(data_kwargs.pop('run', None))
             if run is not None and np.isnan(run):
                 run = None
 
