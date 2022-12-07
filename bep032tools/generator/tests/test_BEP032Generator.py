@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
-                                               generate_simple_csv_file)
+                                               generate_example_csv_file)
 from bep032tools.generator.BEP032Generator import BEP032Data, extract_structure_from_csv
 
 
@@ -395,7 +395,7 @@ class Test_BEP032Data_ice(unittest.TestCase):
 class Test_ReadCsv(unittest.TestCase):
 
     def setUp(self):
-        csv_filename = generate_simple_csv_file()
+        csv_filename = generate_example_csv_file(mode='simple')
         self.csv_file = csv_filename
 
     def test_read_csv(self):
@@ -408,7 +408,7 @@ class Test_GenerateStruct(unittest.TestCase):
 
     def setUp(self):
         initialize_test_directory(clean=True)
-        csv_filename = generate_simple_csv_file()
+        csv_filename = generate_example_csv_file(mode='simple')
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
@@ -435,12 +435,42 @@ class Test_GenerateStruct(unittest.TestCase):
         initialize_test_directory(clean=True)
 
 
-class Test_FolderGeneration(unittest.TestCase):
+class Test_FolderGeneration_simple(unittest.TestCase):
 
     def setUp(self):
         test_dir = Path(initialize_test_directory(clean=True))
         self.test_dir = test_dir / 'generateTest'  # this folder will not exist yet
-        csv_filename = generate_simple_csv_file()
+        csv_filename = generate_example_csv_file(mode='simple')
+        self.csv_file = csv_filename
+
+    def test_generate_folder(self):
+        """
+        Check that generation also works on non existing folders.
+        """
+        test_generate = False
+        BEP032Data.generate_bids_dataset(self.csv_file, self.test_dir)
+        if os.path.isdir(self.test_dir):
+            test_generate = True
+        self.assertTrue(test_generate)
+
+    def test_no_duplicate_folder_generated(self):
+        """
+        Checks that there are no duplicates when generating folders.
+        """
+        BEP032Data.generate_bids_dataset(self.csv_file, self.test_dir)
+        generation = False
+        root_name = self.test_dir.name
+        if not (self.test_dir / root_name).exists():
+            generation = True
+        self.assertTrue(generation)
+
+
+class Test_FolderGeneration_full(unittest.TestCase):
+
+    def setUp(self):
+        test_dir = Path(initialize_test_directory(clean=True))
+        self.test_dir = test_dir / 'generateTest'  # this folder will not exist yet
+        csv_filename = generate_example_csv_file(mode='full')
         self.csv_file = csv_filename
 
     def test_generate_folder(self):

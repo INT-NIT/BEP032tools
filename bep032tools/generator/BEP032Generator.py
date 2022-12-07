@@ -11,12 +11,14 @@ import bep032tools.validator.BEP032Validator
 
 try:
     import pandas as pd
+
     HAVE_PANDAS = True
 except ImportError:
     HAVE_PANDAS = False
 
 try:
     import neo
+
     HAVE_NEO = True
 except ImportError:
     HAVE_NEO = False
@@ -25,8 +27,9 @@ from bep032tools.validator.BEP032Validator import build_rule_regexp
 from bep032tools.rulesStructured import RULES_SET
 from bep032tools.rulesStructured import DATA_EXTENSIONS
 
-METADATA_LEVELS = {i: r['authorized_metadata_files'] for i,r in enumerate(RULES_SET)}
-METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v in values}
+METADATA_LEVELS = {i: r['authorized_metadata_files'] for i, r in enumerate(RULES_SET)}
+METADATA_LEVEL_BY_NAME = {build_rule_regexp(v)[0]: k for k, values in METADATA_LEVELS.items() for v
+                          in values}
 
 # TODO: These can be extracted from the BEP032Data init definition. Check out the
 # function inspection options
@@ -56,6 +59,7 @@ class BEP032Data:
         run identifier of data files
 
     """
+
     def __init__(self, sub_id, ses_id=None, modality='ephys', custom_metadata_source=None):
 
         if modality != 'ephys':
@@ -67,7 +71,6 @@ class BEP032Data:
             if any(elem in arg for elem in invalid_characters):
                 raise ValueError(f"Invalid character present in argument ({arg})."
                                  f"The following characters are not permitted: {invalid_characters}")
-
 
         self.sub_id = sub_id
         self.ses_id = ses_id
@@ -366,11 +369,13 @@ class BEP032Data:
 
             # extract task and run information if present in the input csf file
             # this should probably be extended to support all BIDS-supported entities
-            task = data_kwargs.pop('task', None)
-            if task is not None and np.isnan(task):
+            task = data_kwargs.pop('task', '')
+            run = data_kwargs.pop('run', '')
+
+            # replace empty values by good defaults for later function calls
+            if task == '':
                 task = None
-            run = int(data_kwargs.pop('run', None))
-            if run is not None and np.isnan(run):
+            if run == '':
                 run = None
 
             data_instance = cls(**data_kwargs)
@@ -476,7 +481,7 @@ def extract_structure_from_csv(csv_file):
     if not HAVE_PANDAS:
         raise ImportError('Extraction of bep032tools structure from csv requires pandas.')
 
-    df = pd.read_csv(csv_file, dtype=str)
+    df = pd.read_csv(csv_file, dtype=str, na_filter=False)
 
     # standardizing column labels
     # df = df.rename(columns=LABEL_MAPPING)
