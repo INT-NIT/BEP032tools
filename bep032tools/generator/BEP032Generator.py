@@ -5,6 +5,7 @@ import shutil
 import argparse
 import os
 import re
+import numpy as np
 
 import bep032tools.validator.BEP032Validator
 
@@ -233,7 +234,7 @@ class BEP032Data:
                 suffix = file.suffix
                 # append split postfix if required
                 split = ''
-                if len(sources) > 1:
+                if len(converted_data_files) > 1:
                     # note JS & ST 2022/11/30: this test is incorrect and should be reimplemented
                     # splits should be introduced only if several data files have
                     # the same values for all their entities (sub, ses, task, run etc.)
@@ -350,7 +351,11 @@ class BEP032Data:
             # extract task and run information if present in the input csf file
             # this should probably be extended to support all BIDS-supported entities
             task = data_kwargs.pop('task', None)
+            if np.isnan(task):
+                task = None
             run = data_kwargs.pop('run', None)
+            if np.isnan(run):
+                run = None
 
             data_instance = cls(**data_kwargs)
             data_instance.basedir = pathToDir
