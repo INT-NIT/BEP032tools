@@ -54,7 +54,7 @@ def generate_example_csv_file(mode='simple'):
                 "zimba,20200104"
             f.writelines(csv_lines)
 
-    if mode == 'full':
+    elif mode == 'full':
         with open(file_path, 'w+') as f:
             csv_lines = \
                 "sub_id,ses_id,data_source,run,task\n" \
