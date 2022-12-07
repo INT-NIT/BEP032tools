@@ -31,7 +31,7 @@ def initialize_test_directory(clean=True):
 
 
 
-def generate_simple_csv_file():
+def generate_example_csv_file(mode='simple'):
     """
     Create csv file containing parameters for the creation of multiple BEP032 structures
 
@@ -41,16 +41,33 @@ def generate_simple_csv_file():
         path of the generated file
     """
     file_path = os.path.join(test_directory, 'example.csv')
-    with open(file_path, 'w+') as f:
-        csv_lines = \
-            "sub_id,ses_id\n" \
-            "enya,20200101\n" \
-            "enya,20200101\n" \
-            "enya,20200101\n" \
-            "zamba,20200102\n" \
-            "zamba,20200102\n" \
-            "zimba,20200103\n" \
-            "zimba,20200104"
-        f.writelines(csv_lines)
+    if mode == 'simple':
+        with open(file_path, 'w+') as f:
+            csv_lines = \
+                "sub_id,ses_id\n" \
+                "enya,20200101\n" \
+                "enya,20200101\n" \
+                "enya,20200101\n" \
+                "zamba,20200102\n" \
+                "zamba,20200102\n" \
+                "zimba,20200103\n" \
+                "zimba,20200104"
+            f.writelines(csv_lines)
+
+    if mode == 'full':
+        with open(file_path, 'w+') as f:
+            csv_lines = \
+                "sub_id,ses_id,data_source,run,task\n" \
+                "mouse-A,2000-01-01,my_data_file_0.nix,1,running\n" \
+                "mouse-A,2000-01-01,my_data_file_1.nix,2,running\n" \
+                "mouse-B,2000-01-01,my_data_file_2.nix,0,rest\n" \
+                "mouse-B,2000-01-01,my_data_file_3.nix,,walk\n"
+            f.writelines(csv_lines)
+
+        for i in range(4):
+            pathlib.Path(f'my_data_file_{i}.nix').touch()
+
+    else:
+        raise ValueError(f'unknown mode {mode}')
 
     return file_path
