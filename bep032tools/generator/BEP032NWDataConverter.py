@@ -373,7 +373,7 @@ def main():
         # the following needs to be rethought and checked to see whether it's adequate / possible
         #this_bep032data = BEP032PatchClampNWData(sub_id)
         #this_bep032data.md = this_metadata
-        BEP032Data.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir, autoconvert="nix")
+        BEP032PatchClampNWData.generate_bids_dataset(pathToInputCsv, args.pathToBIDSOutputDir, autoconvert="nix")
 
 
 if __name__ == '__main__':
