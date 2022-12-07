@@ -2,7 +2,7 @@ import os
 import unittest
 from pathlib import Path
 from bep032tools.generator.tests.utils import (initialize_test_directory, test_directory,
-                                               generate_simple_csv_file)
+                                               generate_example_csv_file)
 from bep032tools.generator.BEP032Generator import extract_structure_from_csv
 from bep032tools.generator.BEP032Templater import BEP032TemplateData
 
@@ -133,7 +133,7 @@ class Test_BEP032TemplateData(unittest.TestCase):
 class Test_ReadCsv(unittest.TestCase):
 
     def setUp(self):
-        csv_filename = generate_simple_csv_file()
+        csv_filename = generate_example_csv_file()
         self.csv_file = csv_filename
 
     def test_read_csv(self):
@@ -146,7 +146,7 @@ class Test_GenerateStruct(unittest.TestCase):
 
     def setUp(self):
         initialize_test_directory(clean=True)
-        csv_filename = generate_simple_csv_file()
+        csv_filename = generate_example_csv_file()
         self.csv_file = csv_filename
 
     def test_generate_example_structure(self):
