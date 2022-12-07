@@ -357,10 +357,10 @@ class BEP032Data:
             # extract task and run information if present in the input csf file
             # this should probably be extended to support all BIDS-supported entities
             task = data_kwargs.pop('task', None)
-            if np.isnan(task):
+            if task is not None and np.isnan(task):
                 task = None
             run = data_kwargs.pop('run', None)
-            if np.isnan(run):
+            if run is not None and np.isnan(run):
                 run = None
 
             data_instance = cls(**data_kwargs)
