@@ -55,7 +55,7 @@ class BEP032Data:
         run identifier of data files
 
     """
-    def __init__(self, sub_id, ses_id=None, modality='ephys'):
+    def __init__(self, sub_id, ses_id=None, modality='ephys', custom_metadata_source=None):
 
         if modality != 'ephys':
             raise NotImplementedError('BEP032tools only supports the ephys modality')
@@ -204,9 +204,9 @@ class BEP032Data:
 
         data_folder = self.get_data_folder(mode='absolute')
 
-        converted_data_files = []
-
         for key, sources in self.data.items():
+            converted_data_files = []
+
             # add '_' prefix for filename concatenation
             if key:
                 key = '_' + key
@@ -341,30 +341,21 @@ class BEP032Data:
 
         df = extract_structure_from_csv(csv_file)
 
-        organize_data = 'data_source' in df
-        # extract task and run information if present in the input csf file
-        # this should probably be extended to support all BIDS-supported entities
-        organize_task = 'task' in df
-        organize_run = 'run' in df        
-        
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
 
         for data_kwargs in df.to_dict('index').values():
-            if organize_data:
-                data_source = data_kwargs.pop('data_source')
-            if organize_task:
-                task = data_kwargs.pop('task')
-            else:
-                task = None
-            if organize_run:
-                run = data_kwargs.pop('run')
-            else:
-                run = None
+            data_source = data_kwargs.pop('data_source', None)
+
+            # extract task and run information if present in the input csf file
+            # this should probably be extended to support all BIDS-supported entities
+            task = data_kwargs.pop('task', None)
+            run = data_kwargs.pop('run', None)
+
             data_instance = cls(**data_kwargs)
             data_instance.basedir = pathToDir
             data_instance.generate_directory_structure()
-            if organize_data:
+            if data_source is not None:
                 data_instance.register_data_sources(data_source, task=task, run=run)
                 data_instance.organize_data_files(mode='copy', autoconvert=autoconvert)
             try:
@@ -466,10 +457,6 @@ def extract_structure_from_csv(csv_file):
 
     df = pd.read_csv(csv_file, dtype=str)
 
-    # ensure all fields contain information
-    if df.isnull().values.any():
-        raise ValueError(f'Csv file contains empty cells.')
-
     # standardizing column labels
     # df = df.rename(columns=LABEL_MAPPING)
 
@@ -477,6 +464,10 @@ def extract_structure_from_csv(csv_file):
     if not set(ESSENTIAL_CSV_COLUMNS).issubset(df.columns):
         raise ValueError(f'Csv file ({csv_file}) does not contain required information '
                          f'({ESSENTIAL_CSV_COLUMNS}). Accepted column names are specified in the BEP.')
+
+    # ensure all fields contain information
+    if df[ESSENTIAL_CSV_COLUMNS].isnull().values.any():
+        raise ValueError(f'Csv file contains empty cells for mandatory fields.')
 
     return df
 
