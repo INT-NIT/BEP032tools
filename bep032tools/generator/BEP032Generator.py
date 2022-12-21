@@ -5,7 +5,6 @@ import shutil
 import argparse
 import os
 import re
-import numpy as np
 
 import bep032tools.validator.BEP032Validator
 
@@ -282,9 +281,11 @@ class BEP032Data:
                                                         / "dataset_description")
         self.generate_metadata_file_participants(self.basedir / f"participants")
 
-        self.generate_metadata_file_tasks(self.basedir / f"tasks")
-        self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
-                                             f'sub-{self.sub_id}_sessions')
+        if any(['task' in self.data.keys()]):
+            self.generate_metadata_file_tasks(self.basedir / f"tasks")
+        if self.ses_id:
+            self.generate_metadata_file_sessions(self.get_data_folder().parents[1] /
+                                                 f'sub-{self.sub_id}_sessions')
         for key in self.data.keys():
             if self.filename_stem is None:
                 raise ValueError('No filename stem set.')
