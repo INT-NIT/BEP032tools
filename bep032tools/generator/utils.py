@@ -22,7 +22,7 @@ def save_tsv(dataframe, path_to_save):
     # Check if path exist and if the file is empty
     if Path(path_to_save).exists() and os.path.getsize(path_to_save) > 1 \
             and dataframe.size > 0:
-        existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0)
+        existing_df = pd.read_csv(path_to_save, sep='\t', index_col=0, dtype=str)
         # transforming all indices to str for comparison
         existing_df.set_index(existing_df.index.astype(str), inplace=True)
         dataframe.set_index(dataframe.index.astype(str), inplace=True)
