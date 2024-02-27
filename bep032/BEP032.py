@@ -61,5 +61,23 @@ class BEP032:
                     pass
 
 
+def main():
+    sub_id = "0012microscopy "
+    sess_id = "20210101"
+
+    modality = "micr"
+
+    tasks = ["task1", "task2", "task3"]
+
+    output_path = Path("/home/pourtoi/Bureau/Nouveau dossier/BEP")
+
+    bep_instance = BEP032(sub_id, sess_id, modality, tasks)
+
+    bep_instance.create_directory_structure_by_experience(output_path)
+
+    bep_instance.create_files_in_directory(output_path)
+
+
 if __name__ == '__main__':
-    pass
+    main()
+
