@@ -3,11 +3,12 @@ import os
 import shutil
 from pathlib import Path
 from bep032.Microscopy_bids_structure import MicroscopyBidsStructure
+import utils
 
 
 class TestMicroscopyBidsStructure(unittest.TestCase):
     def setUp(self):
-        self.out_put = Path("/home/pourtoi/Bureau/Nouveau dossier/BEP/test")
+        self.out_put = utils.initialize_test_directory()
         os.makedirs(self.out_put, exist_ok=True)
 
     def tearDown(self):

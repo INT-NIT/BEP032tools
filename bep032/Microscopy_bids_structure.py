@@ -17,6 +17,4 @@ class MicroscopyBidsStructure:
     def create_bids_structure_microscopy(self):
         self.bep_instance.create_directory_structure_by_experience(self.output_path)
 
-        self.bep_instance.create_directory_structure_by_experience(self.output_path)
         self.ModalityAgnosticFile.creat_all_files()
-

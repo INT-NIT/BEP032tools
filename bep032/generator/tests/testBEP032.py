@@ -6,11 +6,15 @@ from bep032.BEP032 import BEP032
 
 import shutil
 
+from bep032.generator.tests import utils
+
 
 class TestBEP032(unittest.TestCase):
     def setUp(self):  # <- Corrected method name
         # creat a tmp repository
-        output_path = Path('/home/pourtoi/Bureau/Nouveau dossier/BEP/test')
+
+        output_path = utils.initialize_test_directory()
+
         self.test_dir = output_path
         os.makedirs(self.test_dir, exist_ok=True)
         # Init test values

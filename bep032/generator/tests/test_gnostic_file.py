@@ -6,11 +6,13 @@ from bep032.BEP032 import BEP032
 import shutil
 
 from bep032.Modality_agnostic_file import ModalityAgnosticFile
+from bep032.generator.tests import utils
 
 
 class TestModalityAgnosticFile(unittest.TestCase):
     def setUp(self):
-        output_path = Path('/home/pourtoi/Bureau/Nouveau dossier/BEP/test')
+        output_path = utils.initialize_test_directory()
+
         self.test_dir = output_path
         os.makedirs(self.test_dir, exist_ok=True)
         self.instance_agnostic = ModalityAgnosticFile(self.test_dir)
