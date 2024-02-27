@@ -27,8 +27,8 @@ class BEP032:
         self.tasks = tasks
 
     def create_directory_structure_by_experience(self, output_path):
-        subject_dir = output_path / f'sub_{self.sub_id}'
-        session_dir = subject_dir / f'ses_{self.sess_id}'
+        subject_dir = output_path / f'sub-{self.sub_id}'
+        session_dir = subject_dir / f'ses-{self.sess_id}'
 
         if not os.path.exists(subject_dir):
             os.makedirs(subject_dir)
@@ -61,23 +61,4 @@ class BEP032:
                     pass
 
 
-def main():
-    sub_id = "0012microscopy "
-    sess_id = "20210101"
-
-    modality = "micr"
-
-    tasks = ["task1", "task2", "task3"]
-
-    output_path = Path("/home/pourtoi/Bureau/Nouveau dossier/BEP")
-
-    bep_instance = BEP032(sub_id, sess_id, modality, tasks)
-
-    bep_instance.create_directory_structure_by_experience(output_path)
-
-    bep_instance.create_files_in_directory(output_path)
-
-
-if __name__ == '__main__':
-    main()
 

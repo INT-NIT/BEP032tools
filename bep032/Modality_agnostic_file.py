@@ -3,16 +3,16 @@ import os
 
 
 class ModalityAgnosticFile:
-    def __init__(self, root_to_save):
-        self.root_to_save = root_to_save
+    def __init__(self, output_path):
+        self.output_path = output_path
 
     def create_empty_file(self, filename):
-        file_path = os.path.join(self.root_to_save, filename)
+        file_path = os.path.join(self.output_path, filename)
         with open(file_path, 'w'):
             pass
 
     def write_json_to_file(self, filename, data):
-        file_path = os.path.join(self.root_to_save, filename)
+        file_path = os.path.join(self.output_path, filename)
         with open(file_path, 'w') as file:
             json.dump(data, file)
 
@@ -37,4 +37,13 @@ class ModalityAgnosticFile:
         self.create_file('sample.tsv')
         self.create_file('sample.json')
 
+    def dataset_description(self):
+        self.create_file('dataset_description.json')
+
+    def creat_all_files(self):
+        self.readme_change_licence()
+        self.participant_file()
+        self.sample_file()
+        self.citation_file()
+        self.dataset_description()
 
