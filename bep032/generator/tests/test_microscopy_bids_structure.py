@@ -11,8 +11,8 @@ class TestMicroscopyBidsStructure(unittest.TestCase):
         self.out_put = utils.initialize_test_directory()
         os.makedirs(self.out_put, exist_ok=True)
 
-    def tearDown(self):
-        shutil.rmtree(self.out_put, ignore_errors=True)
+    """def tearDown(self):
+        shutil.rmtree(self.out_put, ignore_errors=True)"""
 
     def test_create_bids_structure_microscopy(self):
         sub_id = "Microscopy"
