@@ -144,4 +144,3 @@ if __name__ == "__main__":
     print("optional :", common_structure.get_optional_directory())
     print("top level:", common_structure.get_top_level_directory())
     print("recomende:", common_structure.get_recommended_directory())"""
-
