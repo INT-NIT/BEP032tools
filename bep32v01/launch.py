@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 from pandas import read_csv
 
@@ -24,6 +25,10 @@ h = "/home/INT/idrissou.f/PycharmProjects/BEP032tools/elabConf.json"
 
 
 def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    json_path = os.path.join(script_dir, 'elabConf.json')
+    print(json_path)
     output = input(
         "Enter the output folder path:  :"
         " ex :/home/INT/idrissou.f/PycharmProjects/BEP032tools/bep32v01/Essaie")
@@ -31,7 +36,7 @@ def main():
     csv_file = os.path.join(output, 'fichier.csv')
 
     jsonformat = elab_bridge.server_interface.download_experiment(csv_file,
-                                                                  h, 247, format='csv')
+                                                                  json_path, 247, format='csv')
     df = read_csv(csv_file)
 
     generator = Generator(output, df['id'][0], df['session_id'][0], "micr")
