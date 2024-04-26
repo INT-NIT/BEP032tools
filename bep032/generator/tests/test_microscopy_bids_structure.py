@@ -20,7 +20,8 @@ class TestMicroscopyBidsStructure(unittest.TestCase):
         modality = "micr"
         tasks = ["task1", "task2", "task3"]
 
-        microscopy_instance = MicroscopyBidsStructure(self.out_put, sub_id, sess_id, modality, tasks)
+        microscopy_instance = MicroscopyBidsStructure(self.out_put, sub_id, sess_id,
+                                                      modality, tasks)
         microscopy_instance.create_bids_structure_microscopy()
 
         # Add assertions to check if the BIDS structure and files are created as expected
