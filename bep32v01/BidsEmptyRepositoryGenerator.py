@@ -17,8 +17,7 @@ class Generator:
         self.output = output
         self.modality = modality.strip() if modality else None
         if self.modality:
-            self.directory_builder = Createdirectory(output,
-                    sub_id, session_id, self.modality)
+            self.directory_builder = Createdirectory(output, sub_id, session_id, self.modality)
             self.file_builder = CreatFile(output)
             self.generate()
         else:
@@ -32,4 +31,3 @@ class Generator:
 
 if __name__ == "__main__":
     pass
-
