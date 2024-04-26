@@ -56,6 +56,7 @@ class BEP032:
             modality_dir = session_dir / self.modality
             for task in self.tasks:
                 file_path_tsv = os.path.join(modality_dir,
-                                             f'sub_{self.sub_id}_ses_{self.sess_id}_task_{task}.tsv')
+                                             f'sub_{self.sub_id}_ses_{self.sess_id}_task_{task}.tsv'
+                                             )
                 with open(file_path_tsv, 'w'):
                     pass
