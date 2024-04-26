@@ -21,7 +21,7 @@ class Generator:
             self.file_builder = CreatFile(output)
             self.generate()
         else:
-            print("No modality provided. Please specify a modality.")
+                print("No modality provided. Please specify a modality.")
 
     def generate(self):
         """Generate files and directories."""
@@ -39,4 +39,5 @@ if __name__ == "__main__":
         session_id = int(session_id) if session_id.isdigit() else 1
         generator = Generator(output, sub_id, session_id, modality)
     else:
-        print("Output folder path is required.")
+
+            print("Output folder path is required.")

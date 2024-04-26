@@ -45,10 +45,6 @@ def main():
     entities = Entity()
     entity_name = "acquisition"  # Example entity name
     entity_name_output = entities.get_entity_name(entity_name)
-    if entity_name_output:
-        print(f"Nom de l'entité '{entity_name}': {entity_name_output}")
-    else:
-        print(f"L'entité '{entity_name}' n'existe pas.")
 
 
 if __name__ == "__main__":

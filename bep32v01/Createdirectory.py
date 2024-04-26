@@ -60,14 +60,12 @@ class Createdirectory:
         """
         for dir in self.dir_name:
             first_level_dir = os.path.join(self.output_path, dir)
-            print("path: ", first_level_dir)
             if not os.path.exists(first_level_dir):
                 os.makedirs(first_level_dir)
 
         # subdirectory session
         subject_dir = os.path.join(self.output_path, f'sub-{self.sub_id}')
         session_dir = os.path.join(subject_dir, f'ses-{self.session_id}')
-        print("subject_dir: ", session_dir)
         if not os.path.exists(session_dir):
             os.makedirs(session_dir)
         # subdirectory_modality
@@ -84,7 +82,6 @@ def main():
     creator = Createdirectory(output_path)
     creator.layout_folder()
     creator.build()
-    print("Directory layout created successfully.")
 
 
 if __name__ == "__main__":

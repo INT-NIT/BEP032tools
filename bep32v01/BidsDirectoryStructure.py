@@ -41,9 +41,9 @@ class DirectoryStructure:
                     self.all_directory = list(set(helper.find_keys_in_dict(
                         directory_rules, 'level')))
                 else:
-                    print("Le fichier de règles des répertoires est vide.")
+                    print("yml file does not exist.")
         else:
-            print("Le fichier YAML spécifié n'existe pas :", absolute_path)
+            print("check the file path :", absolute_path)
         return self.all_directory
 
     def load_all_directoires_all_details(self, relative_path):
@@ -138,10 +138,11 @@ if __name__ == "__main__":
     common_structure = DirectoryStructure()
     common_structure.get_detail()
 
-    print("All:", common_structure.get_all_directory())
+    """print("All:", common_structure.get_all_directory())
     print("Entity:", common_structure.get_entity_directory())
-    print("par Valeur  :", common_structure.get_value_directory())
+    print("per Value :", common_structure.get_value_directory())
     print("REQUIRED  :", common_structure.get_required_directory())
     print("optional :", common_structure.get_optional_directory())
     print("top level:", common_structure.get_top_level_directory())
-    print("recomende:", common_structure.get_recommended_directory())
+    print("recomende:", common_structure.get_recommended_directory())"""
+

@@ -43,11 +43,6 @@ def main():
     data_types = DataTypes()
     data_type_name = "anat"
     data_type = data_types.get_data_type_value(data_type_name)
-    if data_type:
-        print(f"Données de type '{data_type_name}':")
-        print(data_type)
-    else:
-        print(f"Le type de données '{data_type_name}' n'existe pas.")
 
 
 if __name__ == "__main__":

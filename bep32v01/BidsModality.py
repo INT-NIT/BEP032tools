@@ -23,8 +23,6 @@ def main():
     Main function to demonstrate the usage of the Modality class.
     """
     modality = Modality()
-    print("Modalités :")
-    print(modality.modalities)
 
 
 if __name__ == "__main__":

@@ -143,7 +143,6 @@ def main():
     """
     file_structure = FileStructure()
     file_structure.get_detail()
-    print(file_structure.get_all_files_list())
 
 
 if __name__ == "__main__":
