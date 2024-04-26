@@ -137,7 +137,6 @@ if __name__ == "__main__":
 
     common_structure = DirectoryStructure()
     common_structure.get_detail()
-
     """print("All:", common_structure.get_all_directory())
     print("Entity:", common_structure.get_entity_directory())
     print("per Value :", common_structure.get_value_directory())
