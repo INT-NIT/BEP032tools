@@ -46,4 +46,3 @@ class ModalityAgnosticFile:
         self.sample_file()
         self.citation_file()
         self.dataset_description()
-
