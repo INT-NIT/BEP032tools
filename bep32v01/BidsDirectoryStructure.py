@@ -38,7 +38,8 @@ class DirectoryStructure:
                 directory_rules = yaml.safe_load(file)
 
                 if directory_rules:
-                    self.all_directory = list(set(helper.find_keys_in_dict(directory_rules, 'level')))
+                    self.all_directory = list(set(helper.find_keys_in_dict(
+                        directory_rules, 'level')))
                 else:
                     print("Le fichier de règles des répertoires est vide.")
         else:
@@ -52,7 +53,9 @@ class DirectoryStructure:
         Args:
             relative_path (str): The relative path to the YAML file.
         """
-        self.entity_directory, self.value_directory, self.required_directory, self.optional_directory, self.recommended_directory, self.top_level_directory = helper.get_directories_with_details(
+        (self.entity_directory, self.value_directory, self.required_directory,
+         self.optional_directory, self.recommended_directory,
+         self.top_level_directory) = helper.get_directories_with_details(
             relative_path)
 
     def get_detail(self):

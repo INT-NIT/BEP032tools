@@ -1,5 +1,6 @@
 import yaml
 
+
 class FileStructure:
     def __init__(self, relative_path="ressources/schema/rules/files/common/core.yaml"):
         """
@@ -35,7 +36,8 @@ class FileStructure:
         Retrieve details for all files and directories from a specified YAML file.
 
         Args:
-            relative_path (str): The relative path to the YAML file containing file structure details.
+            relative_path (str): The relative path to the YAML
+            file containing file structure details.
         """
         with open(relative_path, 'r') as file:
             file_rules = yaml.safe_load(file)

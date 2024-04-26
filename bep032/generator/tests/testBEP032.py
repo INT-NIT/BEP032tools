@@ -59,7 +59,8 @@ class TestBEP032(unittest.TestCase):
 
         # tasks files
         for task in self.tasks:
-            self.assertTrue(os.path.exists(modality_dir / f'sub_{self.sub_id}_ses_{self.sess_id}_task_{task}.tsv'))
+            self.assertTrue(os.path.exists(
+                modality_dir / f'sub_{self.sub_id}_ses_{self.sess_id}_task_{task}.tsv'))
 
 
 if __name__ == '__main__':
