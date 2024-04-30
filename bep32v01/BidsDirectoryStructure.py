@@ -41,7 +41,7 @@ class DirectoryStructure:
                     self.all_directory = list(set(helper.find_keys_in_dict(
                         directory_rules, 'level')))
                 else:
-                    print("yml file does not exist.")
+                    print(f"yml file does not exist,{absolute_path}")
         else:
             print("check the file path :", absolute_path)
         return self.all_directory
