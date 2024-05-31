@@ -1,0 +1,92 @@
+{
+  "Name": {
+    "Description": "Name of the dataset.",
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Default value": "default_name"
+  },
+  "BIDSVersion": {
+    "Description": "The version of the BIDS standard that was used.",
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Default value": "default_BIDSVersion"
+  },
+  "HEDVersion": {
+    "Description": "If HED tags are used: The version of the HED schema used to validate HED tags for study. May include a single schema or a base schema and one or more library schema.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string or array of strings",
+    "Default value": "default_HEDVersion"
+  },
+  "DatasetLinks": {
+    "Description": "Used to map a given <dataset-name> from a BIDS URI of the form bids:<dataset-name>:path/within/dataset to a local or remote location. The <dataset-name>: '' (an empty string) is a reserved keyword that MUST NOT be a key in DatasetLinks (example: bids::path/within/dataset).",
+    "Requirement Level": "REQUIRED",
+    "Data type": "object of strings",
+    "Default value": "default_DatasetLinks"
+  },
+  "DatasetType": {
+    "Description": "The interpretation of the dataset. For backwards compatibility, the default value is 'raw'. Must be one of: 'raw', 'derivative'.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_DatasetType"
+  },
+  "License": {
+    "Description": "The license for the dataset. The use of license name abbreviations is RECOMMENDED for specifying a license (see Licenses). The corresponding full license text MAY be specified in an additional LICENSE file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_License"
+  },
+  "Authors": {
+    "Description": "List of individuals who contributed to the creation/curation of the dataset.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "array of strings",
+    "Default value": "default_Authors"
+  },
+  "Acknowledgements": {
+    "Description": "Text acknowledging contributions of individuals or institutions beyond those listed in Authors or Funding.",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "string",
+    "Default value": "default_Acknowledgements"
+  },
+  "HowToAcknowledge": {
+    "Description": "Text containing instructions on how researchers using this dataset should acknowledge the original authors. This field can also be used to define a publication that should be cited in publications that use the dataset.",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "string",
+    "Default value": "default_HowToAcknowledge"
+  },
+  "Funding": {
+    "Description": "List of sources of funding (grant numbers).",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "array of strings",
+    "Default value": "default_Funding"
+  },
+  "EthicsApprovals": {
+    "Description": "List of ethics committee approvals of the research protocols and/or protocol identifiers.",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "array of strings",
+    "Default value": "default_EthicsApprovals"
+  },
+  "ReferencesAndLinks": {
+    "Description": "List of references to publications that contain information on the dataset. A reference may be textual or a URI.",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "array of strings",
+    "Default value": "default_ReferencesAndLinks"
+  },
+  "DatasetDOI": {
+    "Description": "The Digital Object Identifier of the dataset (not the corresponding paper). DOIs SHOULD be expressed as a valid URI; bare DOIs such as 10.0.2.3/dfjj.10 are DEPRECATED.",
+    "Requirement Level": "OPTIONAL",
+    "Data type": "string",
+    "Default value": "default_DatasetDOI"
+  },
+  "GeneratedBy": {
+    "Description": "Used to specify provenance of the dataset.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "array of objects",
+    "Default value": "default_GeneratedBy"
+  },
+  "SourceDatasets": {
+    "Description": "Used to specify the locations and relevant attributes of all source datasets. Valid keys in each object include 'URL', 'DOI' (see URI), and 'Version' with str",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "array of objects",
+    "Default value": "default_SourceDatasets"
+  }
+}

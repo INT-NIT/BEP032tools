@@ -1,0 +1,32 @@
+{
+  "sample_id": {
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Description": "A sample identifier of the form sample-<label>, matching a sample entity found in the dataset. The combination of sample_id and participant_id MUST be unique.",
+    "Default value": "default_sample_id"
+  },
+  "participant_id": {
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Description": "A participant identifier of the form sub-<label>, matching a participant entity found in the dataset. The combination of sample_id and participant_id MUST be unique.",
+    "Default value": "default_participant_id"
+  },
+  "sample_type": {
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Description": "Biosample type defined by ENCODE Biosample Type. Must be one of: 'cell line', 'in vitro differentiated cells', 'primary cell', 'cell-free sample', 'cloning host', 'tissue', 'whole organisms', 'organoid', 'technical sample'.",
+    "Default value": "default_sample_type"
+  },
+  "pathology": {
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Description": "String value describing the pathology of the sample or type of control. When different from healthy, pathology SHOULD be specified. The pathology may be specified in either samples.tsv or sessions.tsv, depending on whether the pathology changes over time.",
+    "Default value": "default_pathology"
+  },
+  "derived_from": {
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Description": "sample-<label> entity from which a sample is derived, for example a slice of tissue (sample-02) derived from a block of tissue (sample-01).",
+    "Default value": "default_derived_from"
+  }
+}

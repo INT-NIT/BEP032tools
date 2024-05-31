@@ -78,10 +78,10 @@ class CreatFile:
 
     def sample_file(self):
         """
-        Create sample.tsv and sample.json files.
+        Create sample.tsv and samples.json files.
         """
         self.create_file('sample.tsv')
-        self.create_file('sample.json')
+        self.create_file('samples.json')
 
     def dataset_description(self):
         """
