@@ -1,0 +1,44 @@
+{
+  "participant_id": {
+    "Description": "A participant identifier of the form sub-<label>, matching a participant entity found in the dataset. There MUST be exactly one row for each participant. Values in participant_id MUST be unique. This column must appear first in the file.",
+    "Requirement Level": "REQUIRED",
+    "Data type": "string",
+    "Default value": "default_participant_id"
+  },
+  "species": {
+    "Description": "The species column SHOULD be a binomial species name from the NCBI Taxonomy (for example, homo sapiens, mus musculus, rattus norvegicus). For backwards compatibility, if species is absent, the participant is assumed to be homo sapiens. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_species"
+  },
+  "age": {
+    "Description": "Numeric value in years (float or integer value). It is RECOMMENDED to tag participant ages that are 89 or higher as 89+, for privacy purposes. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "number",
+    "Default value": "default_age"
+  },
+  "sex": {
+    "Description": "String value indicating phenotypical sex, one of 'male', 'female', 'other'. For a list of valid values, see the associated glossary entry. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_sex"
+  },
+  "handedness": {
+    "Description": "String value indicating one of 'left', 'right', 'ambidextrous'. For a list of valid values, see the associated glossary entry. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_handedness"
+  },
+  "strain": {
+    "Description": "For species different from homo sapiens, string value indicating the strain of the species, for example: C57BL/6J. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_strain"
+  },
+  "strain_rrid": {
+    "Description": "For species different from homo sapiens, research resource identifier (RRID) of the strain of the species, for example: RRID:IMSR_JAX:000664. This column may appear anywhere in the file.",
+    "Requirement Level": "RECOMMENDED",
+    "Data type": "string",
+    "Default value": "default_strain_rrid"
+  }
+}
