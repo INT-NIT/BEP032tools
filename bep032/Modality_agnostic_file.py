@@ -35,7 +35,7 @@ class ModalityAgnosticFile:
 
     def sample_file(self):
         self.create_file('sample.tsv')
-        self.create_file('sample.json')
+        self.create_file('samples.json')
 
     def dataset_description(self):
         self.create_file('dataset_description.json')
