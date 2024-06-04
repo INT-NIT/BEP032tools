@@ -5,7 +5,7 @@ import elab_bridge
 import json
 from elab_bridge import server_interface
 from BidsEmptyRepositoryGenerator import Generator
-
+from writing_agnosticfile import *
 import argparse
 
 
@@ -18,8 +18,19 @@ def main(config_file_path, output_dir_path):
                                                                   config_file_path, 247,
                                                                   format='csv')
     df = read_csv(csv_file)
-
+    print(df)
     generator = Generator(output_dir_path, df['id'][0], df['session_id'][0], "micr")
+
+    additional_kwargs = {
+        "Name": "My Dataset",
+        "BIDSVersion": "1.3.0",
+        "HEDVersion": "7.0",
+        "participant_id": df['id'][0],
+        "sex": df["sex"][0],
+        "age": df["age"][0]
+
+    }
+    fill_agnostic_file(output_dir_path, **additional_kwargs)
 
 
 if __name__ == "__main__":

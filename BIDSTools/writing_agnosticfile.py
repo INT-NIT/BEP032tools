@@ -97,6 +97,8 @@ def fill_agnostic_file(output_dir, **kwargs):
 
 
 if __name__ == "__main__":
+    pass
+    """
     output_directory = "Essaie"
     additional_kwargs = {
         "Name": "My Dataset",
@@ -105,3 +107,6 @@ if __name__ == "__main__":
 
     }
     fill_agnostic_file(output_directory, **additional_kwargs)
+
+    """
+
