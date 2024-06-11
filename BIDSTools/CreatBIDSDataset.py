@@ -12,7 +12,7 @@ import argparse
 def main(config_file_path, output_dir_path):
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    csv_file = os.path.join(output_dir_path, 'fichier.csv')
+    csv_file = os.path.join(output_dir_path, 'elab_data.csv')
 
     jsonformat = elab_bridge.server_interface.download_experiment(csv_file,
                                                                   config_file_path, 247,
