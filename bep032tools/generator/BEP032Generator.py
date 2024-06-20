@@ -101,6 +101,10 @@ class BEP032Data:
 
         sources = [Path(f) for f in sources]
 
+        # the run info is in self.custom_metadata_sources{'run'}
+        # let's go get it!
+
+
         key = ''
         if task is not None:
             key += f'task-{task}'
@@ -206,6 +210,8 @@ class BEP032Data:
             raise ValueError('No filename stem set.')
 
         data_folder = self.get_data_folder(mode='absolute')
+
+        converted_data_files = []
 
         for key, sources in self.data.items():
             converted_data_files = []
@@ -354,6 +360,10 @@ class BEP032Data:
 
         if not os.path.isdir(pathToDir):
             os.makedirs(pathToDir)
+
+        #print(df.to_dict('index').values())
+        for data_kwargs in df.to_dict('index').values():
+            print(data_kwargs)
 
         for data_kwargs in df.to_dict('index').values():
             data_source = data_kwargs.pop('data_source', None)
