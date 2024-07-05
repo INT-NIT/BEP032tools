@@ -14,22 +14,23 @@ def main(config_file_path, output_dir_path):
 
     csv_file = os.path.join(output_dir_path, 'elab_data.csv')
 
-
-    jsonformat = elab_bridge.server_interface.download_experiment(csv_file,
-                                                                  config_file_path, 247,
-                                                                  format='csv')
+    jsonformat = elab_bridge.server_interface.extended_download(csv_file,
+                                                                config_file_path, ["TEST_EEG"],
+                                                                format='csv')
     df = read_csv(csv_file)
     print(df['sex'][0])
+    print(df['id'][0])
     generator = Generator(output_dir_path, df['id'][0], df['session_id'][0], "micr")
 
     additional_kwargs = {
         "Name": "My Dataset",
         "BIDSVersion": "1.3.1",
         "HEDVersion": "7.0",
-        "age": df['age'][0],
-        "sex": df['sex'][0],
-        "participant_id": df['id'][0]
+        "age": str(df['age'][0]),
+        "sex": str(df['sex'][0]),
+        "participant_id": str(df['id'][0])
     }
+    print(additional_kwargs)
     fill_agnostic_file(output_dir_path, **additional_kwargs)
 
 
