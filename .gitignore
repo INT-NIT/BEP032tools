@@ -11,7 +11,7 @@ bep032tools/generator/build/*
 bep032tools/viewer/build/*
 bep032tools/viewer/dist/*
 bep032tools/generator/tests/BEP032-examples
-
+BIDSTools/Essaie/*
 # sphinx build folder
 build
 

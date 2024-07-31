@@ -23,8 +23,9 @@ class CreatFile:
             filename (str): The name of the file to create.
         """
         file_path = os.path.join(self.output_path, filename)
-        with open(file_path, 'w'):
-            pass
+        if not os.path.exists(file_path):
+            with open(file_path, 'w'):
+                pass
 
     def write_json_to_file(self, filename, data):
         """
