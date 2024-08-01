@@ -12,17 +12,24 @@ def generate_top_level_file(outpout_dir):
     Generate a top-level bid dataset structure file
 
     Parameters
-    input   :path to save  bids dataset
+    outpout_dir   :path to save  bids dataset
     """
     builder_creatfile = CreatFile(outpout_dir)
     builder_creatfile.build()
 
 
-def get_sub_id(current_exp):
-    return current_exp.id
-
-
 def check_subdir(outpout_dir, sub_id):
+    """
+    check if a subdirectory exists
+    Parameters
+    ----------
+    outpout_dir : path to save bid dataset
+    sub_id : subdirectory id
+
+    Returns
+    -------
+    bolean : True if subdirectory exists, else False
+    """
     sub_id = "sub-" + sub_id
     sub_dir = os.path.join(outpout_dir, sub_id)
     if not os.path.exists(sub_dir):
@@ -32,6 +39,17 @@ def check_subdir(outpout_dir, sub_id):
 
 
 def generate_subdir(outpout_dir, sub_id):
+    """
+    generate a subdirectory if it doesn't exists'
+    Parameters
+    ----------
+    outpout_dir path:path to save bid dataset
+    sub_id : subdirectory id
+
+    Returns
+    -------
+    sub_dir ; absolute path of subdirectory
+    """
     sub_id = "sub-" + sub_id
     sub_dir = os.path.join(outpout_dir, sub_id)
     if not os.path.exists(sub_dir):
@@ -40,10 +58,31 @@ def generate_subdir(outpout_dir, sub_id):
 
 
 def check_datatype_has_session(datatype):
+    """
+    check if BIDS datatype has a session attribute
+    Parameters
+    ----------
+    datatype: BIDS datatype
+
+    Returns
+    -------
+    Boolean : True if BIDS datatype has a session attribute, else False
+    """
     return True
 
 
 def generate_session_dir(sub_dir, session_id):
+    """
+    generate a session directory
+    Parameters
+    ----------
+    sub_dir:path of subdirectory
+    session_id:session id
+
+    Returns
+    -------
+    session_dir:absolute path of session directory
+    """
     session_id = "ses-" + session_id
     session_dir = os.path.join(sub_dir, session_id)
     if not os.path.exists(session_dir):
@@ -52,6 +91,18 @@ def generate_session_dir(sub_dir, session_id):
 
 
 def generate_datatype_dir(current_dir, datatype):
+    """
+    generate a datatype directory
+    Parameters
+    ----------
+    current_dir:absolute path of current
+    directory it can be subdirectory if Datatype has no session attribute or session directory if
+    Datatype has a session attribute datatype
+
+    Returns
+    -------
+    the absolute path of datatype directory
+    """
     datatype_dir = os.path.join(current_dir, datatype)
     if not os.path.exists(datatype_dir):
         os.makedirs(datatype_dir)
@@ -93,8 +144,24 @@ def extract_primary_key(template):
 
 
 def writeheader_tsv_json_files(output_dir):
+    """
+
+     Writes headers to TSV files in the BIDS top-level directory based on JSON template files.
+
+    Parameters
+    ----------
+    output_dir: str
+        Path to the directory where the BIDS top-level TSV files are located.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It updates the TSV files in place by adding headers
+        based on the corresponding JSON template files found in the 'template_agnostic_file' directory.
+
+    """
     tsv_json_files_list = [f for f in os.listdir(output_dir) if
-                           f.endswith(".json") or f.endswith(".tsv")]
+                           f.endswith(".tsv")]
 
     tsv_json_files_list = [f for f in tsv_json_files_list if
                            os.path.isfile(os.path.join(output_dir, f))]
@@ -105,7 +172,6 @@ def writeheader_tsv_json_files(output_dir):
     list_template_files = [f for f in list_template_files if
                            os.path.isfile(os.path.join(agnostic_template_dir, f)) and f.endswith(
                                ".json")]
-    print(list_template_files)
 
     for template_name in list_template_files:
         template_base_name, template_ext = os.path.splitext(template_name)
@@ -120,10 +186,24 @@ def writeheader_tsv_json_files(output_dir):
                         writeheader(template_content, file_name, output_dir)
 
 
-import os
-
-
 def writeheader(template_content, file_name, output_dir):
+    """
+    Extract headers from a template file and write them to a corresponding TSV file.
+
+    Parameters
+    ----------
+    template_content : dict
+        The JSON data from the template file.
+    file_name : str
+        Name of the corresponding TSV file for this template.
+    output_dir : str
+        Path where the corresponding TSV file is located.
+
+    Returns
+    -------
+    None
+        The TSV file is updated with the corresponding header.
+    """
     file_path = os.path.join(output_dir, file_name)
 
     # Extract header from template content
@@ -137,29 +217,83 @@ def writeheader(template_content, file_name, output_dir):
         # Move the cursor to the beginning of the file
         f.seek(0, 0)
 
-        # Write the new header
-        f.write(header)
+        # Write the new header and then the existing content
+        f.write(header + existing_content)
 
 
 def bids_dataset_processed(output_dir, experiment):
+    """
+    Creates all necessary directories for each experiment (each row in the metadata file).
+
+    Parameters
+    ----------
+    output_dir : str
+        Path to the base directory where BIDS data should be saved.
+    experiment : Experiment
+        An object from the Experiment class representing a row of the metadata file.
+
+    Returns
+    -------
+    tuple A tuple containing the final directory path created for the experiment
+    and a list of experiments already processed.
+
+    Description
+    -----------
+    This function processes an experiment by creating the necessary directories based on its attributes.
+    It creates a subject directory, and if the data type requires a session directory, it creates that as well.
+    Finally, it creates a data type directory within the session or subject directory as needed.
+
+    Example
+    -------
+    If an experiment has the following attributes:
+        - Subject ID: '01'
+        - Data type: 'func'
+        - Session Number: '01'
+
+    The following directory structure will be created:
+        output_dir/sub-01/ses-01/func/
+    """
     list_experiments_already_processed = []
     current_dir = output_dir
 
+    # Retrieve attributes from the experiment object
     subject_id = experiment.get_attribute("Subject ID")
     data_type = experiment.get_attribute("Data type")
     session_number = experiment.get_attribute("Session Number")
 
+    # Create the subject directory
     current_dir = generate_subdir(current_dir, subject_id)
+
+    # If the data type requires a session directory, create it
     if check_datatype_has_session(data_type):
         current_dir = generate_session_dir(current_dir, session_number)
+
+    # Create the data type directory
     current_dir = generate_datatype_dir(current_dir, data_type)
 
+    # Append the processed experiment to the list
     list_experiments_already_processed.append(experiment)
+
     return current_dir, list_experiments_already_processed
 
 
 def add_new_experiment_to_tsv(file_path, experiment):
-    # Convert experiment object to dictionary
+    """
+    Adds a new experiment (a new row from the metadata CSV file) to the TSV file.
+
+    Parameters
+    ----------
+    file_path : str
+        The path to the TSV file to which the new row (experiment) will be added.
+    experiment : Experiment
+        An object from the Experiment class representing a row of the metadata file.
+
+    Returns
+    -------
+    None
+        The function modifies the TSV file in place by adding a new row.
+    """
+    # Convert the experiment object to a dictionary
     exp_dict = experiment.to_dict()
 
     # Read the existing header from the file if it exists
@@ -167,27 +301,28 @@ def add_new_experiment_to_tsv(file_path, experiment):
         with open(file_path, 'r') as f:
             # Read the first line to get the header
             header_line = f.readline()
-            # Split header line into fieldnames
+            # Split the header line into field names
             existing_fieldnames = header_line.strip().split('\t')
     else:
+        # If the file doesn't exist, initialize an empty list of field names
         existing_fieldnames = []
-
-    # Filter the experiment dictionary to only include existing fields
-    filtered_exp_dict = {key: exp_dict.get(key, '') for key in existing_fieldnames}
 
     # Open the file in append mode
     with open(file_path, 'a', newline='') as f:
-        # Create a CSV DictWriter object with the existing fieldnames
-        writer = csv.DictWriter(f, delimiter='\t', fieldnames=existing_fieldnames)
-
-        # Write the header only if the file did not previously exist
+        # If the file is new and empty, initialize with all keys from exp_dict
         if not existing_fieldnames:
-            with open(file_path, 'w', newline='') as f_write:
-                writer = csv.DictWriter(f_write, delimiter='\t', fieldnames=existing_fieldnames)
-                writer.writeheader()
+            print("its have a problem with this file {}".format(file_path))
+            pass
+            existing_fieldnames = exp_dict.keys()
+            writer = csv.DictWriter(f, delimiter='\t', fieldnames=existing_fieldnames)
+            writer.writeheader()
+        else:
+            # Filter the experiment dictionary to include only existing fields
+            filtered_exp_dict = {key: exp_dict.get(key, '') for key in existing_fieldnames}
+            writer = csv.DictWriter(f, delimiter='\t', fieldnames=existing_fieldnames)
 
         # Write the new row (experiment)
-        writer.writerow(filtered_exp_dict)
+        writer.writerow(filtered_exp_dict if existing_fieldnames else exp_dict)
 
 
 def add_new_experiment_to_json(file_path, experiment):
@@ -211,9 +346,27 @@ def add_new_experiment_to_json(file_path, experiment):
             json.dump(existing_data, f, indent=4)  # Write updated data back to JSON file
 
 
+import os
+import csv
+
+
 def fill_metadata_files(output_dir, experiment):
-    tsv_json_files_list = [f for f in os.listdir(output_dir) if
-                           f.endswith(".json") or f.endswith(".tsv")]
+    """
+    Fill an experiment's metadata in a file for each experiment in the metadata file.
+
+    Parameters
+    ----------
+    output_dir : str
+        Path to the directory containing the TSV files.
+    experiment : Experiment
+        An object from the Experiment class representing a row of the metadata file.
+
+    Returns
+    -------
+    None
+        The function modifies TSV files in place by adding new rows or updating existing ones.
+    """
+    tsv_json_files_list = [f for f in os.listdir(output_dir) if f.endswith(".tsv")]
 
     for file_name in tsv_json_files_list:
         file_path = os.path.join(output_dir, file_name)
@@ -226,37 +379,35 @@ def fill_metadata_files(output_dir, experiment):
 
                 # Nettoyer les en-têtes et les lignes pour supprimer les espaces inutiles
                 if lines:
-                    lines_updated = [{key.strip(): (value.strip() if value else '')for key, value in row.items()} for
-                                     row
-                                     in lines]
+                    lines_updated = [
+                        {key.strip(): (value.strip() if value else '') for key, value in
+                         row.items()}
+                        for row in lines
+                    ]
 
                 if lines_updated:
-                    # Extraire les en-têtes après nettoyage
                     headers = [header.strip() for header in lines_updated[0].keys()]
                     print(f"Headers: {headers}")
 
                 for line_number, row in enumerate(lines_updated):
-
                     row = {key.strip(): value.strip() for key, value in row.items()}
 
                     if 'Subject ID' not in row:
                         print(f"Missing 'Subject ID' in row: {row}")
-                        continue  # Passer à la ligne suivante si 'Subject ID' est manquant
+                        continue
 
                     exp = Experiment(**row)
-                    print(
-                        f"Comparing Subject ID {row['Subject ID']} with {experiment.get_attribute('Subject ID')}")
 
                     if experiment.get_attribute("Subject ID") == row['Subject ID']:
                         if exp == experiment:
                             its_new_experience = False
-                            break  # Pas besoin de vérifier les autres lignes si l'expérience est trouvée
+                            break
                         else:
                             print("There are modifications in this experiment")
                             input_user = input(
                                 "Press 1 to continue without changes or 2 to update the experiment: ")
                             if input_user == '1':
-                                continue  # Passer à l'itération suivante sans mise à jour
+                                break
                             else:
                                 update_file(experiment, line_number, file_path, lines_updated,
                                             headers)
@@ -281,16 +432,32 @@ def update_file(experiment, line_number, file_path, lines, headers):
         writer.writerows(lines)
 
 
+import json
+
+
 def write_static_files(template_path, file_path):
+    """
+    Fills a static file with default values based on a JSON template.
+
+    Parameters
+    ----------
+    template_path : str
+        The path to the JSON template file. This file should contain default values for various keys.
+    file_path : str
+        The path to the output file where the default values will be written.
+
+    Returns
+    -------
+    None
+    """
     # Read the JSON content from the template file
     with open(template_path, 'r') as template_file:
         template_content = json.load(template_file)
 
+    # Extract default values for each key from the template
     primary_key = {key: template_content[key]["Default value"] for key in template_content.keys()}
-    # primary_key = edite_value(primary_key,**kwrg)
-    print(primary_key)
 
-    # Write the template content to the output file in JSON format
+    # Write the default values to the output file in JSON format
     with open(file_path, 'w') as static_file:
         json.dump(primary_key, static_file, indent=4)
 
@@ -299,6 +466,19 @@ def write_static_files(template_path, file_path):
 
 
 def fill_static_files(output_dir):
+    """
+    Processes static files in the specified directory. For each file that does not have a .json or .tsv extension,
+    checks for a corresponding template file and fills the static file with default values from the template.
+
+    Parameters
+    ----------
+    output_dir : str
+        The path to the directory where static files are located.
+
+    Returns
+    -------
+    None
+    """
     agnostic_template_dir = "template_agnotic_file"
     list_template_files = os.listdir(agnostic_template_dir)
 
@@ -308,6 +488,7 @@ def fill_static_files(output_dir):
     for file_name in all_files:
         if file_name in tsv_json_files_list:
             continue
+
         file_path = os.path.join(output_dir, file_name)
         base_name, ext = os.path.splitext(file_name)
         base_name_json = base_name + '.json'
@@ -315,8 +496,6 @@ def fill_static_files(output_dir):
         if base_name_json in list_template_files:
             template_path = os.path.join(agnostic_template_dir, base_name_json)
             write_static_files(template_path, file_path)
-
-
 def main():
     outpout = "/home/INT/idrissou.f/Bureau/diglab"
     generate_top_level_file(outpout)
