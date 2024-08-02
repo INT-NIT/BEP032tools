@@ -1,10 +1,13 @@
 import csv
 import json
 import os
-from Experiment import Experiment
+
 import numpy as np
-from Createfile import CreatFile
+from BIDSTools.Createfile import CreatFile
 import template_agnotic_file
+from BIDSTools import *
+
+from BIDSTools.Experiment import Experiment
 
 
 def generate_top_level_file(outpout_dir):
@@ -30,12 +33,12 @@ def check_subdir(outpout_dir, sub_id):
     -------
     bolean : True if subdirectory exists, else False
     """
-    sub_id = "sub-" + sub_id
-    sub_dir = os.path.join(outpout_dir, sub_id)
+    sub_ids = "sub-" + sub_id
+    sub_dir = os.path.join(outpout_dir, sub_ids)
     if not os.path.exists(sub_dir):
-        return True
-    else:
         return False
+    else:
+        return True
 
 
 def generate_subdir(outpout_dir, sub_id):
@@ -166,7 +169,8 @@ def writeheader_tsv_json_files(output_dir):
     tsv_json_files_list = [f for f in tsv_json_files_list if
                            os.path.isfile(os.path.join(output_dir, f))]
 
-    agnostic_template_dir = "template_agnotic_file"
+    script_dir = os.path.dirname(__file__)
+    agnostic_template_dir = os.path.join(script_dir, 'template_agnotic_file')
 
     list_template_files = os.listdir(agnostic_template_dir)
     list_template_files = [f for f in list_template_files if
@@ -346,10 +350,6 @@ def add_new_experiment_to_json(file_path, experiment):
             json.dump(existing_data, f, indent=4)  # Write updated data back to JSON file
 
 
-import os
-import csv
-
-
 def fill_metadata_files(output_dir, experiment):
     """
     Fill an experiment's metadata in a file for each experiment in the metadata file.
@@ -479,7 +479,10 @@ def fill_static_files(output_dir):
     -------
     None
     """
-    agnostic_template_dir = "template_agnotic_file"
+    script_dir = os.path.dirname(__file__)
+
+    agnostic_template_dir = os.path.join(script_dir, "template_agnotic_file")
+
     list_template_files = os.listdir(agnostic_template_dir)
 
     all_files = os.listdir(output_dir)
@@ -496,6 +499,8 @@ def fill_static_files(output_dir):
         if base_name_json in list_template_files:
             template_path = os.path.join(agnostic_template_dir, base_name_json)
             write_static_files(template_path, file_path)
+
+
 def main():
     outpout = "/home/INT/idrissou.f/Bureau/diglab"
     generate_top_level_file(outpout)
@@ -505,7 +510,6 @@ def main():
     with open(path, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            print(row)
             experiment = Experiment(**row)
             bids_dataset_processed(outpout, experiment)
             fill_metadata_files(outpout, experiment)

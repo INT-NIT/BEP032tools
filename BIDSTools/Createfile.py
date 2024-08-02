@@ -1,6 +1,6 @@
 import json
 import os
-from BidsFilestructure import FileStructure
+from .BidsFilestructure import FileStructure
 
 
 class CreatFile:
