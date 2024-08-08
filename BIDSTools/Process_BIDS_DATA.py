@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import shutil
 
 import numpy as np
 from BIDSTools.Createfile import CreatFile
@@ -112,15 +113,19 @@ def generate_datatype_dir(current_dir, datatype):
     return datatype_dir
 
 
-def get_bids_filename(current_exp, raw_data_link):
+def get_link(current_exp):
+    try:
+
+        link = current_exp.get_attribute('Rawdatalink')
+    except AttributeError:
+        link = " "
+    return link
+
+
+def get_data_metadata_link(current_exp, current_path):
+    raw_data_link = get_link(current_exp)
+
     return raw_data_link
-    pass
-
-
-def get_data_metadata_link(current_exp, data_storage_path):
-    raw_data_link = current_exp.get_data_link()
-
-    standardized_data_link = get_bids_filename(current_exp, raw_data_link)
 
 
 def covert_data_edf_to_msg(edf_data):
@@ -274,7 +279,12 @@ def bids_dataset_processed(output_dir, experiment):
 
     # Create the data type directory
     current_dir = generate_datatype_dir(current_dir, data_type)
+    metadata_link = get_data_metadata_link(experiment, current_dir)
+    file_name = os.path.basename(metadata_link)
+    destination_path = os.path.join(current_dir, file_name)
 
+    # Copiez le fichier
+    shutil.copy(metadata_link, destination_path)
     # Append the processed experiment to the list
     list_experiments_already_processed.append(experiment)
 
@@ -501,10 +511,36 @@ def fill_static_files(output_dir):
             write_static_files(template_path, file_path)
 
 
+def read_edf(edf_path):
+    f = pyedflib.EdfReader(edf_path)
+    n = f.signals_in_file
+    signal_labels = f.getSignalLabels()
+    sigbufs = []
+    for i in range(n):
+        sigbufs.append(f.readSignal(i))
+    f._close()
+    del f
+    return signal_labels, sigbufs
+
+
+# Écrire les données dans un fichier .msg
+def write_msg(msg_path, signal_labels, sigbufs):
+    with open(msg_path, 'w') as msg_file:
+        for label, signal in zip(signal_labels, sigbufs):
+            msg_file.write(f"Label: {label}\n")
+            msg_file.write("Signal:\n")
+            msg_file.write(", ".join(map(str, signal)))
+            msg_file.write("\n\n")
+
+
+def simple_copy(source_path, destination_path):
+    shutil.copytree(source_path, destination_path)
+
+
 def main():
-    outpout = "/home/INT/idrissou.f/Bureau/diglab"
+    outpout = "/home/INT/idrissou.f/Bureau/Test"
     generate_top_level_file(outpout)
-    path = "/home/INT/idrissou.f/Bureau/diglab/newone1.csv"
+    path = "/home/INT/idrissou.f/Bureau/diglab/meta.csv"
     writeheader_tsv_json_files(outpout)
     fill_static_files(outpout)
     with open(path, mode='r', newline='') as file:

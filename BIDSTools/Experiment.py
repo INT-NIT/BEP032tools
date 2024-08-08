@@ -4,7 +4,8 @@ import json
 
 class Experiment:
     def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
+        cleaned_kwargs = {key.strip(): value for key, value in kwargs.items()}
+        self.__dict__.update(cleaned_kwargs)
 
     def get_attribute(self, name):
         if name in self.__dict__:
@@ -19,7 +20,7 @@ class Experiment:
         if isinstance(other, Experiment):
             other_dict = other.__dict__
             filtered_other_dict  = {key: other_dict.get(key, '') for key in self.__dict__}
-            print(filtered_other_dict, self.__dict__)
+
             return self.__dict__ == filtered_other_dict
         return False
 
