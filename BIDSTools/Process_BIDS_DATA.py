@@ -1,3 +1,4 @@
+import argparse
 import csv
 import json
 import os
@@ -9,6 +10,9 @@ import template_agnotic_file
 from BIDSTools import *
 
 from BIDSTools.Experiment import Experiment
+import elab_bridge
+
+from elab_bridge import server_interface
 
 
 def generate_top_level_file(outpout_dir):
@@ -227,7 +231,7 @@ def writeheader(template_content, file_name, output_dir):
         f.seek(0, 0)
 
         # Write the new header and then the existing content
-        f.write(header + existing_content)
+        f.write(header)
 
 
 def bids_dataset_processed(output_dir, experiment):
@@ -381,7 +385,7 @@ def fill_metadata_files(output_dir, experiment):
     for file_name in tsv_json_files_list:
         file_path = os.path.join(output_dir, file_name)
         its_new_experience = True
-
+        lines_updated = {}
         if file_name.endswith('.tsv'):
             with open(file_path, 'r') as f:
                 reader = csv.DictReader(f, delimiter='\t')
@@ -432,17 +436,14 @@ def update_file(experiment, line_number, file_path, lines, headers):
     # Filter the experiment dictionary to keep only the fields in the header
     exp_dict = experiment.to_dict()
     filtered_exp_dict = {key: exp_dict.get(key, '') for key in headers}
-    print(filtered_exp_dict, " found in ", file_path)
+
     lines[line_number] = filtered_exp_dict
-    print(lines, "je suis lines")
+
     # Write back the file with updated content
     with open(file_path, 'w', newline='') as f:
         writer = csv.DictWriter(f, delimiter='\t', fieldnames=headers)
         writer.writeheader()
         writer.writerows(lines)
-
-
-import json
 
 
 def write_static_files(template_path, file_path):
@@ -537,19 +538,31 @@ def simple_copy(source_path, destination_path):
     shutil.copytree(source_path, destination_path)
 
 
-def main():
-    outpout = "/home/INT/idrissou.f/Bureau/Test"
-    generate_top_level_file(outpout)
-    path = "/home/INT/idrissou.f/Bureau/diglab/meta.csv"
-    writeheader_tsv_json_files(outpout)
-    fill_static_files(outpout)
-    with open(path, mode='r', newline='') as file:
+def main(config_file_path, metada_file_path, output_dir, tag):
+    jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
+                                                                config_file_path,
+                                                                [tag],
+                                                                format='csv')
+
+    generate_top_level_file(output_dir)
+
+    writeheader_tsv_json_files(output_dir)
+    fill_static_files(output_dir)
+    with open(metada_file_path, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
             experiment = Experiment(**row)
-            bids_dataset_processed(outpout, experiment)
-            fill_metadata_files(outpout, experiment)
+            bids_dataset_processed(output_dir, experiment)
+            fill_metadata_files(output_dir, experiment)
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config_file_path", help="The path to the configuration file")
+    parser.add_argument("metada_file_path", help="The path to the output directory")
+    parser.add_argument("output_dir", help="The path to the output directory")
+    parser.add_argument("tag", help="The tag to write the output to")
+    args = parser.parse_args()
+    main(args.config_file_path, args.metada_file_path, args.output_dir, args.tag)
+
+    #main("elabConf.json", "/home/INT/idrissou.f/Bureau/diglab/meta.csv", "/home/INT/idrissou.f/Bureau/Test", "version1")
