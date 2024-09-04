@@ -165,11 +165,9 @@ def writeheader_tsv_json_files(output_dir):
     output_dir: str
         Path to the directory where the BIDS top-level TSV files are located.
 
-    Returns
-    -------
-    None
-        This function does not return any value. It updates the TSV files in place by adding headers
-        based on the corresponding JSON template files found in the 'template_agnostic_file' directory.
+    Returns ------- None This function does not return any value. It updates the TSV files in
+    place by adding headers based on the corresponding JSON template files found in the
+    'template_agnostic_file' directory.
 
     """
     tsv_json_files_list = [f for f in os.listdir(output_dir) if
@@ -252,9 +250,10 @@ def bids_dataset_processed(output_dir, experiment):
 
     Description
     -----------
-    This function processes an experiment by creating the necessary directories based on its attributes.
-    It creates a subject directory, and if the data type requires a session directory, it creates that as well.
-    Finally, it creates a data type directory within the session or subject directory as needed.
+    This function processes an experiment by creating the necessary
+    directories based on its attributes. It creates a subject directory, and if the data type
+    requires a session directory, it creates that as well. Finally, it creates a data type
+    directory within the session or subject directory as needed.
 
     Example
     -------
@@ -419,7 +418,8 @@ def fill_metadata_files(output_dir, experiment):
                         else:
                             print("There are modifications in this experiment")
                             input_user = input(
-                                "Press 1 to continue without changes or 2 to update the experiment: ")
+                                "Press 1 to continue without changes or 2 to update the "
+                                "experiment: ")
                             if input_user == '1':
                                 break
                             else:
@@ -453,7 +453,8 @@ def write_static_files(template_path, file_path):
     Parameters
     ----------
     template_path : str
-        The path to the JSON template file. This file should contain default values for various keys.
+        The path to the JSON template file. This file should contain default values for various
+        keys.
     file_path : str
         The path to the output file where the default values will be written.
 
@@ -478,8 +479,10 @@ def write_static_files(template_path, file_path):
 
 def fill_static_files(output_dir):
     """
-    Processes static files in the specified directory. For each file that does not have a .json or .tsv extension,
-    checks for a corresponding template file and fills the static file with default values from the template.
+    Processes static files in the specified directory. For each file that does not have a .json or
+     .tsv extension,
+    checks for a corresponding template file and fills the static file with default values from
+    the template.
 
     Parameters
     ----------
@@ -564,5 +567,3 @@ if __name__ == '__main__':
     parser.add_argument("tag", help="The tag to write the output to")
     args = parser.parse_args()
     main(args.config_file_path, args.metada_file_path, args.output_dir, args.tag)
-
-    #main("elabConf.json", "/home/INT/idrissou.f/Bureau/diglab/meta.csv", "/home/INT/idrissou.f/Bureau/Test", "version1")

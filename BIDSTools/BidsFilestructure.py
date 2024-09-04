@@ -26,8 +26,7 @@ class FileStructure:
         """
 
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                   'ressources/schema/objects/files.yaml'), 'r') as file:
-            # Ton code ici
+                               'ressources/schema/objects/files.yaml'), 'r') as file:
 
             file_rules = yaml.safe_load(file)
             if file_rules:
@@ -61,8 +60,8 @@ class FileStructure:
         """
         self.get_all_files()
         self.get_all_files_detail(self.relative_path)
-        self.get_all_files_detail( os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                   "ressources/schema/rules/files/common/tables.yaml"))
+        self.get_all_files_detail(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                               "ressources/schema/rules/files/common/tables.yaml"))
         return self
 
     def get_detail_for_file(self, file_name):

@@ -19,7 +19,7 @@ class Experiment:
     def __eq__(self, other):
         if isinstance(other, Experiment):
             other_dict = other.__dict__
-            filtered_other_dict  = {key: other_dict.get(key, '') for key in self.__dict__}
+            filtered_other_dict = {key: other_dict.get(key, '') for key in self.__dict__}
 
             return self.__dict__ == filtered_other_dict
         return False

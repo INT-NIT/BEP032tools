@@ -15,10 +15,11 @@ def main(config_file_path, output_dir_path):
     csv_file = os.path.join(output_dir_path, 'elab_data.csv')
 
     jsonformat = elab_bridge.server_interface.extended_download(csv_file,
-                                                                config_file_path, ["fat","TEST_EEG"],
+                                                                config_file_path,
+                                                                ["fat", "TEST_EEG"],
                                                                 format='csv')
     df = read_csv(csv_file)
-    print(df)
+
     for i in range(len(df)):
         generator = Generator(output_dir_path, df['id'][i], df['session_id'][i], "micr")
         additional_kwargs = {
@@ -31,8 +32,6 @@ def main(config_file_path, output_dir_path):
         }
         fill_agnostic_file(output_dir_path, **additional_kwargs)
         print(additional_kwargs)
-    #print(additional_kwargs)
-    #fill_agnostic_file(output_dir_path, **additional_kwargs)
 
 
 if __name__ == "__main__":
