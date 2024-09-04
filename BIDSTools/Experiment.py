@@ -1,6 +1,14 @@
 import csv as csv
 import json
 
+"""
+This class is designed to create an experiment.
+Each experiment is represented by a line from a CSV file (which serves as our metadata file).
+Each line has the following format: {key: value}, where {key} is a column name and {value} is the
+corresponding column value.
+For each experiment, a dynamic attribute is created for each {key} with its corresponding {value}.
+"""
+
 
 class Experiment:
     def __init__(self, **kwargs):
@@ -35,4 +43,3 @@ class Experiment:
 
     def display(self):
         print(self.to_dict())
-
