@@ -232,7 +232,7 @@ def writeheader(template_content, file_name, output_dir):
         f.write(header)
 
 
-def bids_dataset_processed(output_dir, experiment):
+def construct_bids_folders(output_dir, experiment):
     """
     Creates all necessary directories for each experiment (each row in the metadata file).
 
@@ -251,8 +251,8 @@ def bids_dataset_processed(output_dir, experiment):
     Description
     -----------
     This function processes an experiment by creating the necessary
-    directories based on its attributes. It creates a subject directory, and if the data type
-    requires a session directory, it creates that as well. Finally, it creates a data type
+    directories based on its attributes. It creates a subject directory if required , and if the
+    data type requires a session directory, it creates that as well. Finally, it creates a data type
     directory within the session or subject directory as needed.
 
     Example
@@ -343,6 +343,39 @@ def add_new_experiment_to_tsv(file_path, experiment):
 
 
 def add_new_experiment_to_json(file_path, experiment):
+    """
+    Adds a new experiment to a JSON file if it doesn't already exist.
+
+    This function checks if an experiment, represented as a dictionary,
+    is already present in the JSON file specified by `file_path`. If the
+    experiment is not present, it is added to the JSON file. If the file
+    does not exist, a new file is created.
+
+    Parameters
+    ----------
+    file_path : str
+        The path to the JSON file where the experiment data is stored.
+    experiment : Experiment
+        An object from the Experiment class containing the data of the experiment to be added.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It modifies the JSON file by adding
+        the new experiment if it doesn't already exist.
+
+    Raises
+    ------
+    IOError
+        If there is an issue opening or writing to the JSON file.
+
+    Example
+    -------
+    Assume `experiment` is an instance of the Experiment class with relevant data.
+
+    >>> add_new_experiment_to_json('experiments.json', experiment)
+    This will add the experiment to 'experiments.json' if it's not already present.
+    """
     try:
         with open(file_path, 'r') as f:
             existing_data = json.load(f)  # Load existing JSON data
@@ -555,7 +588,7 @@ def main(config_file_path, metada_file_path, output_dir, tag):
         reader = csv.DictReader(file)
         for row in reader:
             experiment = Experiment(**row)
-            bids_dataset_processed(output_dir, experiment)
+            construct_bids_folders(output_dir, experiment)
             fill_metadata_files(output_dir, experiment)
 
 

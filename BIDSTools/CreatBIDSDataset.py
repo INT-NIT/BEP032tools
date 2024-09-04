@@ -5,7 +5,7 @@ import elab_bridge
 import json
 from elab_bridge import server_interface
 from BidsEmptyRepositoryGenerator import Generator
-from Writing_modality_Agnostics_files import *
+from WritingModalityAgnosticsFiles import *
 import argparse
 
 

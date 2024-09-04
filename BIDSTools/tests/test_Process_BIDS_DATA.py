@@ -8,7 +8,7 @@ import json
 # Ajouter le chemin du dossier parent pour trouver le package BIDSTools
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from BIDSTools.Process_BIDS_DATA import check_subdir, generate_subdir, generate_datatype_dir, \
+from BIDSTools.ProcessBIDSDATA import check_subdir, generate_subdir, generate_datatype_dir, \
     generate_datatype_dir, generate_datatype_dir, generate_session_dir, writeheader, \
     writeheader_tsv_json_files, add_new_experiment_to_tsv
 
