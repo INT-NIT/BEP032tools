@@ -35,6 +35,15 @@ class DataTypes:
         """
         return self.data_types.get(data_type_name, {}).get("value")
 
+    def get_data_type_list(self):
+        """
+                Retrieve a list of all data type names.
+
+                Returns:
+                    list: A list of strings, each representing a data type name.
+        """
+        return list(self.data_types.keys())
+
 
 def main():
     """
@@ -43,6 +52,7 @@ def main():
     data_types = DataTypes()
     data_type_name = "anat"
     data_type = data_types.get_data_type_value(data_type_name)
+    print(data_types.get_data_type_list())
 
 
 if __name__ == "__main__":

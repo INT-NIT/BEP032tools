@@ -41,20 +41,19 @@ def write_agnostic_files(path_to_save, template, **kwargs):
             primary_keys[key] = value
 
     if path_to_save.endswith('.json'):
-        with open(path_to_save, 'w') as f:
+        with open(path_to_save, 'a') as f:
             json.dump(primary_keys, f, indent=4)
     elif path_to_save.endswith('.tsv'):
-        with open(path_to_save, 'w') as f:
+        with open(path_to_save, 'a') as f:
             writer = csv.writer(f, delimiter='\t')
             writer.writerow(primary_keys.keys())
             writer.writerow(primary_keys.values())
     elif path_to_save.endswith('.cff'):
-        with open(path_to_save, 'w') as f:
+        with open(path_to_save, 'a') as f:
             yaml.dump(primary_keys, f, default_flow_style=False)
-            print(path_to_save)
-            print(primary_keys)
+
     elif path_to_save.endswith('.txt'):
-        with open(path_to_save, 'w') as f:
+        with open(path_to_save, 'a') as f:
             for key, value in primary_keys.items():
                 f.write(f"{key}: {value}\n")
     return primary_keys
@@ -94,6 +93,20 @@ def fill_agnostic_file(output_dir, **kwargs):
                         write_agnostic_files(os.path.join(output_dir, file_path),
                                              template, **kwargs)
                         print(f"Wrote {file_path}")
+
+
+def append_to_json_file(file_path, primary_key, **kwargs):
+    with open(file_path, 'w') as f:
+        json.dump(primary_key, f, indent=4)
+        for key, value in kwargs.items():
+            if key in primary_key:
+                json.dump(value, f, indent=4)
+
+
+def append_tsv_file(file_path, primary_key):
+    with open(file_path, 'w', newline='') as f:  # 'a' mode for appending
+        writer = csv.writer(f, delimiter='\t')
+        writer.writerow(primary_key)
 
 
 if __name__ == "__main__":

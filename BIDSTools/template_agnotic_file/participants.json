@@ -1,5 +1,5 @@
 {
-  "participant_id": {
+  " Subject ID": {
     "Description": "A participant identifier of the form sub-<label>, matching a participant entity found in the dataset. There MUST be exactly one row for each participant. Values in participant_id MUST be unique. This column must appear first in the file.",
     "Requirement Level": "REQUIRED",
     "Data type": "string",
@@ -13,11 +13,11 @@
   },
   "age": {
     "Description": "Numeric value in years (float or integer value). It is RECOMMENDED to tag participant ages that are 89 or higher as 89+, for privacy purposes. This column may appear anywhere in the file.",
-    "Requirement Level": "RECOMMENDED",
+    "Requirement Level": "REQUIRED",
     "Data type": "number",
     "Default value": "default_age"
   },
-  "sex": {
+  "Sex": {
     "Description": "String value indicating phenotypical sex, one of 'male', 'female', 'other'. For a list of valid values, see the associated glossary entry. This column may appear anywhere in the file.",
     "Requirement Level": "RECOMMENDED",
     "Data type": "string",

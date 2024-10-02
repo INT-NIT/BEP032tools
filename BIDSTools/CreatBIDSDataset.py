@@ -5,7 +5,7 @@ import elab_bridge
 import json
 from elab_bridge import server_interface
 from BidsEmptyRepositoryGenerator import Generator
-
+from WritingModalityAgnosticsFiles import *
 import argparse
 
 
@@ -14,12 +14,24 @@ def main(config_file_path, output_dir_path):
 
     csv_file = os.path.join(output_dir_path, 'elab_data.csv')
 
-    jsonformat = elab_bridge.server_interface.download_experiment(csv_file,
-                                                                  config_file_path, 247,
-                                                                  format='csv')
+    jsonformat = elab_bridge.server_interface.extended_download(csv_file,
+                                                                config_file_path,
+                                                                ["fat", "TEST_EEG"],
+                                                                format='csv')
     df = read_csv(csv_file)
 
-    generator = Generator(output_dir_path, df['id'][0], df['session_id'][0], "micr")
+    for i in range(len(df)):
+        generator = Generator(output_dir_path, df['id'][i], df['session_id'][i], "micr")
+        additional_kwargs = {
+            "Name": "My Dataset",
+            "BIDSVersion": "1.3.1",
+            "HEDVersion": "7.0",
+            "age": str(df['age'][i]),
+            "sex": str(df['sex'][i]),
+            "participant_id": str(df['id'][i])
+        }
+        fill_agnostic_file(output_dir_path, **additional_kwargs)
+        print(additional_kwargs)
 
 
 if __name__ == "__main__":
