@@ -8,3 +8,4 @@ pandas~=2.2.2
 python-dateutil~=2.9.0.post0
 six~=1.16.0
 DigLabTools~= 0.0.7
+git+https://github.com/bids-standard/eye2bids.git#egg=eye2bids
