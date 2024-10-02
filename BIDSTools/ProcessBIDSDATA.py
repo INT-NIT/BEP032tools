@@ -5,6 +5,8 @@ import os
 import shutil
 
 import numpy as np
+import yaml
+
 from BIDSTools.Createfile import CreatFile
 import template_agnotic_file
 from BIDSTools import *
@@ -13,6 +15,8 @@ from BIDSTools.Experiment import Experiment
 import elab_bridge
 
 from elab_bridge import server_interface
+
+from convert_bids_data import ConvertedfSData
 
 
 def generate_top_level_file(outpout_dir):
@@ -291,7 +295,7 @@ def construct_bids_folders(output_dir, experiment):
     # Append the processed experiment to the list
     list_experiments_already_processed.append(experiment)
 
-    return current_dir, list_experiments_already_processed
+    return current_dir, list_experiments_already_processed, metadata_link
 
 
 def add_new_experiment_to_tsv(file_path, experiment):
@@ -574,6 +578,26 @@ def simple_copy(source_path, destination_path):
     shutil.copytree(source_path, destination_path)
 
 
+def convert_row_to_yml(row, temp_file_name):
+    mydict = dict(row)
+    with open(temp_file_name, 'w') as ymlfile:
+        yaml.dump(mydict, ymlfile, default_flow_style=False, sort_keys=False)
+
+
+import tempfile
+
+
+def edf_converter(row, raw_data, output_dir):
+    yml_file = tempfile.NamedTemporaryFile(suffix='.yml', delete=False)
+    yml_file_name = yml_file.name
+    convert_row_to_yml(row, yml_file_name)
+
+    edf_converter = ConvertedfSData(raw_data, yml_file_name, output_dir)
+    edf_converter.convert_bids_data()
+    yml_file.close()
+    os.remove(yml_file_name)
+
+
 def main(config_file_path, metada_file_path, output_dir, tag):
     jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
                                                                 config_file_path,
@@ -584,11 +608,13 @@ def main(config_file_path, metada_file_path, output_dir, tag):
 
     writeheader_tsv_json_files(output_dir)
     fill_static_files(output_dir)
+
     with open(metada_file_path, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
             experiment = Experiment(**row)
-            construct_bids_folders(output_dir, experiment)
+            output_edf, t, raw_data = construct_bids_folders(output_dir, experiment)
+            edf_converter(row, raw_data, output_edf)
             fill_metadata_files(output_dir, experiment)
 
 
