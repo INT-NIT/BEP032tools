@@ -20,11 +20,13 @@ from convert_bids_data import ConvertedfSData
 
 
 def generate_top_level_file(outpout_dir):
-    """"
+    """
     Generate a top-level bid dataset structure file
 
     Parameters
-    outpout_dir   :path to save  bids dataset
+    ----------
+    outpout_dir : str
+        Path to save bids dataset
     """
     builder_creatfile = CreatFile(outpout_dir)
     builder_creatfile.build()
@@ -273,9 +275,12 @@ def construct_bids_folders(output_dir, experiment):
     current_dir = output_dir
 
     # Retrieve attributes from the experiment object
-    subject_id = experiment.get_attribute("Subject ID")
-    data_type = experiment.get_attribute("Data type")
-    session_number = experiment.get_attribute("Session Number")
+    #subject_id = experiment.get_attribute("Subject ID")# to be changed due to metadata changes
+    subject_id = "01"
+    #data_type = experiment.get_attribute("Data type") # must be changed
+    data_type = "micr"
+    # session_number = experiment.get_attribute("Session Number")
+    session_number = "01"
 
     # Create the subject directory
     current_dir = generate_subdir(current_dir, subject_id)
@@ -286,7 +291,9 @@ def construct_bids_folders(output_dir, experiment):
 
     # Create the data type directory
     current_dir = generate_datatype_dir(current_dir, data_type)
-    metadata_link = get_data_metadata_link(experiment, current_dir)
+    #metadata_link = get_data_metadata_link(experiment, current_dir)# must be changed or update
+    metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
+
     file_name = os.path.basename(metadata_link)
     destination_path = os.path.join(current_dir, file_name)
 
@@ -294,7 +301,6 @@ def construct_bids_folders(output_dir, experiment):
     shutil.copy(metadata_link, destination_path)
     # Append the processed experiment to the list
     list_experiments_already_processed.append(experiment)
-
     return current_dir, list_experiments_already_processed, metadata_link
 
 
@@ -602,9 +608,20 @@ def main(config_file_path, metada_file_path, output_dir, tag):
     jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
                                                                 config_file_path,
                                                                 [tag],
-                                                                format='csv')
+                                                            format='csv')
 
+    """print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+    print(jsonformat)
+    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+    print(type(jsonformat))
+    
+    with open("/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/fff.json", 'w', encoding='utf-8') as f:
+        json.dump(jsonformat, f, indent=4)
+    """
     generate_top_level_file(output_dir)
+
+
+
 
     writeheader_tsv_json_files(output_dir)
     fill_static_files(output_dir)

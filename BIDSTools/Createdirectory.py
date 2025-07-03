@@ -1,9 +1,9 @@
 import json
 import os
-from BidsFilestructure import FileStructure
-from BidsDirectoryStructure import DirectoryStructure
-from BidsEntity import Entity
-from BidsDatatype import DataTypes
+from BIDSTools.BidsFilestructure import FileStructure
+from BIDSTools.BidsDirectoryStructure import DirectoryStructure
+from BIDSTools.BidsEntity import Entity
+from BIDSTools.BidsDatatype import DataTypes
 from pathlib import Path
 
 

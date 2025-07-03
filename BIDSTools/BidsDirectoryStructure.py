@@ -1,6 +1,6 @@
 from pathlib import Path
 import yaml
-import helper
+import BIDSTools.helper as helper
 
 
 class DirectoryStructure:

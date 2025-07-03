@@ -1,6 +1,6 @@
 import sys
-from Createfile import CreatFile
-from Createdirectory import Createdirectory
+from BIDSTools.Createfile import CreatFile
+from BIDSTools.Createdirectory import Createdirectory
 
 
 class Generator:
