@@ -1,15 +1,18 @@
 import argparse
 import csv
 import json
+import logging
 import os
+from get_experiement_details import get_experiement_details
 import shutil
-
+from BidsModality import Modality
 import numpy as np
 import yaml
-
+import ast
 from BIDSTools.Createfile import CreatFile
 import template_agnotic_file
 from BIDSTools import *
+from BIDSTools.field_mapping import *  # Import des constantes de mapping de champs
 
 from BIDSTools.Experiment import Experiment
 import elab_bridge
@@ -97,6 +100,8 @@ def generate_session_dir(sub_dir, session_id):
     -------
     session_dir:absolute path of session directory
     """
+    if session_id is None:
+        return sub_dir
     session_id = "ses-" + session_id
     session_dir = os.path.join(sub_dir, session_id)
     if not os.path.exists(session_dir):
@@ -126,8 +131,10 @@ def generate_datatype_dir(current_dir, datatype):
 def get_link(current_exp):
     try:
 
-        link = current_exp.get_attribute('Rawdatalink')
+        link = current_exp.get_attribute(RAW_DATA_PATH)
     except AttributeError:
+        logging.warning(
+            f"RAW_DATA_PATH attribute not found in experiment {current_exp.get_attribute(SUBJECT_ID)}")
         link = " "
     return link
 
@@ -265,7 +272,8 @@ def construct_bids_folders(output_dir, experiment):
     -------
     If an experiment has the following attributes:
         - Subject ID: '01'
-        - Data type: 'func'
+        - Data type: 'func' if single data type
+        - Data type: 'func' , 'anat' , ..., if multiple data types
         - Session Number: '01'
 
     The following directory structure will be created:
@@ -275,23 +283,42 @@ def construct_bids_folders(output_dir, experiment):
     current_dir = output_dir
 
     # Retrieve attributes from the experiment object
-    #subject_id = experiment.get_attribute("Subject ID")# to be changed due to metadata changes
-    subject_id = "01"
-    #data_type = experiment.get_attribute("Data type") # must be changed
-    data_type = "micr"
-    # session_number = experiment.get_attribute("Session Number")
-    session_number = "01"
-
-    # Create the subject directory
+    subject_id = experiment.get_attribute(SUBJECT_ID,)  # Use the SUBJECT_ID constant
     current_dir = generate_subdir(current_dir, subject_id)
+    #data_type = experiment.get_attribute("Data type") # must be changed
 
-    # If the data type requires a session directory, create it
-    if check_datatype_has_session(data_type):
-        current_dir = generate_session_dir(current_dir, session_number)
+    # check modality
+    modality_list = experiment.get_attribute(MODALITY)
+    modality_list  = ast.literal_eval(modality_list)
+    print("modality list", type(modality_list),modality_list)
 
-    # Create the data type directory
-    current_dir = generate_datatype_dir(current_dir, data_type)
-    #metadata_link = get_data_metadata_link(experiment, current_dir)# must be changed or update
+    # take the list of modalities
+    modality_objects =  Modality()
+    for modality in modality_list:
+        if modality.upper() not in modality_objects.modalities:
+            raise ValueError(f"Modality {modality} is not valid. Valid modalities are: {modality_objects.modalities}")
+        for datatype_key  in modality_objects.modalities:
+            if modality.upper() in datatype_key:
+                data_type = modality_objects.modality_details[datatype_key]
+
+                # create seesion directory
+                if check_datatype_has_session(data_type):
+                    session_number = experiment.get_attribute(SESSION_ID)
+                    if session_number is None:
+                        logger = logging.getLogger(__name__)
+                        logger.error(f"Session number is not set for experiment: {experiment}")
+                        #raise ValueError("Session number is not set for experiment") # on check si on doit lever lexecption a chaque que l'utlisateurs ne respdecte pas quelques chose
+
+                    current_dir = generate_session_dir(current_dir,
+                                                       session_number)
+                current_dir = generate_datatype_dir(current_dir, data_type)
+
+
+
+
+
+
+
     metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
 
     file_name = os.path.basename(metadata_link)
@@ -432,7 +459,8 @@ def fill_metadata_files(output_dir, experiment):
             with open(file_path, 'r') as f:
                 reader = csv.DictReader(f, delimiter='\t')
                 lines = list(reader)
-
+                print(f"Lines: {lines}")
+                print(f"File: {file_name}, Path: {file_path}", file_path,)
                 # Nettoyer les en-têtes et les lignes pour supprimer les espaces inutiles
                 if lines:
                     lines_updated = [
@@ -448,13 +476,13 @@ def fill_metadata_files(output_dir, experiment):
                 for line_number, row in enumerate(lines_updated):
                     row = {key.strip(): value.strip() for key, value in row.items()}
 
-                    if 'Subject ID' not in row:
-                        print(f"Missing 'Subject ID' in row: {row}")
+                    if SUBJECT_ID not in row:
+                        print(f"Missing '{SUBJECT_ID}' in row: {row}")
                         continue
 
                     exp = Experiment(**row)
 
-                    if experiment.get_attribute("Subject ID") == row['Subject ID']:
+                    if experiment.get_attribute(SUBJECT_ID) == row[SUBJECT_ID]:
                         if exp == experiment:
                             its_new_experience = False
                             break
@@ -605,11 +633,17 @@ def edf_converter(row, raw_data, output_dir):
 
 
 def main(config_file_path, metada_file_path, output_dir, tag):
-    jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
+    """jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
                                                                 config_file_path,
                                                                 [tag],
-                                                            format='csv')
+                                                          format='csv')"""
 
+    get_experiement_details(
+        config_file_path=config_file_path,
+        metada_file_path=metada_file_path,
+        tag=tag,
+        output_csv_file=metada_file_path
+    )
     """print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
     print(jsonformat)
     print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")

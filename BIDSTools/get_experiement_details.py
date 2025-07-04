@@ -1,3 +1,4 @@
+
 """
 Module for processing experiment details from JSON format to CSV.
 
@@ -11,8 +12,10 @@ import os
 from typing import Dict, List, Any
 import pandas as pd
 
+import elab_bridge
 
-def get_experiement_details(experiement_json_file: str,
+from elab_bridge import server_interface
+def get_experiement_details(config_file_path: str, metada_file_path: str, tag: str,
                             output_csv_file: str) -> None:
     """
     Process experiment data from a JSON file and save it as a CSV file.
@@ -32,9 +35,13 @@ def get_experiement_details(experiement_json_file: str,
 
 
     """
-    with open(experiement_json_file, 'r') as f:
-        experiement_details = json.load(f)
 
+    experiement_details = elab_bridge.server_interface.extended_download(
+        metada_file_path,
+        config_file_path,
+        [tag],
+        format='csv'
+    )
     list_experiement_details = []
     for data in experiement_details:
         group_fields = []
@@ -56,7 +63,11 @@ def get_experiement_details(experiement_json_file: str,
                 if group_name.startswith('MODALITY'):
                     modality = group_name.split('_')[-1]
                     modaity_list.append(modality)
+            #fields_details['modality'] = modaity_list
             fields_details['modality'] = modaity_list
+
+
+
 
             list_experiement_details.append(fields_details)
         else:
@@ -73,14 +84,22 @@ def main() -> None:
     Main function to demonstrate the usage of get_experiement_details.
 
     This function serves as an entry point for command-line execution.
-    It processes a specific JSON file and saves the output to a CSV file.
+    It downloads experiment data using elab_bridge and saves the output to a CSV file.
     """
     try:
-        input_file = "/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/ffffff.json"
-        output_file = "output.csv"
+        # Configuration parameters
+        config_file = "/home/INT/idrissou.f/Bureau/diglab/elabConf.json"  # Path to your configuration file
+        metadata_file = "metadata.csv" # Path where to save the downloaded metadata
+        tag = "FF"  # Tag to filter experiments
+        output_file = "output.csv"  # Output CSV file
 
-        print(f"Processing experiment data from: {input_file}")
-        get_experiement_details(input_file, output_file)
+        print(f"Downloading experiment data with tag: {tag}")
+        get_experiement_details(
+            config_file_path=config_file,
+            metada_file_path=metadata_file,
+            tag=tag,
+            output_csv_file=output_file
+        )
         print(f"Successfully saved processed data to: {output_file}")
 
     except Exception as e:
@@ -90,3 +109,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

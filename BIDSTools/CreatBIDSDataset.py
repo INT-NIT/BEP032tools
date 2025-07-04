@@ -1,3 +1,8 @@
+"""
+This script laod metadat from elab  . it takes as input the path to the CSV file and the path to the output directory.
+it creates a BIDS repository a test directory and a list of experiments
+"""
+
 from pathlib import Path
 import os
 from pandas import read_csv
