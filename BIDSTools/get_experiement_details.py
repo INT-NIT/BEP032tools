@@ -30,8 +30,7 @@ def get_experiement_details(experiement_json_file: str,
         json.JSONDecodeError: If the input file contains invalid JSON.
         ValueError: If the required fields are missing in the JSON structure.
 
-    Example:
-        >>> get_experiement_details("experiment_data.json", "output.csv")
+
     """
     with open(experiement_json_file, 'r') as f:
         experiement_details = json.load(f)

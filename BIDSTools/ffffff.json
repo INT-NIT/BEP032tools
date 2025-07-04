@@ -1,0 +1,570 @@
+[
+    {
+        "elabftw": {
+            "extra_fields_groups": [
+                {
+                    "id": 1,
+                    "name": "GENERAL_SUBJECT"
+                },
+                {
+                    "id": 2,
+                    "name": "GENERAL_PROJECT"
+                },
+                {
+                    "id": 3,
+                    "name": "GENERAL_SAMPLE"
+                },
+                {
+                    "id": 4,
+                    "name": "MODALITY_MICROSCOPY"
+                },
+                {
+                    "id": 5,
+                    "name": "CUSTOM_CONFOCAL_MICROSCOPY"
+                }
+            ]
+        },
+        "extra_fields": {
+            "age": {
+                "type": "number",
+                "unit": "months",
+                "units": [
+                    "years",
+                    "months"
+                ],
+                "value": "3",
+                "group_id": 1,
+                "position": 3,
+                "description": "Age in years or months, e.g., '42' or '0.4'",
+                "blank_value_on_duplicate": false
+            },
+            "sex": {
+                "type": "radio",
+                "value": "female",
+                "options": [
+                    "female",
+                    "male",
+                    "other"
+                ],
+                "group_id": 1,
+                "position": 4,
+                "description": "Participant's sex",
+                "blank_value_on_duplicate": false
+            },
+            "strain": {
+                "type": "text",
+                "value": "",
+                "group_id": 1,
+                "position": 5,
+                "description": "The strain of the subject",
+                "blank_value_on_duplicate": false
+            },
+            "species": {
+                "type": "text",
+                "value": "mouse",
+                "group_id": 1,
+                "position": 2,
+                "description": "Species (from the NCBI Taxonomy), e.g., 'Macaca mulatta', 'Rattus norvegicusmus')",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPart": {
+                "type": "text",
+                "value": "brain",
+                "group_id": 4,
+                "position": 34,
+                "description": "Body part of the organ / region scanned (e.g. BRAIN).",
+                "blank_value_on_duplicate": false
+            },
+            "Immersion": {
+                "type": "text",
+                "value": "liquid",
+                "group_id": 4,
+                "position": 29,
+                "description": "Lens immersion medium.",
+                "blank_value_on_duplicate": false
+            },
+            "PixelSize": {
+                "type": "text",
+                "value": "[2,2,2]",
+                "group_id": 4,
+                "position": 27,
+                "description": "2- or 3-number array of the physical size of a pixel [X,Y,(Z)].",
+                "blank_value_on_duplicate": false
+            },
+            "pathology": {
+                "type": "text",
+                "value": "",
+                "group_id": 3,
+                "position": 4,
+                "description": "Describes the pathology of the sample or type of control. If different from healthy, this SHOULD be specified."
+            },
+            "sample_id": {
+                "type": "text",
+                "value": "cell01",
+                "group_id": 3,
+                "position": 1,
+                "description": "The identifier of the sample from which the data is acquired, e.g., 'slice02', or 'cell4'. The combination of sample_id and participant_id MUST be unique."
+            },
+            "sample_type": {
+                "type": "select",
+                "value": "primary cell",
+                "options": [
+                    "cell line",
+                    "in vitro differentiated cells",
+                    "primary cell",
+                    "cell-free sample",
+                    "cloning host",
+                    "tissue",
+                    "whole organisms",
+                    "organoid",
+                    "technical sample"
+                ],
+                "group_id": 3,
+                "position": 3,
+                "description": "Biosample type defined by ENCODE Biosample Type."
+            },
+            "Project name": {
+                "type": "text",
+                "value": "dev_mic_bidsification",
+                "group_id": 2,
+                "position": 0,
+                "description": "Project name (should be identical to the project tag).",
+                "blank_value_on_duplicate": false
+            },
+            "derived_from": {
+                "type": "text",
+                "value": "slice03",
+                "group_id": 3,
+                "position": 5,
+                "description": "sample-<label> entity from which a sample is derived, e.g., sample-cell02 is derived from sample-slice01."
+            },
+            "Experimenters": {
+                "type": "text",
+                "value": "Sylvain Takerkart, Fatai Idrissou, Dipankar Bachar",
+                "group_id": 2,
+                "position": 1,
+                "description": "List of individuals present during the recordings.",
+                "blank_value_on_duplicate": false
+            },
+            "Magnification": {
+                "type": "number",
+                "value": "40",
+                "group_id": 4,
+                "position": 31,
+                "description": "Lens magnification (e.g. 40).",
+                "blank_value_on_duplicate": false
+            },
+            "datafile_path": {
+                "type": "text",
+                "value": "",
+                "group_id": 5,
+                "description": "Location of the corresponding data file(s)",
+                "blank_value_on_duplicate": true
+            },
+            "PixelSizeUnits": {
+                "type": "select",
+                "value": "mm",
+                "options": [
+                    "mm",
+                    "um",
+                    "nm"
+                ],
+                "group_id": 4,
+                "description": "Unit format of the specified PixelSize."
+            },
+            "SampleFixation": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 39,
+                "description": "Description of the tissue sample fixation.",
+                "blank_value_on_duplicate": false
+            },
+            "participant_id": {
+                "type": "text",
+                "value": "002",
+                "group_id": 1,
+                "position": 0,
+                "description": "Participant's ID (subject number, animal name etc.). It will define the BIDS directory name: sub-participant_id.",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPartDetails": {
+                "type": "text",
+                "value": "left hemisphere",
+                "group_id": 4,
+                "position": 35,
+                "description": "Additional details about body part or location.",
+                "blank_value_on_duplicate": false
+            },
+            "SampleEmbedding": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 38,
+                "description": "Description of the tissue sample embedding.",
+                "blank_value_on_duplicate": false
+            },
+            "participant_guid": {
+                "type": "text",
+                "value": "28FG44",
+                "group_id": 1,
+                "position": 1,
+                "description": "The Globally Unique IDentifier (GUID) of the participant, if it exists",
+                "blank_value_on_duplicate": false
+            },
+            "NumericalAperture": {
+                "type": "number",
+                "value": "1.4",
+                "group_id": 4,
+                "position": 30,
+                "description": "Lens numerical aperture (e.g. 1.4).",
+                "blank_value_on_duplicate": false
+            },
+            "SampleEnvironment": {
+                "type": "select",
+                "value": "in vitro",
+                "options": [
+                    "in vivo",
+                    "ex vivo",
+                    "in vitro"
+                ],
+                "group_id": 4,
+                "position": 37,
+                "description": "Environment in which the sample was imaged.",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPartDetailsOntology": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 36,
+                "description": "Ontology URI for BodyPartDetails.",
+                "blank_value_on_duplicate": false
+            },
+            "ImageAcquisitionProtocol": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 32,
+                "description": "Description or URI of the image acquisition protocol.",
+                "blank_value_on_duplicate": false
+            },
+            "ChunkTransformationMatrix": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 29,
+                "description": "3x3 or 4x4 affine transformation matrix describing spatial chunk transformation, for 2D and 3D respectively (e.g. [[2, 0, 0], [0, 3, 0], [0, 0, 1]] for 2D or [[1, 0, 0, 0], [0, 2, 0, 0], [0, 0, 3, 0], [0, 0, 0, 1]] for 3D). Non-spatial dimensions like time and channel are not included.",
+                "blank_value_on_duplicate": false
+            },
+            "OtherAcquisitionParameters": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 33,
+                "description": "Other relevant image acquisition parameters.",
+                "blank_value_on_duplicate": false
+            },
+            "Ethical Protocol Identifier": {
+                "type": "text",
+                "value": "",
+                "group_id": 2,
+                "position": 2,
+                "description": "The official ethical protocol id.",
+                "blank_value_on_duplicate": false
+            },
+            "ChunkTransformationMatrixAxis": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 30,
+                "description": "List of axis names corresponding to ChunkTransformationMatrix (e.g. [\"X\", \"Y\"] or [\"Z\", \"Y\", \"X\"]). REQUIRED if ChunkTransformationMatrix is present.",
+                "blank_value_on_duplicate": false
+            }
+        }
+    },
+    {
+        "elabftw": {
+            "extra_fields_groups": [
+                {
+                    "id": 1,
+                    "name": "GENERAL_SUBJECT"
+                },
+                {
+                    "id": 2,
+                    "name": "GENERAL_PROJECT"
+                },
+                {
+                    "id": 3,
+                    "name": "GENERAL_SAMPLE"
+                },
+                {
+                    "id": 4,
+                    "name": "MODALITY_MICROSCOPY"
+                },
+                {
+                    "id": 5,
+                    "name": "CUSTOM_CONFOCAL_MICROSCOPY"
+                }
+            ]
+        },
+        "extra_fields": {
+            "age": {
+                "type": "number",
+                "unit": "months",
+                "units": [
+                    "years",
+                    "months"
+                ],
+                "value": "3",
+                "group_id": 1,
+                "position": 3,
+                "description": "Age in years or months, e.g., '42' or '0.4'",
+                "blank_value_on_duplicate": false
+            },
+            "sex": {
+                "type": "radio",
+                "value": "female",
+                "options": [
+                    "female",
+                    "male",
+                    "other"
+                ],
+                "group_id": 1,
+                "position": 4,
+                "description": "Participant's sex",
+                "blank_value_on_duplicate": false
+            },
+            "strain": {
+                "type": "text",
+                "value": "",
+                "group_id": 1,
+                "position": 5,
+                "description": "The strain of the subject",
+                "blank_value_on_duplicate": false
+            },
+            "species": {
+                "type": "text",
+                "value": "mouse",
+                "group_id": 1,
+                "position": 2,
+                "description": "Species (from the NCBI Taxonomy), e.g., 'Macaca mulatta', 'Rattus norvegicusmus')",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPart": {
+                "type": "text",
+                "value": "brain",
+                "group_id": 4,
+                "position": 34,
+                "description": "Body part of the organ / region scanned (e.g. BRAIN).",
+                "blank_value_on_duplicate": false
+            },
+            "Immersion": {
+                "type": "text",
+                "value": "liquid",
+                "group_id": 4,
+                "position": 29,
+                "description": "Lens immersion medium.",
+                "blank_value_on_duplicate": false
+            },
+            "PixelSize": {
+                "type": "text",
+                "value": "[2,2,2]",
+                "group_id": 4,
+                "position": 27,
+                "description": "2- or 3-number array of the physical size of a pixel [X,Y,(Z)].",
+                "blank_value_on_duplicate": false
+            },
+            "pathology": {
+                "type": "text",
+                "value": "",
+                "group_id": 3,
+                "position": 4,
+                "description": "Describes the pathology of the sample or type of control. If different from healthy, this SHOULD be specified."
+            },
+            "sample_id": {
+                "type": "text",
+                "value": "cell01",
+                "group_id": 3,
+                "position": 1,
+                "description": "The identifier of the sample from which the data is acquired, e.g., 'slice02', or 'cell4'. The combination of sample_id and participant_id MUST be unique."
+            },
+            "sample_type": {
+                "type": "select",
+                "value": "primary cell",
+                "options": [
+                    "cell line",
+                    "in vitro differentiated cells",
+                    "primary cell",
+                    "cell-free sample",
+                    "cloning host",
+                    "tissue",
+                    "whole organisms",
+                    "organoid",
+                    "technical sample"
+                ],
+                "group_id": 3,
+                "position": 3,
+                "description": "Biosample type defined by ENCODE Biosample Type."
+            },
+            "Project name": {
+                "type": "text",
+                "value": "dev_mic_bidsification",
+                "group_id": 2,
+                "position": 0,
+                "description": "Project name (should be identical to the project tag).",
+                "blank_value_on_duplicate": false
+            },
+            "derived_from": {
+                "type": "text",
+                "value": "slice03",
+                "group_id": 3,
+                "position": 5,
+                "description": "sample-<label> entity from which a sample is derived, e.g., sample-cell02 is derived from sample-slice01."
+            },
+            "Experimenters": {
+                "type": "text",
+                "value": "Sylvain Takerkart, Fatai Idrissou, Dipankar Bachar",
+                "group_id": 2,
+                "position": 1,
+                "description": "List of individuals present during the recordings.",
+                "blank_value_on_duplicate": false
+            },
+            "Magnification": {
+                "type": "number",
+                "value": "40",
+                "group_id": 4,
+                "position": 31,
+                "description": "Lens magnification (e.g. 40).",
+                "blank_value_on_duplicate": false
+            },
+            "datafile_path": {
+                "type": "text",
+                "value": "/envau/work/crise/takerkart/test_file.tiff",
+                "group_id": 5,
+                "description": "Location of the corresponding data file(s)",
+                "blank_value_on_duplicate": true
+            },
+            "PixelSizeUnits": {
+                "type": "select",
+                "value": "mm",
+                "options": [
+                    "mm",
+                    "um",
+                    "nm"
+                ],
+                "group_id": 4,
+                "description": "Unit format of the specified PixelSize."
+            },
+            "SampleFixation": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 39,
+                "description": "Description of the tissue sample fixation.",
+                "blank_value_on_duplicate": false
+            },
+            "participant_id": {
+                "type": "text",
+                "value": "001",
+                "group_id": 1,
+                "position": 0,
+                "description": "Participant's ID (subject number, animal name etc.). It will define the BIDS directory name: sub-participant_id.",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPartDetails": {
+                "type": "text",
+                "value": "left hemisphere",
+                "group_id": 4,
+                "position": 35,
+                "description": "Additional details about body part or location.",
+                "blank_value_on_duplicate": false
+            },
+            "SampleEmbedding": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 38,
+                "description": "Description of the tissue sample embedding.",
+                "blank_value_on_duplicate": false
+            },
+            "participant_guid": {
+                "type": "text",
+                "value": "28FG44",
+                "group_id": 1,
+                "position": 1,
+                "description": "The Globally Unique IDentifier (GUID) of the participant, if it exists",
+                "blank_value_on_duplicate": false
+            },
+            "NumericalAperture": {
+                "type": "number",
+                "value": "1.4",
+                "group_id": 4,
+                "position": 30,
+                "description": "Lens numerical aperture (e.g. 1.4).",
+                "blank_value_on_duplicate": false
+            },
+            "SampleEnvironment": {
+                "type": "select",
+                "value": "in vitro",
+                "options": [
+                    "in vivo",
+                    "ex vivo",
+                    "in vitro"
+                ],
+                "group_id": 4,
+                "position": 37,
+                "description": "Environment in which the sample was imaged.",
+                "blank_value_on_duplicate": false
+            },
+            "BodyPartDetailsOntology": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 36,
+                "description": "Ontology URI for BodyPartDetails.",
+                "blank_value_on_duplicate": false
+            },
+            "ImageAcquisitionProtocol": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 32,
+                "description": "Description or URI of the image acquisition protocol.",
+                "blank_value_on_duplicate": false
+            },
+            "ChunkTransformationMatrix": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 29,
+                "description": "3x3 or 4x4 affine transformation matrix describing spatial chunk transformation, for 2D and 3D respectively (e.g. [[2, 0, 0], [0, 3, 0], [0, 0, 1]] for 2D or [[1, 0, 0, 0], [0, 2, 0, 0], [0, 0, 3, 0], [0, 0, 0, 1]] for 3D). Non-spatial dimensions like time and channel are not included.",
+                "blank_value_on_duplicate": false
+            },
+            "OtherAcquisitionParameters": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 33,
+                "description": "Other relevant image acquisition parameters.",
+                "blank_value_on_duplicate": false
+            },
+            "Ethical Protocol Identifier": {
+                "type": "text",
+                "value": "",
+                "group_id": 2,
+                "position": 2,
+                "description": "The official ethical protocol id.",
+                "blank_value_on_duplicate": false
+            },
+            "ChunkTransformationMatrixAxis": {
+                "type": "text",
+                "value": "",
+                "group_id": 4,
+                "position": 30,
+                "description": "List of axis names corresponding to ChunkTransformationMatrix (e.g. [\"X\", \"Y\"] or [\"Z\", \"Y\", \"X\"]). REQUIRED if ChunkTransformationMatrix is present.",
+                "blank_value_on_duplicate": false
+            }
+        }
+    }
+]
