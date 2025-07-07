@@ -1,2 +1,0 @@
-age,sex,strain,species,BodyPart,Immersion,PixelSize,pathology,sample_id,sample_type,Project name,derived_from,Experimenters,Magnification,datafile_path,PixelSizeUnits,SampleFixation,participant_id,BodyPartDetails,SampleEmbedding,participant_guid,NumericalAperture,SampleEnvironment,BodyPartDetailsOntology,ImageAcquisitionProtocol,ChunkTransformationMatrix,OtherAcquisitionParameters,Ethical Protocol Identifier,ChunkTransformationMatrixAxis
-months,,,,,,,,,,,,,,,,,,,,,,,,,,,,
