@@ -1,3 +1,11 @@
+
+"""WritingModalityAgnosticsFiles.py
+
+This module provides tools for managing and writing modality-agnostic files according to the BIDS schema.
+It allows extraction of primary keys from a template, writing files in various formats (JSON, TSV, YAML, TXT),
+and automatically filling agnostic files in a given directory.
+"""
+
 import csv
 import json
 import os

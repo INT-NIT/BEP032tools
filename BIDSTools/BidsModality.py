@@ -1,3 +1,5 @@
+""" this module aim  to load all all the modalities defined by the BIDS standard  so that we can get the value of a specific modality based on its name."""
+
 import yaml
 import os
 

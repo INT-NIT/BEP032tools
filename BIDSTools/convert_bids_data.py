@@ -1,3 +1,7 @@
+"""
+This module provides the `ConvertBIDSData` class, which is an abstract base class, and the `ConvertedfSData` class, which is a subclass of `ConvertBIDSData`.
+ConvertedfSData is used to convert EDF data to BIDS format.
+"""
 import os
 import shutil
 from abc import ABC, abstractmethod

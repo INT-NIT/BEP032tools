@@ -1,3 +1,6 @@
+
+"""Helper functions for BIDSTools. This module is used to extract all details from YAML files."""
+
 import os
 import yaml
 

@@ -18,6 +18,10 @@ SESSION_DATE = "session_date"
 SESSION_TASK = "task"
 SESSION_RUN = "run"
 MODALITY = "modality"
+
+
+# Data path (datafile_path) path where the data is stored
+DATA_PATH = "datafile_path"
 # Data type fields
 DATATYPE_EEG = "eeg"
 DATATYPE_MEG = "meg"

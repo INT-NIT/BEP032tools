@@ -319,8 +319,8 @@ def construct_bids_folders(output_dir, experiment):
 
 
 
-    metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
-
+    #metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
+    metadata_link=experiment.get_attribute(DATA_PATH)
     file_name = os.path.basename(metadata_link)
     destination_path = os.path.join(current_dir, file_name)
 

@@ -1,6 +1,7 @@
 """
 This script laod metadat from elab  . it takes as input the path to the CSV file and the path to the output directory.
 it creates a BIDS repository a test directory and a list of experiments
+its a short example of  how to use the BIDSTools package, you can find more details in the documentation
 """
 
 from pathlib import Path
@@ -24,10 +25,7 @@ def main(config_file_path, output_dir_path):
                                                                 ["FF"],
                                                                 format='csv')
 
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-    print(jsonformat)
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-    print(type(jsonformat))
+
 
     with open("/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/ffffff.json", 'w', encoding='utf-8') as f:
         json.dump(jsonformat, f, indent=4)

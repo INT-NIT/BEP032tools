@@ -1,3 +1,7 @@
+"""
+this module contains the CreatFile class that creates files based on BIDS directory structure , its creat all files and dataset structure (especially  agnostic files)
+"""
+
 import json
 import os
 from .BidsFilestructure import FileStructure

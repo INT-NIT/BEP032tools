@@ -1,3 +1,6 @@
+"""
+this module contains the Createdirectory class that creates directory layout based on BIDS directory structure
+"""
 import json
 import os
 from BIDSTools.BidsFilestructure import FileStructure
