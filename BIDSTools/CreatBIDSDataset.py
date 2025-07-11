@@ -1,11 +1,17 @@
+"""
+This script laod metadat from elab  . it takes as input the path to the CSV file and the path to the output directory.
+it creates a BIDS repository a test directory and a list of experiments
+its a short example of  how to use the BIDSTools package, you can find more details in the documentation
+"""
+
 from pathlib import Path
 import os
 from pandas import read_csv
 import elab_bridge
 import json
 from elab_bridge import server_interface
-from BidsEmptyRepositoryGenerator import Generator
-from WritingModalityAgnosticsFiles import *
+from BIDSTools.BidsEmptyRepositoryGenerator import Generator
+from BIDSTools.WritingModalityAgnosticsFiles import *
 import argparse
 
 
@@ -16,11 +22,19 @@ def main(config_file_path, output_dir_path):
 
     jsonformat = elab_bridge.server_interface.extended_download(csv_file,
                                                                 config_file_path,
-                                                                ["fat", "TEST_EEG"],
+                                                                ["FF"],
                                                                 format='csv')
+
+
+
+    with open("/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/ffffff.json", 'w', encoding='utf-8') as f:
+        json.dump(jsonformat, f, indent=4)
     df = read_csv(csv_file)
 
-    for i in range(len(df)):
+
+    print(df)
+
+    """for i in range(len(df)):
         generator = Generator(output_dir_path, df['id'][i], df['session_id'][i], "micr")
         additional_kwargs = {
             "Name": "My Dataset",
@@ -31,7 +45,7 @@ def main(config_file_path, output_dir_path):
             "participant_id": str(df['id'][i])
         }
         fill_agnostic_file(output_dir_path, **additional_kwargs)
-        print(additional_kwargs)
+        print(additional_kwargs)"""
 
 
 if __name__ == "__main__":

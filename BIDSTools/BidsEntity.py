@@ -1,3 +1,4 @@
+""" this module aim  to load all all the entities defined by the BIDS standard """
 import yaml
 
 

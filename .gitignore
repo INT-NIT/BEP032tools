@@ -54,3 +54,8 @@ Thumbs.db
 # Editor backup files #
 #######################
 *~
+
+# Fichiers temporaires à ignorer
+BIDSTools/fff.json
+BIDSTools/ffffff.json
+BIDSTools/fff.CSV

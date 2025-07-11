@@ -1,6 +1,6 @@
 import csv as csv
 import json
-
+import logging
 """
 This class is designed to create an experiment.
 Each experiment is represented by a line from a CSV file (which serves as our metadata file).
@@ -19,7 +19,9 @@ class Experiment:
         if name in self.__dict__:
             return self.__dict__[name]
         else:
-            raise AttributeError(f"'Experiment' object has no attribute '{name}'")
+          logger = logging.getLogger(__name__)
+          logger.warning(f"'Experiment' object has no attribute '{name}'")
+          return None
 
     def set_attribute(self, name, value):
         self.__dict__[name] = value

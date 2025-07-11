@@ -1,6 +1,10 @@
+"""
+this module aim  to load all all the directories defined by the BIDS standard, their level and their details
+"""
+
 from pathlib import Path
 import yaml
-import helper
+import BIDSTools.helper as helper
 
 
 class DirectoryStructure:

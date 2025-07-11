@@ -1,3 +1,6 @@
+"""
+BIDSTools/BidsDatatype.py, this file is used to load data types from a YAML file.
+ this module aim  to load  all the data types defined by the BIDS standard. and provide a function to retrieve the value of a specific data type based on its name."""
 import yaml
 
 
