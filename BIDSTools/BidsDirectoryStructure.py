@@ -20,6 +20,7 @@ Refer to the BIDS specification for directory structure guidelines.
 from pathlib import Path
 import yaml
 import BIDSTools.helper as helper
+from resource_paths import DIRECTORIES_YAML
 
 
 class DirectoryStructure:
@@ -27,7 +28,7 @@ class DirectoryStructure:
         """
         Initialize a DirectoryStructure object with default parameters.
         """
-        self.relative_path = "ressources/schema/rules/directories.yaml"
+        self.relative_path = DIRECTORIES_YAML
         self.entity_directory = []
         self.all_directory = None
         self.value_directory = None

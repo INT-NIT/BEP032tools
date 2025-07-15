@@ -17,7 +17,7 @@ Typical Usage:
 Refer to the BIDS specification for entity definitions and usage.
 """
 import yaml
-
+from BIDSTools.resource_paths import ENTITIES_YAML
 
 class Entity:
     def __init__(self):
@@ -26,7 +26,7 @@ class Entity:
         """
         self.entities = self._load_entities()
 
-    def _load_entities(self, yaml_path="ressources/schema/objects/entities.yaml"):
+    def _load_entities(self, yaml_path=ENTITIES_YAML):
         """
         Load entities from a YAML file.
 

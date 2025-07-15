@@ -19,7 +19,7 @@ Refer to the BIDS specification for file and dataset structure guidelines.
 
 import json
 import os
-from .BidsFilestructure import FileStructure
+from BIDSTools.BidsFilestructure import FileStructure
 
 
 class CreatFile:

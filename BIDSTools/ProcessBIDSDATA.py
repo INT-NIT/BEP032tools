@@ -21,15 +21,15 @@ import csv
 import json
 import logging
 import os
-from get_experiement_details import get_experiement_details
 import shutil
-from BidsModality import Modality
+from BIDSTools.get_experiement_details import get_experiement_details
+from BIDSTools.BidsModality import Modality
 import numpy as np
 import yaml
 import ast
 from BIDSTools.Createfile import CreatFile
-import template_agnotic_file
-from BIDSTools import *
+
+
 from BIDSTools.field_mapping import *  # Import des constantes de mapping de champs
 
 from BIDSTools.Experiment import Experiment
@@ -37,7 +37,7 @@ import elab_bridge
 
 from elab_bridge import server_interface
 
-from convertfileformat import ConvertedfSData
+from BIDSTools.convertfileformat import ConvertedfSData
 
 
 def generate_top_level_file(outpout_dir):
@@ -677,10 +677,10 @@ def main(config_file_path, metada_file_path, output_dir, tag):
     """
     # Download experiment data from elab
     get_experiement_details(
-        config_file_path=config_file_path,
-        metada_file_path=metada_file_path,
-        tag=tag,
-        output_csv_file=metada_file_path
+        config_file_path,
+        metada_file_path,
+        tag,
+        metada_file_path
     )
    # Generate top-level file structure
     generate_top_level_file(output_dir)

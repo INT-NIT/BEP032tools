@@ -10,8 +10,8 @@ Main Features:
 - Supports BIDSTools modules in managing BIDS-compliant data.
 
 Typical Usage:
-    from BIDSTools.helper import find_keys_in_dict, get_directories_with_details
-    keys = find_keys_in_dict(dictionary, 'anat')
+    from BIDSTools import helper
+    keys = helper.find_keys_in_dict(dictionary, 'anat')
 
 Refer to the BIDSTools documentation for more details on helper utilities and YAML processing.
 """

@@ -138,4 +138,5 @@ if __name__ == "__main__":
         "HEDVersion": "7.0",
 
     }
+    from BIDSTools.WritingModalityAgnosticsFiles import extract_primary_key, write_agnostic_files, fill_agnostic_file
     fill_agnostic_file(output_directory, **additional_kwargs)

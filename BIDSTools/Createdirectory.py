@@ -22,11 +22,11 @@ Refer to the BIDS specification for directory organization guidelines.
 """
 import json
 import os
-from BIDSTools.BidsFilestructure import FileStructure
-from BIDSTools.BidsDirectoryStructure import DirectoryStructure
-from BIDSTools.BidsEntity import Entity
-from BIDSTools.BidsDatatype import DataTypes
 from pathlib import Path
+from BIDSTools import BidsFilestructure
+from BIDSTools import BidsDirectoryStructure
+from BIDSTools import BidsEntity
+from BIDSTools import BidsDatatype
 
 
 class Createdirectory:
@@ -43,11 +43,11 @@ class Createdirectory:
         self.session_path = None
         self.output_path = output_path
         self.dir_name = []
-        self.filestructure = FileStructure()
+        self.filestructure = BidsFilestructure.FileStructure()
         self.filestructure.get_detail()
-        self.directorystructure = DirectoryStructure()
-        self.entity = Entity()
-        self.dataType = DataTypes()
+        self.directorystructure = BidsDirectoryStructure.DirectoryStructure()
+        self.entity = BidsEntity.Entity()
+        self.dataType = BidsDatatype.DataTypes()
         self.sub_id = sub_id
         self.session_id = session_id
         self.modality = modality

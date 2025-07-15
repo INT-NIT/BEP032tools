@@ -33,7 +33,7 @@ import argparse
 def main(config_file_path, output_dir_path):
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    csv_file = os.path.join(output_dir_path, 'elab_data.csv')
+    csv_file = os.path.join(output_dir_path, '../elab_data.csv')
 
     jsonformat = elab_bridge.server_interface.extended_download(csv_file,
                                                                 config_file_path,
@@ -42,7 +42,7 @@ def main(config_file_path, output_dir_path):
 
 
 
-    with open("/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/ffffff.json", 'w', encoding='utf-8') as f:
+    with open("/BIDSTools/dev_tests/ffffff.json", 'w', encoding='utf-8') as f:
         json.dump(jsonformat, f, indent=4)
     df = read_csv(csv_file)
 

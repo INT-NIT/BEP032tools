@@ -17,9 +17,10 @@ Typical Usage:
 Refer to the BIDS specification for more details on data type definitions.
 """
 import yaml
+from BIDSTools.resource_paths import DATATYPES_YAML
 
 
-def _load_data_types(yaml_path="ressources/schema/objects/datatypes.yaml"):
+def _load_data_types(yaml_path=DATATYPES_YAML):
     """
     Load data types from a YAML file.
 

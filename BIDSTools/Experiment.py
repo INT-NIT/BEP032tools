@@ -10,8 +10,8 @@ Main Features:
 - Integrates with BIDSTools for experiment-based data processing.
 
 Typical Usage:
-    from BIDSTools.Experiment import Experiment
-    exp = Experiment(subject_id='01', session_id='01', modality='anat')
+    from BIDSTools import Experiment
+    exp = Experiment.Experiment(subject_id='01', session_id='01', modality='anat')
     print(exp.subject_id)
 
 Refer to the BIDSTools documentation for more details on experiment management.

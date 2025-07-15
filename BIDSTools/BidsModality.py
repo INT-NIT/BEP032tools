@@ -25,7 +25,7 @@ See the BIDS specification for more details on modality definitions.
 import yaml
 import os
 
-
+from BIDSTools.resource_paths import MODALITIES_YAML
 class Modality:
     def __init__(self, relative_path=None):
         """
@@ -39,7 +39,7 @@ class Modality:
             # Get the directory where the current script is located
             script_dir = os.path.dirname(os.path.abspath(__file__))
             # Construct the absolute path to modalities.yaml
-            relative_path = os.path.join(script_dir, "ressources", "schema", "objects", "modalities.yaml")
+            relative_path = os.path.join(script_dir, MODALITIES_YAML)
         
         self.relative_path = relative_path
         self.modalities = []
