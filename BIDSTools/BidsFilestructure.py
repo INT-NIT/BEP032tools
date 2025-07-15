@@ -1,3 +1,21 @@
+"""
+BidsFilestructure.py
+
+This module loads and manages file structures defined by the BIDS (Brain Imaging Data Structure) standard.
+It provides utilities to retrieve, inspect, and validate BIDS file structures from YAML schemas.
+
+Main Features:
+- Loads all BIDS file structure rules from YAML configuration files.
+- Provides access to file names, directory levels, and file details.
+- Facilitates validation and inspection of file structures for BIDS compliance.
+
+Typical Usage:
+    from BIDSTools.BidsFilestructure import FileStructure
+    fs = FileStructure()
+    print(fs.all_files)
+
+Refer to the BIDS specification for file structure guidelines.
+"""
 
 import yaml
 

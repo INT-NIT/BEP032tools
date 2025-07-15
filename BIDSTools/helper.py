@@ -1,5 +1,20 @@
+"""
+helper.py
 
-"""Helper functions for BIDSTools. This module is used to extract all details from YAML files."""
+This module provides helper functions for extracting and processing details from YAML files and dictionaries for BIDS (Brain Imaging Data Structure) workflows.
+It supports searching, categorizing, and retrieving information from configuration files and data structures.
+
+Main Features:
+- Functions for searching keys and values in dictionaries.
+- Utilities for extracting directory and file details from YAML schemas.
+- Supports BIDSTools modules in managing BIDS-compliant data.
+
+Typical Usage:
+    from BIDSTools.helper import find_keys_in_dict, get_directories_with_details
+    keys = find_keys_in_dict(dictionary, 'anat')
+
+Refer to the BIDSTools documentation for more details on helper utilities and YAML processing.
+"""
 
 import os
 import yaml

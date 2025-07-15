@@ -1,7 +1,22 @@
-"""
-This script laod metadat from elab  . it takes as input the path to the CSV file and the path to the output directory.
-it creates a BIDS repository a test directory and a list of experiments
-its a short example of  how to use the BIDSTools package, you can find more details in the documentation
+""" CreatBIDSDataset.py
+
+This script demonstrates how to load metadata from an elab source and generate a BIDS-compliant dataset.
+It takes as input the path to a configuration file and an output directory, processes metadata from a CSV file, and creates a BIDS repository structure with example experiments.
+
+Main Features:
+- Downloads and processes metadata from elab via CSV.
+- Creates a BIDS repository and test directory structure.
+- Serves as a practical example of BIDSTools package usage.
+
+Typical Usage:
+    python CreatBIDSDataset.py --config <config_file_path> --output <output_dir_path>
+
+Dependencies:
+- pandas
+- elab_bridge
+- BIDSTools submodules
+
+See the BIDSTools documentation for more advanced usage and customization.
 """
 
 from pathlib import Path

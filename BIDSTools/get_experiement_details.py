@@ -1,10 +1,19 @@
-
 """
-Module for processing experiment details from JSON format to CSV.
+get_experiement_details.py
 
-This module provides functionality to extract and transform experiment data
-from a specific JSON structure into a tabular CSV format, making it easier
-to analyze and work with the data in spreadsheet applications or data analysis tools.
+This module provides tools for extracting and processing experiment details from JSON to CSV format for BIDS (Brain Imaging Data Structure) workflows.
+It enables transformation of experiment metadata for easier analysis and integration with BIDSTools pipelines.
+
+Main Features:
+- Processes experiment data from JSON files and saves as CSV.
+- Extracts experiment fields and modality types for downstream use.
+- Integrates with elab_bridge for data download and transformation.
+
+Typical Usage:
+    from BIDSTools.get_experiement_details import get_experiement_details
+    get_experiement_details(config_file_path, metada_file_path, tag, output_csv_file)
+
+Refer to the BIDSTools documentation for more details on experiment metadata extraction.
 """
 
 import json
@@ -109,4 +118,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

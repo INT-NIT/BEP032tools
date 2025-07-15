@@ -1,4 +1,26 @@
-""" this module aim  to load all all the modalities defined by the BIDS standard  so that we can get the value of a specific modality based on its name."""
+"""
+BidsModality.py
+
+This module provides functionality to load and manage all modalities defined by the BIDS (Brain Imaging Data Structure) standard.
+It enables retrieval of modality values based on their names, using a YAML schema as the source of truth for available modalities.
+
+Main Features:
+- Loads BIDS modalities from a YAML configuration file.
+- Provides access to modality names and details.
+- Facilitates lookup of modality information by name.
+
+Typical Usage:
+    modality = Modality()
+    available_modalities = modality.modalities
+    details = modality.modality_details
+Example:
+    modality = Modality()
+    print("Available Modalities:", modality.modalities)
+    print("Modality Details:", modality.modality_details)
+
+
+See the BIDS specification for more details on modality definitions.
+"""
 
 import yaml
 import os

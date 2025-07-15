@@ -1,5 +1,24 @@
 """
-this module contains the Createdirectory class that creates directory layout based on BIDS directory structure
+Createdirectory.py
+
+This module defines the Createdirectory class, which automates the creation of directory layouts compliant with the BIDS (Brain Imaging Data Structure) directory structure.
+
+Main Features:
+- Generates a BIDS-compliant directory tree for neuroimaging datasets.
+- Supports customization of subject ID, session ID, and modality.
+- Integrates with other BIDSTools components for file and entity management.
+
+Typical Usage:
+    creator = Createdirectory(output_path, sub_id=1, session_id=1, modality="micr")
+    creator.create_directories()
+    Example of outuput:
+    sub-1
+    └─ ses-1
+        └─ micr
+
+
+
+Refer to the BIDS specification for directory organization guidelines.
 """
 import json
 import os
