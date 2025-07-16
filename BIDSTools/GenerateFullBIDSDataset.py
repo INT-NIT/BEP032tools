@@ -1,5 +1,5 @@
 """
-ProcessBIDSDATA.py
+GenerateFullBIDSDataset.py
 
 This module provides tools for processing, organizing, and converting neuroimaging datasets into the BIDS (Brain Imaging Data Structure) format.
 It supports directory creation, file conversion, metadata handling, and integration with elab sources and the BIDSTools ecosystem.
@@ -11,7 +11,7 @@ Main Features:
 - Integrates with elab_bridge for metadata download and experiment management.
 
 Typical Usage:
-    python ProcessBIDSDATA.py --config_file_path <config.json> --metada_file_path <metadata.csv> --output_dir <bids_output> --tag <experiment_tag>
+    python GenerateFullBIDSDataset.py --config_file_path <config.json> --metada_file_path <metadata.csv> --output_dir <bids_output> --tag <experiment_tag>
 
 Refer to the BIDS specification and BIDSTools documentation for further details.
 """
@@ -30,7 +30,7 @@ import ast
 from BIDSTools.Createfile import CreatFile
 
 
-from BIDSTools.field_mapping import *  # Import des constantes de mapping de champs
+from BIDSTools.constants_fields import *  # Import des constantes de mapping de champs
 
 from BIDSTools.Experiment import Experiment
 import elab_bridge
@@ -331,14 +331,14 @@ def construct_bids_folders(output_dir, experiment):
                                                        session_number)
                 current_dir = generate_datatype_dir(current_dir, data_type)
 
+    metadata_link = str(experiment.get_attribute(DATA_PATH))
 
+    print(metadata_link, type(metadata_link))
 
-
-
-
-
-    #metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
-    metadata_link=experiment.get_attribute(DATA_PATH)
+    if metadata_link is None or not os.path.isfile(metadata_link):
+        # use default link
+        logging.error(f"Metadata link does not exist: {metadata_link} the default link will be used")
+        metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
     file_name = os.path.basename(metadata_link)
     destination_path = os.path.join(current_dir, file_name)
 

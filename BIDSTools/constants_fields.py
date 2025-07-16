@@ -1,5 +1,5 @@
 """
-field_mapping.py
+constants_fields.py
 
 This module defines all field name constants used throughout the BIDSTools application.
 Centralizing field names here ensures consistency and simplifies updates across the codebase.
@@ -13,7 +13,7 @@ Typical Usage:
     from BIDSTools.field_mapping import SUBJECT_ID, DATATYPE_EEG
     print(SUBJECT_ID)
 
-Refer to the BIDS specification for recommended field names and usage.
+
 """
 
 # Subject fields

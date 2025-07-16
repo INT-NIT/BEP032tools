@@ -26,7 +26,7 @@ import elab_bridge
 import json
 from elab_bridge import server_interface
 from BIDSTools.BidsEmptyRepositoryGenerator import Generator
-from BIDSTools.WritingModalityAgnosticsFiles import *
+from BIDSTools.WriteModalityAgnosticBIDSMetadataFiles import *
 import argparse
 
 
@@ -49,18 +49,6 @@ def main(config_file_path, output_dir_path):
 
     print(df)
 
-    """for i in range(len(df)):
-        generator = Generator(output_dir_path, df['id'][i], df['session_id'][i], "micr")
-        additional_kwargs = {
-            "Name": "My Dataset",
-            "BIDSVersion": "1.3.1",
-            "HEDVersion": "7.0",
-            "age": str(df['age'][i]),
-            "sex": str(df['sex'][i]),
-            "participant_id": str(df['id'][i])
-        }
-        fill_agnostic_file(output_dir_path, **additional_kwargs)
-        print(additional_kwargs)"""
 
 
 if __name__ == "__main__":

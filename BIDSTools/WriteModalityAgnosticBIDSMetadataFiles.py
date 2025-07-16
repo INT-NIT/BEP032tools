@@ -1,5 +1,5 @@
 """
-WritingModalityAgnosticsFiles.py
+WriteModalityAgnosticBIDSMetadataFiles.py
 
 This module provides tools for managing and writing modality-agnostic files according to the BIDS (Brain Imaging Data Structure) schema.
 It allows extraction of primary keys from templates, writing files in various formats (JSON, TSV, YAML, TXT), and automatic filling of agnostic files in a given directory.
@@ -138,5 +138,5 @@ if __name__ == "__main__":
         "HEDVersion": "7.0",
 
     }
-    from BIDSTools.WritingModalityAgnosticsFiles import extract_primary_key, write_agnostic_files, fill_agnostic_file
+    from BIDSTools.WriteModalityAgnosticBIDSMetadataFiles import extract_primary_key, write_agnostic_files, fill_agnostic_file
     fill_agnostic_file(output_directory, **additional_kwargs)

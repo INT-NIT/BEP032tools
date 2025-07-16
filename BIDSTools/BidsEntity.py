@@ -2,19 +2,10 @@
 BidsEntity.py
 
 This module loads and manages entities defined by the BIDS (Brain Imaging Data Structure) standard.
-It provides utilities to retrieve entity names and details from a YAML schema and supports entity-based queries.
+It provides utilities to retrieve entity names and details .
 
-Main Features:
-- Loads all BIDS entities from a YAML configuration file.
-- Provides access to entity names and details.
-- Facilitates lookup of entity information by name.
 
-Typical Usage:
-    from BIDSTools.BidsEntity import Entity
-    entities = Entity()
-    name = entities.get_entity_name("subject")
 
-Refer to the BIDS specification for entity definitions and usage.
 """
 import yaml
 from BIDSTools.resource_paths import ENTITIES_YAML
