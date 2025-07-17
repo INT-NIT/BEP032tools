@@ -1,10 +1,26 @@
 """
-this module aim  to load all all the directories defined by the BIDS standard, their level and their details
+BidsDirectoryStructure.py
+
+This module loads and manages directory structures defined by the BIDS (Brain Imaging Data Structure) standard.
+It provides utilities to retrieve, inspect BIDS directory structures .
+
+Main Features:
+- Loads all BIDS directories and their attributes from a YAML configuration file.
+- Provides access to directory names, levels, and requirements.
+- Facilitates validation and inspection of directory structures for BIDS compliance.
+
+Typical Usage:
+    from BIDSTools.BidsDirectoryStructure import DirectoryStructure
+    ds = DirectoryStructure()
+    print(ds.all_directory)
+
+Refer to the BIDS specification for directory structure guidelines.
 """
 
 from pathlib import Path
 import yaml
 import BIDSTools.helper as helper
+from resource_paths import DIRECTORIES_YAML
 
 
 class DirectoryStructure:
@@ -12,7 +28,7 @@ class DirectoryStructure:
         """
         Initialize a DirectoryStructure object with default parameters.
         """
-        self.relative_path = "ressources/schema/rules/directories.yaml"
+        self.relative_path = DIRECTORIES_YAML
         self.entity_directory = []
         self.all_directory = None
         self.value_directory = None

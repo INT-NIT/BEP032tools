@@ -1,11 +1,29 @@
+"""
+BidsFilestructure.py
+
+This module loads and manages file structures defined by the BIDS (Brain Imaging Data Structure) standard.
+It provides utilities to retrieve, inspect, and validate BIDS file structures from YAML schemas.
+
+Main Features:
+- Loads all BIDS file structure rules from YAML configuration files.
+- Provides access to file names, directory levels, and file details.
+- Facilitates validation and inspection of file structures for BIDS compliance.
+
+Typical Usage:
+    from BIDSTools.BidsFilestructure import FileStructure
+    fs = FileStructure()
+    print(fs.all_files)
+
+Refer to the BIDS specification for file structure guidelines.
+"""
 
 import yaml
 
 import os
-
+from BIDSTools.resource_paths import CORE_FILES_YAML, DIRECTORIES_YAML, FILES_YAML, TABLES_YAML
 
 class FileStructure:
-    def __init__(self, relative_path="ressources/schema/rules/files/common/core.yaml"):
+    def __init__(self, relative_path=CORE_FILES_YAML):
         """
         Initialize a FileStructure object with a relative path to a YAML file.
 
@@ -27,7 +45,7 @@ class FileStructure:
         """
 
         with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                               'ressources/schema/objects/files.yaml'), 'r') as file:
+                               FILES_YAML), 'r') as file:
 
             file_rules = yaml.safe_load(file)
             if file_rules:
@@ -62,7 +80,7 @@ class FileStructure:
         self.get_all_files()
         self.get_all_files_detail(self.relative_path)
         self.get_all_files_detail(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                               "ressources/schema/rules/files/common/tables.yaml"))
+                                               TABLES_YAML))
         return self
 
     def get_detail_for_file(self, file_name):

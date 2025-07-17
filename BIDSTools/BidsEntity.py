@@ -1,27 +1,24 @@
-""" this module aim  to load all all the entities defined by the BIDS standard """
-import yaml
+"""
+BidsEntity.py
 
+This module loads and manages entities defined by the BIDS (Brain Imaging Data Structure) standard.
+It provides utilities to retrieve entity names and details .
+
+
+
+"""
+import yaml
+from BIDSTools.resource_paths import ENTITIES_YAML
+from BIDSTools.helper import load_yaml_file
 
 class Entity:
     def __init__(self):
         """
         Initialize an Entity object and load entities from a YAML file.
         """
-        self.entities = self._load_entities()
+        self.entities = load_yaml_file(ENTITIES_YAML)
 
-    def _load_entities(self, yaml_path="ressources/schema/objects/entities.yaml"):
-        """
-        Load entities from a YAML file.
 
-        Args:
-            yaml_path (str): The path to the YAML file containing entity data.
-
-        Returns:
-            dict: A dictionary containing entity data.
-        """
-        with open(yaml_path, 'r') as file:
-            entities_data = yaml.safe_load(file)
-        return entities_data
 
     def get_entity_name(self, entity_name):
         """

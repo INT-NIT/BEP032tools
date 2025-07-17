@@ -1,8 +1,19 @@
 """
-This file defines all field names used in the application.
+constants_fields.py
 
-To modify a field name, simply change it here.
-All code references should use these constants.
+This module defines all field name constants used throughout the BIDSTools application.
+Centralizing field names here ensures consistency and simplifies updates across the codebase.
+
+Main Features:
+- Defines constants for subject, session, modality, data type, and data path fields.
+- Ensures consistency in field naming across all BIDSTools modules.
+- Facilitates easy updates to field names as standards evolve.
+
+Typical Usage:
+    from BIDSTools.field_mapping import SUBJECT_ID, DATATYPE_EEG
+    print(SUBJECT_ID)
+
+
 """
 
 # Subject fields

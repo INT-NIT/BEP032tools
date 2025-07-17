@@ -1,9 +1,32 @@
-""" this module aim  to load all all the modalities defined by the BIDS standard  so that we can get the value of a specific modality based on its name."""
+"""
+BidsModality.py
+
+This module provides functionality to load and manage all modalities defined by the BIDS (Brain Imaging Data Structure) standard.
+It enables retrieval of modality values based on their names, using a YAML schema as the source of truth for available modalities.
+
+Main Features:
+- Loads BIDS modalities from a YAML configuration file.
+- Provides access to modality names and details.
+- Facilitates lookup of modality information by name.
+
+Typical Usage:
+    modality = Modality()
+    available_modalities = modality.modalities
+    details = modality.modality_details
+Example:
+    modality = Modality()
+    print("Available Modalities:", modality.modalities)
+    print("Modality Details:", modality.modality_details)
+
+
+See the BIDS specification for more details on modality definitions.
+"""
 
 import yaml
 import os
 
-
+from BIDSTools.resource_paths import MODALITIES_YAML
+from BIDSTools.helper import load_yaml_file
 class Modality:
     def __init__(self, relative_path=None):
         """
@@ -17,7 +40,7 @@ class Modality:
             # Get the directory where the current script is located
             script_dir = os.path.dirname(os.path.abspath(__file__))
             # Construct the absolute path to modalities.yaml
-            relative_path = os.path.join(script_dir, "ressources", "schema", "objects", "modalities.yaml")
+            relative_path = os.path.join(script_dir, MODALITIES_YAML)
         
         self.relative_path = relative_path
         self.modalities = []

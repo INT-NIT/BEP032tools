@@ -1,3 +1,22 @@
+"""
+Experiment.py
+
+This module defines the Experiment class for representing and managing experiment metadata in BIDS (Brain Imaging Data Structure) workflows.
+Each experiment is typically initialized from a row in a metadata CSV file, with dynamic attributes for each metadata field.
+
+Main Features:
+- Dynamically creates attributes for each metadata field.
+- Provides methods for attribute access, modification, and comparison.
+- Integrates with BIDSTools for experiment-based data processing.
+
+Typical Usage:
+    from BIDSTools import Experiment
+    exp = Experiment.Experiment(subject_id='01', session_id='01', modality='anat')
+    print(exp.subject_id)
+
+Refer to the BIDSTools documentation for more details on experiment management.
+"""
+
 import csv as csv
 import json
 import logging

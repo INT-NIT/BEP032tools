@@ -1,25 +1,43 @@
+"""
+GenerateFullBIDSDataset.py
+
+This module provides tools for processing, organizing, and converting neuroimaging datasets into the BIDS (Brain Imaging Data Structure) format.
+It supports directory creation, file conversion, metadata handling, and integration with elab sources and the BIDSTools ecosystem.
+
+Main Features:
+- Generates BIDS-compliant directory and file structures for experiments.
+- Converts raw data formats (e.g., EDF) to BIDS-compatible formats.
+- Handles metadata extraction, transformation, and storage in TSV/JSON.
+- Integrates with elab_bridge for metadata download and experiment management.
+
+Typical Usage:
+    python GenerateFullBIDSDataset.py --config_file_path <config.json> --metada_file_path <metadata.csv> --output_dir <bids_output> --tag <experiment_tag>
+
+Refer to the BIDS specification and BIDSTools documentation for further details.
+"""
+
 import argparse
 import csv
 import json
 import logging
 import os
-from get_experiement_details import get_experiement_details
 import shutil
-from BidsModality import Modality
+from BIDSTools.get_experiement_details import get_experiement_details
+from BIDSTools.BidsModality import Modality
 import numpy as np
 import yaml
 import ast
 from BIDSTools.Createfile import CreatFile
-import template_agnotic_file
-from BIDSTools import *
-from BIDSTools.field_mapping import *  # Import des constantes de mapping de champs
+
+
+from BIDSTools.constants_fields import *  # Import des constantes de mapping de champs
 
 from BIDSTools.Experiment import Experiment
 import elab_bridge
 
 from elab_bridge import server_interface
 
-from convert_bids_data import ConvertedfSData
+from BIDSTools.convertfileformat import ConvertedfSData
 
 
 def generate_top_level_file(outpout_dir):
@@ -313,14 +331,14 @@ def construct_bids_folders(output_dir, experiment):
                                                        session_number)
                 current_dir = generate_datatype_dir(current_dir, data_type)
 
+    metadata_link = str(experiment.get_attribute(DATA_PATH))
 
+    print(metadata_link, type(metadata_link))
 
-
-
-
-
-    #metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
-    metadata_link=experiment.get_attribute(DATA_PATH)
+    if metadata_link is None or not os.path.isfile(metadata_link):
+        # use default link
+        logging.error(f"Metadata link does not exist: {metadata_link} the default link will be used")
+        metadata_link="/home/INT/idrissou.f/Bureau/sina-raw-data/sub-02_ses-01_task-DeepMReyeCalibTraining_run-01_eyetrack.edf" # to be remove in the future
     file_name = os.path.basename(metadata_link)
     destination_path = os.path.join(current_dir, file_name)
 
@@ -633,39 +651,60 @@ def edf_converter(row, raw_data, output_dir):
 
 
 def main(config_file_path, metada_file_path, output_dir, tag):
-    """jsonformat = elab_bridge.server_interface.extended_download(metada_file_path,
-                                                                config_file_path,
-                                                                [tag],
-                                                          format='csv')"""
 
-    get_experiement_details(
-        config_file_path=config_file_path,
-        metada_file_path=metada_file_path,
-        tag=tag,
-        output_csv_file=metada_file_path
-    )
-    """print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-    print(jsonformat)
-    print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-    print(type(jsonformat))
-    
-    with open("/home/INT/idrissou.f/PycharmProjects/BEP032tools/BIDSTools/fff.json", 'w', encoding='utf-8') as f:
-        json.dump(jsonformat, f, indent=4)
+
     """
+    Main entry point for the BIDS generation process.
+
+    This function reads configuration parameters from a file, downloads experiment data from elab using the provided tag,
+    and generates a BIDS-compliant dataset structure with example experiments and files.
+
+    Parameters
+    ----------
+    config_file_path : str
+        Path to a configuration file containing elab connection parameters.
+    metada_file_path : str
+        Path where to save the downloaded experiment metadata.
+    output_dir : str
+        Path to the directory where the BIDS dataset will be generated.
+    tag : str
+        Tag to filter experiments.
+
+    Returns
+    -------
+    None
+        The function modifies the file system by creating a BIDS dataset structure and writing files to it.
+    """
+    # Download experiment data from elab
+    get_experiement_details(
+        config_file_path,
+        metada_file_path,
+        tag,
+        metada_file_path
+    )
+   # Generate top-level file structure
     generate_top_level_file(output_dir)
 
 
 
-
+    # Write headers to TSV files
     writeheader_tsv_json_files(output_dir)
+    # Fill static files
     fill_static_files(output_dir)
+
+    # Fill metadata files
 
     with open(metada_file_path, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
+            # create an experiment(object)
             experiment = Experiment(**row)
+            # creat a BIDS folder structure
+
             output_edf, t, raw_data = construct_bids_folders(output_dir, experiment)
+            # convert edf to bids( formats) and store them in predefined folders
             edf_converter(row, raw_data, output_edf)
+            # fill metadata in TSV files
             fill_metadata_files(output_dir, experiment)
 
 

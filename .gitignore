@@ -56,6 +56,6 @@ Thumbs.db
 *~
 
 # Fichiers temporaires à ignorer
-BIDSTools/fff.json
-BIDSTools/ffffff.json
-BIDSTools/fff.CSV
+BIDSTools/dev_tests/fff.json
+BIDSTools/dev_tests/ffffff.json
+BIDSTools/dev_tests/fff.CSV

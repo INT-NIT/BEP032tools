@@ -1,4 +1,13 @@
-"""BIDS Empty Repository Generator. This module generates an empty BIDS repository structure."""
+"""
+BidsEmptyRepositoryGenerator.py
+
+This module generates an empty BIDS (Brain Imaging Data Structure) repository structure.
+It creates the required directory .
+
+
+
+Refer to the BIDS specification for repository initialization guidelines.
+"""
 import sys
 from BIDSTools.Createfile import CreatFile
 from BIDSTools.Createdirectory import Createdirectory

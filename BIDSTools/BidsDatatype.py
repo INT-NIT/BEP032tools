@@ -1,22 +1,25 @@
 """
-BIDSTools/BidsDatatype.py, this file is used to load data types from a YAML file.
- this module aim  to load  all the data types defined by the BIDS standard. and provide a function to retrieve the value of a specific data type based on its name."""
+BidsDatatype.py
+
+This module loads and manages data types defined by the BIDS (Brain Imaging Data Structure) standard.
+It provides utilities to retrieve data type values from a YAML schema and facilitates working with BIDS-compliant datasets.
+
+Main Features:
+- Loads all BIDS data types from a YAML configuration file.
+- Provides access to data type names and values.
+- Facilitates lookup of data type values by name.
+
+Typical Usage:
+    from BIDSTools.BidsDatatype import DataTypes
+    datatypes = DataTypes()
+    value = datatypes.get_data_type_value("anat")
+
+Refer to the BIDS specification for more details on data type definitions.
+"""
 import yaml
+from BIDSTools.resource_paths import DATATYPES_YAML
+from BIDSTools.helper import load_yaml_file
 
-
-def _load_data_types(yaml_path="ressources/schema/objects/datatypes.yaml"):
-    """
-    Load data types from a YAML file.
-
-    Args:
-        yaml_path (str): The path to the YAML file containing data type data.
-
-    Returns:
-        dict: A dictionary containing data type data.
-    """
-    with open(yaml_path, 'r') as file:
-        data_types_data = yaml.safe_load(file)
-    return data_types_data
 
 
 class DataTypes:
@@ -24,7 +27,7 @@ class DataTypes:
         """
         Initialize a DataTypes object and load data types from a YAML file.
         """
-        self.data_types = _load_data_types()
+        self.data_types = load_yaml_file(DATATYPES_YAML)
 
     def get_data_type_value(self, data_type_name):
         """

@@ -1,6 +1,21 @@
 """
-This module provides the `ConvertBIDSData` class, which is an abstract base class, and the `ConvertedfSData` class, which is a subclass of `ConvertBIDSData`.
-ConvertedfSData is used to convert EDF data to BIDS format.
+convertfileformat.py
+
+This module defines classes for converting raw neuroimaging data (such as EDF files) to BIDS-compliant formats.
+It provides an abstract base class for conversion and a concrete implementation for EDF-to-BIDS conversion.
+
+Main Features:
+- Abstract base class for BIDS data conversion workflows.
+- Concrete implementation for converting EDF files to BIDS format.
+- Validates input file types and manages output locations.
+- Integrates with the eye2bids toolkit for EDF handling.
+
+Typical Usage:
+    from convertfileformat import ConvertedfSData
+    converter = ConvertedfSData(raw_data, metadata, output_dir)
+    converter.convert_bids_data()
+
+Refer to the BIDS specification and the eye2bids documentation for more information on supported modalities and conversion details.
 """
 import os
 import shutil

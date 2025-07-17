@@ -1,5 +1,20 @@
+"""
+helper.py
 
-"""Helper functions for BIDSTools. This module is used to extract all details from YAML files."""
+This module provides helper functions for extracting and processing details from YAML files and dictionaries for BIDS (Brain Imaging Data Structure) workflows.
+It supports searching, categorizing, and retrieving information from configuration files and data structures.
+
+Main Features:
+- Functions for searching keys and values in dictionaries.
+- Utilities for extracting directory and file details from YAML schemas.
+- Supports BIDSTools modules in managing BIDS-compliant data.
+
+Typical Usage:
+    from BIDSTools import helper
+    keys = helper.find_keys_in_dict(dictionary, 'anat')
+
+Refer to the BIDSTools documentation for more details on helper utilities and YAML processing.
+"""
 
 import os
 import yaml
@@ -111,3 +126,17 @@ def get_directories_with_details(yaml_file):
 
     return (directories_entities, directories_values, directory_required,
             directory_optional, directory_recommended, top_level_directory)
+
+def load_yaml_file(yaml_file):
+    """
+    Load a YAML file and return its contents as a dictionary.
+
+    Args:
+        yaml_file (str): Path to the YAML file to load.
+
+    Returns:
+        dict: Dictionary containing the YAML file contents.
+    """
+    with open(yaml_file, 'r') as file:
+        data = yaml.safe_load(file)
+    return data

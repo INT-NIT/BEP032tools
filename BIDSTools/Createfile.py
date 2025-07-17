@@ -1,10 +1,25 @@
 """
-this module contains the CreatFile class that creates files based on BIDS directory structure , its creat all files and dataset structure (especially  agnostic files)
+Createfile.py
+
+This module defines the CreatFile class for generating files and dataset structures based on the BIDS (Brain Imaging Data Structure) directory structure.
+It automates the creation of all required files, including modality-agnostic files, to ensure BIDS compliance.
+
+Main Features:
+- Creates empty files and structured datasets following BIDS specifications.
+- Integrates with BIDSTools file structure components.
+- Supports automated generation of modality-agnostic files.
+
+Typical Usage:
+    from BIDSTools.Createfile import CreatFile
+    creator = CreatFile(output_path)
+    creator.create_empty_file('dataset_description.json')
+
+Refer to the BIDS specification for file and dataset structure guidelines.
 """
 
 import json
 import os
-from .BidsFilestructure import FileStructure
+from BIDSTools.BidsFilestructure import FileStructure
 
 
 class CreatFile:
