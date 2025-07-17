@@ -26,6 +26,7 @@ import yaml
 import os
 
 from BIDSTools.resource_paths import MODALITIES_YAML
+from BIDSTools.helper import load_yaml_file
 class Modality:
     def __init__(self, relative_path=None):
         """

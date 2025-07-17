@@ -126,3 +126,17 @@ def get_directories_with_details(yaml_file):
 
     return (directories_entities, directories_values, directory_required,
             directory_optional, directory_recommended, top_level_directory)
+
+def load_yaml_file(yaml_file):
+    """
+    Load a YAML file and return its contents as a dictionary.
+
+    Args:
+        yaml_file (str): Path to the YAML file to load.
+
+    Returns:
+        dict: Dictionary containing the YAML file contents.
+    """
+    with open(yaml_file, 'r') as file:
+        data = yaml.safe_load(file)
+    return data

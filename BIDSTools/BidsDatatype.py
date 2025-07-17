@@ -18,21 +18,8 @@ Refer to the BIDS specification for more details on data type definitions.
 """
 import yaml
 from BIDSTools.resource_paths import DATATYPES_YAML
+from BIDSTools.helper import load_yaml_file
 
-
-def _load_data_types(yaml_path=DATATYPES_YAML):
-    """
-    Load data types from a YAML file.
-
-    Args:
-        yaml_path (str): The path to the YAML file containing data type data.
-
-    Returns:
-        dict: A dictionary containing data type data.
-    """
-    with open(yaml_path, 'r') as file:
-        data_types_data = yaml.safe_load(file)
-    return data_types_data
 
 
 class DataTypes:
@@ -40,7 +27,7 @@ class DataTypes:
         """
         Initialize a DataTypes object and load data types from a YAML file.
         """
-        self.data_types = _load_data_types()
+        self.data_types = load_yaml_file(DATATYPES_YAML)
 
     def get_data_type_value(self, data_type_name):
         """
