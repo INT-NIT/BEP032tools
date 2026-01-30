@@ -20,10 +20,115 @@ import json
 import os
 from typing import Dict, List, Any
 import pandas as pd
+import elabapi_python
 
-import elab_bridge
+def extended_download(save_to, server_config_json, experiment_tags=None,
+                      format='csv', experiment_axis='columns'):
+    """
+    Download experiments based on tags or a specific experiment by ID.
+    Existing function that has been retrieved from "DigLabTools" repository, at "elab_bridge/server_interface.py"
+    Parameters
+    ----------
+    save_to: str
+        Path where to save the retrieved experiment data
+    server_config_json: str
+        Path to the json file containing the api_url and the api_token
+    experiment_tags: list, optional
+        List of tags of your experiments. Default is None.
+    experiment_id: int, optional
+        ID of the experiment you want to download. Default is None.
+    format: str
+        Format of the retrieved records. Options are 'csv' or 'json'. Default: 'csv'
+    experiment_axis: str
+        Option to control whether in the csv format experiments are arranged in columns or rows.
+        Default: 'columns'
 
-from elab_bridge import server_interface
+    Returns
+    -------
+    list
+        List of the experiment(s) downloaded
+    """
+
+    api_client = get_elab_config(server_config_json)
+    experiment_api = elabapi_python.ExperimentsApi(api_client)
+
+    if experiment_tags:
+        response = experiment_api.read_experiments_with_http_info(tags=experiment_tags)
+        experiments = response[0]
+        experiment_ids = [experiment.id for experiment in experiments]
+    else:
+        raise ValueError("Either experiment_tags or experiment_id must be provided.")
+
+    downloaded_experiments = []
+    combined_df = pd.DataFrame()
+
+    for exp_id in experiment_ids:
+        experiment_body, status_get, http_dict = (
+            experiment_api.get_experiment_with_http_info(exp_id))
+
+        if status_get != 200:
+            raise ValueError('Could not download experiment. '
+                             'Check your internet connection and permissions.')
+
+        experiment_json = experiment_body.metadata
+        metadata = json.loads(experiment_json)
+        extra_fields = metadata.get("extra_fields", {})
+
+        if format == 'json':
+            with open(save_to, 'w') as f:
+                json.dump(extra_fields, f)
+        elif format == 'csv':
+            if experiment_axis == 'columns':
+                df = pd.DataFrame.from_dict(extra_fields, orient='columns')
+                combined_df = pd.concat([combined_df, df.iloc[[1]]], ignore_index=True, sort=False)
+            elif experiment_axis == 'rows':
+                df = pd.DataFrame.from_dict(extra_fields, orient='index')
+                df = df[['value']].transpose()
+                combined_df = pd.concat([combined_df, df], ignore_index=True, sort=False)
+            else:
+                raise ValueError(f'Unknown experiment axis: {experiment_axis}. Valid arguments are '
+                                 f'"columns" and "rows".')
+        else:
+            raise ValueError(f'Unknown format: {format}. Valid arguments are "json" and "csv".')
+
+        downloaded_experiments.append(metadata)
+
+    if format == 'csv':
+        combined_df.to_csv(save_to, index=False)
+
+    return downloaded_experiments
+
+
+def get_elab_config(server_config_json):
+    """
+    Initialize an elab project based on the provided server configuration
+    Existing function that has been retrieved from "DigLabTools" repository, at "elab_bridge/server_interface.py"
+    Used to make extended_download works
+    :param server_config_json: json file containing the api_token and api_url
+    :return: elab api client
+    """
+
+    config = json.load(open(server_config_json, 'r'))
+    configuration = elabapi_python.Configuration()
+
+    if config['api_token'] in os.environ:
+        api_token = os.environ[config['api_token']]
+    else:
+        api_token = config['api_token']
+
+    configuration.api_key['api_token'] = api_token
+    configuration.api_key_prefix['api_token'] = 'Authorization'
+
+    configuration.host = config['api_url']
+    configuration.debug = True
+    configuration.verify_ssl = False
+
+    api_client = elabapi_python.ApiClient(configuration)
+    api_client.set_default_header(header_name='Authorization', header_value=api_token)
+
+    return api_client
+
+
 def get_experiement_details(config_file_path: str, metada_file_path: str, tag: str,
                             output_csv_file: str) -> None:
     """
@@ -44,8 +149,8 @@ def get_experiement_details(config_file_path: str, metada_file_path: str, tag: s
 
 
     """
-
-    experiement_details = elab_bridge.server_interface.extended_download(
+    
+    experiement_details = extended_download(
         metada_file_path,
         config_file_path,
         [tag],
