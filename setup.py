@@ -53,7 +53,7 @@ setup(
                             'BEP032Viewer=bep032tools.viewer.BEP032Viewer:main',
                             'build-bids=BIDSTools.cli:cli'],
     },
-    python_requires='==3.10.12',
+    python_requires='>=3.10.12',
     extras_require={
         'tools': ['pandas', 'pynwb', 'neo', 'nixio'],
         'test': ['pytest', 'datalad', 'parameterized']
