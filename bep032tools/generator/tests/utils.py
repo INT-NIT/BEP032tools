@@ -20,7 +20,7 @@ def initialize_test_directory(clean=True):
         path of the test directory
     """
     if clean and os.path.exists(test_directory):
-        shutil.rmtree(test_directory)
+        shutil.rmtree(test_directory, ignore_errors=True)
 
     if not os.path.exists(test_directory):
         os.mkdir(test_directory)
