@@ -139,7 +139,8 @@ class CreatFile:
             info = self.filestructure.get_detail_for_file(filename)
 
             if 'path' in info:
-                self.file_name.append(info['path'])
+                if info['level']=='required':
+                    self.file_name.append(info['path'])
 
             elif 'stem' in info:
 
@@ -148,7 +149,8 @@ class CreatFile:
 
                 for extension in info['extensions']:
                     path = path + extension
-                    self.file_name.append(path)
+                    if info['level']=='required':
+                        self.file_name.append(path)
                     if extension != '':
                         path = path[:-len(extension)]
 

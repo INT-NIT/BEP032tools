@@ -28,7 +28,7 @@ from BIDSTools.Experiment import Experiment
 
 from BIDSTools.BIDS_PROJECT_CONFIG.BIDS_modality_custom import ModalityCustomBuilder
 
-def generate_top_level_file(outpout_dir):
+def generate_empty_top_level_bids_files(outpout_dir):
     """
     Generate a top-level bid dataset structure file
 
@@ -174,7 +174,7 @@ def extract_primary_key(template):
     return primary_keys
 
 
-def writeheader_tsv_json_files(output_dir):
+def initiate_top_level_bids_files_tsv(output_dir):
     """
 
      Writes headers to TSV files in the BIDS top-level directory based on JSON template files.
@@ -196,15 +196,15 @@ def writeheader_tsv_json_files(output_dir):
                            os.path.isfile(os.path.join(output_dir, f))]
 
     script_dir = os.path.dirname(__file__)
-    agnostic_template_dir = os.path.join(script_dir, 'template_agnotic_file')
+    agnostic_template_dir = os.path.join(script_dir, 'template_agnostic_files')
 
     list_template_files = os.listdir(agnostic_template_dir)
     list_template_files = [f for f in list_template_files if
                            os.path.isfile(os.path.join(agnostic_template_dir, f)) and f.endswith(
-                               ".json")]
+                               "_tsv.json")]
 
     for template_name in list_template_files:
-        template_base_name, template_ext = os.path.splitext(template_name)
+        template_base_name = template_name.removesuffix("_tsv.json")
 
         template_path = os.path.join(agnostic_template_dir, template_name)
         with open(template_path, 'r') as template_file:
@@ -249,6 +249,50 @@ def writeheader(template_content, file_name, output_dir):
 
         # Write the new header and then the existing content
         f.write(header)
+
+
+def initiate_top_level_bids_files_json(output_dir):
+    """
+
+     Initiate json files with default values in the BIDS top-level directory based on JSON template files.
+
+    Parameters
+    ----------
+    output_dir: str
+        Path to the directory where the BIDS top-level TSV files are located.
+
+    Returns
+    ------- 
+    None
+
+    """
+    json_files_list = [f for f in os.listdir(output_dir) if
+                           f.endswith(".json")]
+
+    json_files_list = [f for f in json_files_list if
+                           os.path.isfile(os.path.join(output_dir, f))]
+
+    script_dir = os.path.dirname(__file__)
+    agnostic_template_dir = os.path.join(script_dir, 'template_agnostic_files')
+
+    list_template_files = os.listdir(agnostic_template_dir)
+    list_template_files = [f for f in list_template_files if
+                           os.path.isfile(os.path.join(agnostic_template_dir, f)) and f.endswith(
+                               "_json.json")]
+
+    for template_name in list_template_files:
+        template_base_name = template_name.removesuffix("_json.json")
+
+        template_path = os.path.join(agnostic_template_dir, template_name)
+        with open(template_path, 'r') as template_file:
+            template_content = json.load(template_file)
+
+            if template_content:
+                for file_name in json_files_list:
+                    if file_name.startswith(template_base_name):
+                        #writeheader(template_content, file_name, output_dir)
+                        file_path = os.path.join(output_dir, file_name)
+                        write_static_files(template_path, file_path)
 
 
 def construct_bids_folders(output_dir, experiment, project_config):
@@ -548,7 +592,7 @@ def write_static_files(template_path, file_path):
         f"Written static content from {template_path} to {file_path} with primary key: {primary_key}")
 
 
-def fill_static_files(output_dir):
+def initiate_top_level_bids_files_other(output_dir):
     """
     Processes static files in the specified directory. For each file that does not have a .json or
      .tsv extension,
@@ -566,7 +610,7 @@ def fill_static_files(output_dir):
     """
     script_dir = os.path.dirname(__file__)
 
-    agnostic_template_dir = os.path.join(script_dir, "template_agnotic_file")
+    agnostic_template_dir = os.path.join(script_dir, "template_agnostic_files")
 
     list_template_files = os.listdir(agnostic_template_dir)
 
@@ -575,6 +619,7 @@ def fill_static_files(output_dir):
 
     for file_name in all_files:
         if file_name in tsv_json_files_list:
+            # skip json and tsv files to process only the others
             continue
 
         file_path = os.path.join(output_dir, file_name)
@@ -636,17 +681,19 @@ def main(config_file_path, metada_file_path, output_dir, tag, project_config_yml
     project_config = ProjectConfig(project_config_yml_path)
 
    # Generate top-level file structure
-    generate_top_level_file(output_dir)
+    generate_empty_top_level_bids_files(output_dir)
 
 
 
     # Generate participant folder structure
 
 
-    # Write headers to TSV files
-    writeheader_tsv_json_files(output_dir)
+    # Write header (first line) of tsv files
+    initiate_top_level_bids_files_tsv(output_dir)
+    # Temporary: fill json files (as static ones)
+    initiate_top_level_bids_files_json(output_dir)
     # Fill static files
-    fill_static_files(output_dir)
+    initiate_top_level_bids_files_other(output_dir)
 
     # Fill metadata files
 

@@ -1,0 +1,6 @@
+{
+  "fake-readme-field": {
+    "Requirement Level": "RECOMMENDED",
+    "Default value": "This is the default content for the README file that will be located at the top-level of the BIDS directory"
+  }
+}
